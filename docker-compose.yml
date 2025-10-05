@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: prep_2_plate_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ""   # disables Rails default docker-entrypoint for dev
+    command: bash -c "sleep 5 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000"
+    volumes:
+      - .:/rails
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: db
+      DATABASE_URL: postgres://postgres:password@db:5432/prep_2_plate_development
+      SECRET_KEY_BASE: devdummykey
+    depends_on:
+      - db
+
+volumes:
+  db_data:
