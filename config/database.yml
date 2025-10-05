@@ -84,9 +84,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: prep_2_plate_production
-    username: prep_2_plate
-    password: <%= ENV["PREP_2_PLATE_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *primary_production
     database: prep_2_plate_production_cache
