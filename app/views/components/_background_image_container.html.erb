@@ -1,0 +1,10 @@
+<%= tag.div(class: "relative", style:  "background-image: url(#{image_url(image || "")});
+  background-color: #686A6B;
+  background-repeat: #{'no-repeat'};
+  background-size: #{'cover'};
+  background-position: #{'center center'};", data: html_options[:data]) do %>
+  <%# tag.div(class: "h-full w-full absolute bg-black opacity-50") if overlay %>
+  <%= tag.div(class: class_names("relative text-white", html_options[:class])) do %>
+    <%= yield %>
+  <% end %>
+<% end %>

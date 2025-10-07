@@ -1,0 +1,47 @@
+<!-- Desktop Navigation -->
+<div class="container mx-auto flex items-center justify-between mt-4 sticky top-0 z-20 bg-white shadow-sm px-6 hidden sm:flex">
+  <%= link_to :root do %>
+    <%= image_tag 'prep-2-plate.png', class: "max-w-[120px] mr-12" %>
+  <% end %>
+
+  <div class="flex justify-between items-center w-full">
+    <div class="flex items-center space-x-6">
+      <%# render NavItemComponent.with_collection(@facade.layout.menu) %>
+    </div>
+
+    <ul class="flex items-center space-x-4">
+      <%# render @facade.shopping_list_link %>
+      <%# render @facade.sign_out_link %>
+      <%# render @facade.sign_in_link %>
+    </ul>
+  </div>
+</div>
+
+<!-- Mobile Navigation -->
+<header class="sm:hidden bg-white shadow-sm px-6 py-4 sticky top-0 z-20">
+  <div class="flex items-center justify-between">
+    <%= link_to :root do %>
+      <%= image_tag("prep-2-plate.png", class: "max-w-[120px]") %>
+    <% end %>
+
+    <button data-action="navbar#toggleOpen" class="text-primary text-3xl focus:outline-none">
+      <i data-navbar-target="openButton" class="fal fa-bars"></i>
+      <i data-navbar-target="closeButton" class="fal fa-times !hidden"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <nav data-navbar-target="navbar" class="hidden flex flex-col gap-4 pt-4">
+    <%# render NavItemComponent.with_collection(
+      BuildNavItemCollectionService.call(MenuData.main_menu, :recipes, formatter: MenuData::Format.main_menu)
+    ) %>
+
+    <hr class="my-3 border-gray-200" />
+
+    <ul class="flex flex-col gap-3">
+      <%# render @facade.shopping_list_link %>
+      <%# render @facade.sign_out_link %>
+      <%# render @facade.sign_in_link %>
+    </ul>
+  </nav>
+</header>
