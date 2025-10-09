@@ -1,10 +1,10 @@
 class Public::IndexFacade < BaseFacade
-   def initialize(params, **options)
+   def initialize(user, params, **options)
+    @user = user
     @params = params
     @strong_params = options.fetch(:strong_params, {})
     @session = options.fetch(:session, {})
   end
-  
   def recipes
     []
     # Recipe.order(:name).with_attached_image.featured.map do |recipe|
