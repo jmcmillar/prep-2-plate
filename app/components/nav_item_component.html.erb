@@ -1,0 +1,4 @@
+<%= link_to @nav_item.path, class: @nav_item.css do %>
+  <%= render IconComponent.new(IconComponent::Data[@nav_item.icon, :fal, {class: "mr-3"}]) %>
+  <%= @nav_item.title %>
+<% end %>

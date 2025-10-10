@@ -1,0 +1,9 @@
+<%= tag.div(class: DEFAULT_CLASSES) do %>
+  <%= tag.div do %>
+    <%= tag.h1(class: "text-1xl leading-tight") { @title } %>
+    <%= breadcrumb_collection %>
+  <% end %>
+  <%= tag.div do %>
+    <%= icon_link_collection %>
+  <% end %>
+<% end %>

@@ -1,0 +1,18 @@
+<%= flash_notice do %>
+  <%= tag.div do %>
+    <%= tag.strong do %>
+      <%= render IconComponent.new(IconComponent::Data[@icon, :fal, {class: "mr-2"}]) %>
+    <% end %>
+    <%= tag.span(class: "block sm:inline") do %>
+      <%= sanitize @message['notice'] || @message %>
+    <% end %>
+  <% end %>
+  <%= tag.span(class: "absolute top-0 bottom-0 right-0 px-4 py-3") do %>
+    <%= tag.button(
+      data: { action: "click->flash_dismiss#closeAlert"},
+      aria: {label: "Close Button"}
+    ) do %>
+      <%= render IconComponent.new(IconComponent::Data[:times]) %>
+    <% end %>
+  <% end %>
+<% end %>

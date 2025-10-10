@@ -1,0 +1,19 @@
+<%= tag.div(class: "flex flex-col gap-1", data: { controller: "search", search_advance_value: @advance}) do %>
+  <%= tag.label(@label || @field, for: @field, class: "text-sm font-medium text-gray-700") %>
+
+  <div class="relative">
+    <!-- Search Icon -->
+    <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+      <i class="fas fa-search"></i>
+    </span>
+
+    <!-- Input Field -->
+    <%= tag.input name: @field,
+      id: @field,
+      type: "text",
+      class: "w-full h-10 pl-10 pr-3 rounded-md border border-gray-300 shadow-inner focus:border-primary focus:ring-primary focus:outline-none text-sm text-gray-900",
+      placeholder: "Search...",
+      data: { search_target: "input" } %>
+  </div>
+<% end %>
+

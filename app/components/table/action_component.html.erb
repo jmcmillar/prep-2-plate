@@ -1,0 +1,17 @@
+<%= tag.div(
+  class: "relative flex justify-end",
+  data: {
+  controller: "frame-source",
+  frame_source_url_value: url_for(@turbo_data.url)
+}) do %>
+  <%= button_tag(
+    type: "button",
+    class: "p-2 rounded hover:bg-gray-100 focus:outline-none focus:bg-gray-100",
+    data: {
+    action: "click->frame-source#setFrameSource",
+  }) do %>
+    <%= render IconComponent.new(IconComponent::Data[:ellipsis_v, :fas]) %>
+  <% end %>
+  <turbo-frame id="<%= @turbo_data.frame_id %>" data-frame-source-target="source" target="_top"/>
+<% end %>
+

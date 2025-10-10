@@ -1,0 +1,54 @@
+<div 
+  data-controller="filter dropdown"
+  data-dropdown-filter-name-value="<%= @key %>"
+  data-filter-filter-name-value="<%= @key %>"
+  data-action="click@window->dropdown#maybeClose"
+  class="relative inline-block text-left"
+>
+  <!-- Dropdown Toggle Button -->
+  <button 
+    type="button"
+    data-action="click->dropdown#toggle"
+    data-dropdown-target="toggle"
+    aria-expanded="false"
+    class="inline-flex justify-center items-center gap-1.5 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+  >
+    <%= @title %>
+    <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8l4 4 4-4" />
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div 
+    data-dropdown-target="menu"
+    class="dropdown-menu absolute right-0 z-10 mt-2 w-64 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden"
+  >
+    <div class="flex justify-between items-center px-4 pt-4">
+      <h3 class="text-sm font-medium text-gray-900">Filters</h3>
+      <button 
+        type="button"
+        class="text-xs text-red-600 hover:underline font-semibold"
+        data-action="click->filter#clearAll click->dropdown#updateActiveState"
+      >
+        Clear All
+      </button>
+    </div>
+
+    <%= tag.fieldset(class: "flex flex-col gap-3 p-4") do %>
+      <% @collection.each do |filter| %>
+        <label class="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            name="<%= @key %>"
+            value="<%= filter.id %>"
+            data-filter-target="input"
+            data-action="change->filter#submit change->dropdown#updateActiveState"
+            class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+          >
+          <%= filter.name %>
+        </label>
+      <% end %>
+    <% end %>
+  </div>
+</div>

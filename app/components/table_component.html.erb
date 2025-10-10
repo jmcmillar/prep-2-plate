@@ -1,0 +1,17 @@
+<%= tag.div(class: "rounded mb-4 shadow w-full") do %>
+  <%= tag.table(class: "table-auto w-full") do %>
+    <%= tag.thead do %>
+      <%= tag.tr(class: "rounded-t") do %>
+        <%= render Table::HeaderComponent.with_collection(@header_data) %>
+      <% end %>
+    <% end %>
+    <%= tag.tbody(class: "divide-y divide-gray-300 border border-gray-300") do %>
+      <% @row_data.each do |row| %>
+        <%= render row %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+<% if @pagy.try(:pages) && @pagy.pages > 1 %>
+  <div class="flex justify-end pt-6"><%== pagy_nav(@pagy) %></div>
+<% end %>

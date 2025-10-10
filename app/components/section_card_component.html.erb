@@ -1,0 +1,14 @@
+<%= tag.div(class: "rounded shadow-sm bg-gray-100 border") do %>
+  <% if @title %>
+    <%= tag.div(class: "w-full border-b p-4 flex justify-between items-center") do %>
+      <%= title_section %>
+      <%= tag.div do %>
+        <%= icon_link_collection %>
+        <% end %>
+    <% end %>
+  <% end %>
+  <%= tag.div(class: "p-4") do %>
+    <%= content %>
+  <% end %>
+<% end %>
+

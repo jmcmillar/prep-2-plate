@@ -1,0 +1,7 @@
+<%= tag.tr(**@html_options) do %>
+  <% @td_collection.each do |data| %>
+    <%= tag.td(class: "px-2 py-2") do %>
+      <%= render data %>
+    <% end %>
+  <% end %>
+<% end %>

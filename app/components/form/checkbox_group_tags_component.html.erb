@@ -1,0 +1,19 @@
+<div **@html_options >
+  <%= form.label @method %>
+  <div class="h-full">
+    <div class="overflow-y-scroll max-h-[322px]">
+      <%= form.collection_check_boxes(
+        @method,
+        @collection,
+        @value_method,
+        @text_method
+      ) do |checkbox| %>
+        <div class="px-2 mb-2 last:mb-0 hidden">
+          <%= checkbox.check_box(class: 'mr-1') %>
+          <%= checkbox.label(class: 'align-middle') %>
+        </div>
+      <% end %>
+    </div>
+    <input type="text" class="mt-1 px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50">
+  </div>
+</div>

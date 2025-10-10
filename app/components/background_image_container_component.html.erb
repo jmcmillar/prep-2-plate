@@ -1,0 +1,6 @@
+<%= tag.div(class: "relative", style: background_image_attributes, data: @html_options[:data]) do %>
+  <%= tag.div(class: "h-full w-full absolute bg-black opacity-50") if @settings.overlay %>
+  <%= tag.div(class: @classes) do %>
+    <%= content %>
+  <% end %>
+<% end %>

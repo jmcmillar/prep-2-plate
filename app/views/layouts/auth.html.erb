@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prep2Plate</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <link
+      href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
+      rel="stylesheet"
+    >
+    <link
+      crossorigin="anonymous"
+      href="https://pro.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-iKbFRxucmOHIcpWdX9NTZ5WETOPm0Goy0WmfyNcl52qSYtc2Buk0NCe6jU1sWWNB"
+      rel="stylesheet"
+    >
+  </head>
+  <body>
+    <%# render "flash", flash: flash %>
+    <section class="h-screen">
+      <%= tag.div class: "px-6 h-full text-gray-800" do %>
+        <%= tag.div class: class_names(
+          "flex xl:justify-center lg:justify-between justify-center items-center", 
+          "flex-wrap h-full g-6") do %>
+          <%= tag.div class: "grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0" do %>
+            <%# image_tag "auth.png", alt: "planning", class: "w-full" %>
+          <% end %>
+          <div class="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+            <%= yield %>
+          </div>
+        <% end %>
+      <% end %>
+  </section>
+</body>
+</html>
