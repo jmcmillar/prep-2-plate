@@ -3,7 +3,7 @@
   <%= render ContainerComponent.new do %>
     <h2 class="text-3xl font-bold text-gray-900 mb-6">Featured Meal Plans</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <%# render partial: "public/meal_plan", collection: @facade.meal_plans %>
+      <%= render partial: "public/meal_plan", collection: @facade.meal_plans %>
     </div>
   <% end %>
 </section>
@@ -11,7 +11,7 @@
   <%= tag.h2(class: "text-4xl mb-2") { "Featured Recipes" } %>
   <div id="recipes">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <%# render partial: "recipes/recipe", collection: @facade.recipes %>
+      <%= render partial: "public/recipe", collection: @facade.recipes %>
     </div>
   </div>
 <% end %>

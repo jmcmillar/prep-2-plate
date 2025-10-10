@@ -7,13 +7,12 @@ class Public::IndexFacade < BaseFacade
   end
   def recipes
     []
-    # Recipe.order(:name).with_attached_image.featured.map do |recipe|
-    #   Recipes::ResourceFacade.new(recipe)
-    # end
+    Recipe.order(:name).featured.map do |recipe|
+      Recipes::ResourceFacade.new(recipe)
+    end
   end
 
   def meal_plans
-    # MealPlan.order(:name).featured
-    []
+    MealPlan.order(:name).featured
   end
 end
