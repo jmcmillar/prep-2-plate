@@ -1,0 +1,10 @@
+<% if @facade.meal_plan_recipe.destroyed? %>
+  <%= turbo_stream_action_tag(
+    "remove",
+    target: dom_id(@facade.meal_plan_recipe)
+  ) %>
+<% end %>
+
+<%= turbo_stream.update :flash do %>
+  <%= render "application/flash", flash: flash %>
+<% end %>

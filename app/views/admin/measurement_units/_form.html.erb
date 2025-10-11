@@ -1,0 +1,6 @@
+<%= meal_planner_form_with(model: [:admin, measurement_unit]) do |form| %>
+  <%= render 'components/errors', model: measurement_unit %>
+    <%= form.input :name, class: "col-4" %>
+    <%= form.actions cancel_path: :back %>
+<% end %>
+

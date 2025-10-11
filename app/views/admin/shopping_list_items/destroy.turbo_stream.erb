@@ -1,0 +1,10 @@
+<% if @facade.shopping_list_item.destroyed? %>
+  <%= turbo_stream_action_tag(
+    "remove",
+    target: dom_id(@facade.shopping_list_item)
+  ) %>
+<% end %>
+
+<%= turbo_stream.update :flash do %>
+  <%= render "application/flash", flash: flash %>
+<% end %>

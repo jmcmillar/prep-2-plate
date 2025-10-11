@@ -1,0 +1,10 @@
+<% if @facade.user.destroyed? %>
+  <%= turbo_stream_action_tag(
+    "remove",
+    target: dom_id(@facade.user)
+  ) %>
+<% end %>
+
+<%= turbo_stream.update :flash do %>
+  <%= render "application/flash", flash: flash %>
+<% end %>

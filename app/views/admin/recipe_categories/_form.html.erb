@@ -1,0 +1,6 @@
+<%= meal_planner_form_with(model: [:admin, recipe_category]) do |form| %>
+  <%= render 'components/errors', model: recipe_category %>
+    <%= form.input :name, class: "col-4" %>
+    <%= form.input :image, as: :file_field, class: "col-4" %>
+    <%= form.actions cancel_path: :back %>
+<% end %>

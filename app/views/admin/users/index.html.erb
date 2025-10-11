@@ -1,0 +1,11 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection([
+    BreadcrumbComponent::Data.new("Admin", admin_recipes_path),
+    BreadcrumbComponent::Data.new("Users")
+  ]) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "Users") do |card| %>
+    <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>

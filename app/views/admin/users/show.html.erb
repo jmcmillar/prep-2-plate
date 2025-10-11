@@ -1,0 +1,10 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "User", class: "mb-8") do %>
+    <%= tag.p(class: "font-medium mb-2") { "Email"} %>
+    <%= tag.p(class: "mb-8") { @facade.user.email_address } %>
+  <% end %>
+<% end %>

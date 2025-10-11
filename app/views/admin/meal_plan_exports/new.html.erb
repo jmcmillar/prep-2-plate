@@ -1,0 +1,11 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "Export Meal Plan") do %>
+    <%= meal_planner_form_with url: @facade.form_url, method: :get, local: true do |form| %>
+      <%= form.input :start_on, as: :datetime_field %>
+      <%= form.submit "Export", data: { turbo: false}, class: "h-10 rounded bg-secondary px-4 py-2 text-white font-medium hover:bg-gray-500" %>
+    <% end %>
+  <% end %>
+<% end %>

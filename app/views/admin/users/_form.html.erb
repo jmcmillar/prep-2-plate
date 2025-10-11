@@ -1,0 +1,7 @@
+<%= meal_planner_form_with(model: [:admin, user]) do |form| %>
+  <%= render 'components/errors', model: user %>
+  <%= form.input :email, as: :email_field %>
+  <%= form.input :email, as: :email_field %>
+  <%= form.check_box_input :admin %>
+  <%= form.actions cancel_path: :back %>
+<% end %>

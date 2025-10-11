@@ -1,0 +1,30 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-6") do %>
+  <%= render SectionCardComponent.new(title: @facade.meal_plan.name, class: "mb-8") do |card| %>
+    <%= tag.p(class: "font-medium mb-2") { "Description"} %>
+    <%= tag.p(class: "mb-8") { @facade.meal_plan.description } %>
+  <% end %>
+
+  <%= tag.div(class: "row mt-8") do %>
+
+    <%= tag.div(
+      id: "calendar",
+      class: "mb-8 lg:col-8",
+      data: { 
+        controller: "calendar",
+        "calendar-modal-outlet": ".modal", 
+        calendar_plan_id_value: @facade.meal_plan.id,
+        calendar_event_url_value: admin_meal_plan_meal_plan_recipes_path(@facade.meal_plan, format: :json)
+      }) %>
+    <%= tag.div(class: "lg:col-4") do %>
+      <%= turbo_frame_tag :meal_plan_recipes, src: admin_meal_plan_meal_plan_recipes_path(@facade.meal_plan) %>
+    <% end %>
+  <% end %>  
+<% end %>
+
+<%= render ContainerComponent.new(class: "mt-6") do %>
+  <%= turbo_frame_tag :meal_plan_ingredients, src: admin_meal_plan_meal_plan_ingredients_path(@facade.meal_plan) %>
+<% end %>

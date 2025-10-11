@@ -1,0 +1,7 @@
+<%= turbo_frame_tag :meal_plan_ingredients, target: "_top" do %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "Plan Ingredients") do |card| %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>
+<% end %>

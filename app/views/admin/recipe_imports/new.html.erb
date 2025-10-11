@@ -1,0 +1,16 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "Step 1") do %>
+    <%= meal_planner_form_with(model: [:admin, @facade.import]) do |form| %>
+      <%= render 'components/errors', model: @facade.import %>
+
+      <%= form.input :url, label_text: "URL", class: "col-4" %>
+
+      <div>
+        <%= form.actions cancel_path: :back  %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

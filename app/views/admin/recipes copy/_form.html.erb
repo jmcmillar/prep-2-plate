@@ -1,0 +1,18 @@
+<%= meal_planner_form_with(model: facade.recipe, url: facade.form_url) do |form| %>
+    <%= render 'components/errors', model: facade.recipe %>
+    <%= form.input :name, class: "col-4" %>
+    <%= form.input :image, as: :file_field, class: "col-4" %>
+    <%= form.check_box_input(:featured) %>
+    <%= form.input :description, as: :rich_text_area %>
+    <%= form.input :serving_size, as: :number_field, class: "col-4" %>
+    <%= form.input :duration_minutes, as: :number_field, class: "col-4" %>
+    <%= form.collection_select_input(
+      :difficulty_level,
+      facade.difficulty_levels,
+      :name,
+      :value
+    )  %>
+    <%= form.multiple_searchable_collection_select_input :recipe_category_ids, facade.categories, :id, :name, label_text: "Recipe Categories" %>
+    <%= form.multiple_searchable_collection_select_input :meal_type_ids, facade.meal_types, :id, :name, label_text: "Meal Types" %>
+  <%= form.actions cancel_path: :back %>
+<% end %>

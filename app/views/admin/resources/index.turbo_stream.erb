@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "table" do %>
+  <%= tag.div(id: "table") do %>
+    <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,6 @@
+<%= render HeaderBarComponent.new(title: "Admin") %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: @facade.meal_plan.name) do %>
+    <%= render "form", meal_plan: @facade.meal_plan %>
+  <% end %>
+<% end %>

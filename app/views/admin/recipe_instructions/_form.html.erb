@@ -1,0 +1,6 @@
+<%= meal_planner_form_with(model: @facade.recipe_instruction, url: @facade.form_url) do |form| %>
+  <%= render 'components/errors', model: @facade.recipe_instruction %>
+  <%= form.input :step_number, as: :number_field %>
+  <%= form.input :instruction, as: :text_area %>
+  <%= form.actions cancel_path: @facade.cancel_path %>
+<% end %>

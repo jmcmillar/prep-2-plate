@@ -1,0 +1,9 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions)%>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-10") do %>
+  <%= render SectionCardComponent.new(title: @facade.shopping_list.name) do |card| %>
+  <% end %>
+<% end %>
+<%= turbo_frame_tag :shopping_list_items, src: admin_shopping_list_shopping_list_items_path(@facade.shopping_list) %>

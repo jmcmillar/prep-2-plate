@@ -1,0 +1,9 @@
+<%= render HeaderBarComponent.new(title: "Admin") %>
+<%= turbo_frame_tag :recipe_instructions do %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "New Recipe Instruction") do %>
+      <%= render "form", facade: @facade %>
+    <% end %>
+  <% end %>
+<% end %>
+

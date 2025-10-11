@@ -1,0 +1,34 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "Step 2") do %>
+    <%= meal_planner_form_with(model: @facade.recipe, url: @facade.form_url) do |form| %>
+      <%= render 'components/errors', model: @facade.recipe %>
+      <%= form.input :name %>
+      <%= form.input :serving_size, as: :number_field, value: @facade.serving_size, class: "col-4" %>
+    <%= form.input :duration_minutes, as: :number_field, value: @facade.duration, class: "col-4" %>
+    <%= form.collection_select_input(
+      :difficulty_level,
+      @facade.difficulty_levels,
+      :name,
+      :value
+    )  %>
+    <%= form.multiple_searchable_collection_select_input :recipe_category_ids, @facade.categories, :id, :name, label_text: "Recipe Categories" %>
+    <%= form.multiple_searchable_collection_select_input :meal_type_ids, @facade.meal_types, :id, :name, label_text: "Meal Types" %>
+      <% @facade.recipe.recipe_instructions.each do |instruction| %>
+        <%= form.fields_for :recipe_instructions, instruction do |fields| %>
+          <%= tag.div(class: "row") do %>
+            <%= tag.div(class: "col-2") do %>
+              <%= fields.input :step_number, as: :number_field, value: instruction.step_number %>
+            <% end %>
+            <%= tag.div(class: "col-10") do %>
+              <%= fields.input :instruction, as: :text_area, value: instruction.instruction %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= form.actions cancel_path: :back %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,16 @@
+<%= turbo_frame_tag :ingredients do %>
+  <%= render HeaderBarComponent.new(title: "Admin") do |c|%>
+    <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+    <% c.with_icon_link_collection([@facade.new_action_data]) %>    
+  <% end %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "Ingredients") do %>
+    <%= tag.div(class: "col-4 mb-6") do %>
+      <%= render SearchFormComponent.new(@facade.search_data) %>
+    <% end %>
+      <%= tag.div(id: "table") do %>
+        <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,8 @@
+<%= turbo_frame_tag :meal_plan_recipes do %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "Plan Recipes") do |card| %>
+      <% card.icon_link_collection(@facade.header_actions) %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>
+<% end %>

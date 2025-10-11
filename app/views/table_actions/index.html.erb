@@ -1,5 +1,5 @@
 <%= turbo_frame_tag :table_actions do %>
-  <%= tag.div(class: "absolute rounded bg-white w-[150px] z-20 bg-white shadow border flex flex-col right-0 mr-6") do %>
+  <%= tag.div(class: "absolute rounded bg-white w-[150px] z-20 bg-white shadow-sm border flex flex-col right-0 mr-6") do %>
     <%= render ButtonLinkComponent.with_collection(@facade.action_collection)  %>
   <% end %>
 <% end %>

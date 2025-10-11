@@ -1,0 +1,9 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "Meal Plans") do |card| %>
+    <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>
