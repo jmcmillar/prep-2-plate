@@ -13,4 +13,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'public#index'
+  resources :table_actions, only: :index
+  draw "admin"
 end

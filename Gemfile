@@ -18,6 +18,8 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+gem 'pagy'
+gem 'ransack'
 
 gem "view_component", "~> 4.0.1"
 
@@ -42,7 +44,15 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.2"
+gem "ruby-openai"
+gem "scenic"
+gem 'icalendar'
+gem "ranked-model"
+gem "httparty"
+gem "oj"
+gem 'iso8601'
+gem "pundit"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -58,10 +68,14 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "bullet"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "json_matchers"
+  gem "shoulda"
+  gem "simplecov", require: false
 end

@@ -1,0 +1,8 @@
+<aside class="relative bg-gray-200 h-screen w-[350px] hidden sm:block">
+  <div class="bg-white p-2 border-b border-gray-400">
+    <%= image_tag 'prep-2-plate.png', class: "w-[5rem]" %>
+  </div>
+  <nav>
+    <%= render NavItemComponent.with_collection(@facade.layout.menu) %>
+  </nav>
+</aside>

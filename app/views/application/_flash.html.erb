@@ -1,0 +1,5 @@
+<%= tag.div(id: "flash", class: "absolute z-50 top-0 w-full") do %>
+  <% flash.each do |type, message| %>
+    <%= FlashService.new(flash).call %>
+  <% end %>
+<% end %>

@@ -1,0 +1,30 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection([@facade.edit_action_data])%>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-10") do %>
+  <%= render SectionCardComponent.new do |card| %>
+    <%= tag.div(class: "w-1/3 rounded relative mb-8") do %>
+      <%= render BackgroundImageContainerComponent.new(
+        image: (@facade.recipe.image.attached? ? url_for(@facade.recipe.image) : ""),
+        settings: BackgroundImageData.new(position: "center center"),
+        class: "h-[150px] overflow-hidden relative"
+      ) %>
+    <% end %>
+    <%= tag.div(class: "row mb-6") do %>
+      <%= tag.div(class: "col-6") do %>
+        <%= tag.p(class: "font-medium mb-2") { "Categories"} %>
+        <%= @facade.recipe.recipe_categories.pluck(:name).join(", ") %>
+      <% end %>
+      <%= tag.div(class: "col-6") do %>
+        <%= tag.p(class: "font-medium mb-2") { "Meal Type"} %>
+        <%= @facade.meal_types %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+<%= tag.div(class: "mb-6") do %>
+  <%# turbo_frame_tag :recipe_ingredients, src: admin_recipe_recipe_ingredients_path(@facade.recipe) %>
+<% end %>
+
+<%# turbo_frame_tag :recipe_instructions, src: admin_recipe_recipe_instructions_path(@facade.recipe) %>

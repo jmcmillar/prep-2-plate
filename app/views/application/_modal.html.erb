@@ -1,0 +1,41 @@
+<div
+  aria-hidden="true"
+  class="absolute flex items-center justify-center z-[100] top-0"
+  data-modal-target="wrapper"
+>
+  <%= tag.div(
+    class: class_names(
+      'absolute inset-0 bg-gray-600 cursor-pointer opacity-0',
+      'transition-opacity duration-300 ease-in-out',
+    ),
+    data: {
+      action: 'click->modal#toggle keyup@window->modal#closeWithKeyboard',
+      modal_target: 'overlay',
+    },
+    tabindex: '-1',
+  ) %>
+  <div
+    aria-modal="true"
+    class="<%= class_names(
+      'bg-white rounded relative',
+      'w-[1120px] lg:max-w-3/4 md:max-h-3/4 sm:max-w-full h-full',
+      'transition ease-in-out duration-300',
+    ) %>"
+    data-modal-target="modal"
+    role="dialog"
+  >
+    <button
+      aria-label="Close Dialog"
+      class="absolute top-0 right-0 p-3 leading-none text-sm flex items-center z-[30]"
+      data-action="click->modal#toggle"
+      type="button"
+    >
+      <%= tag.i(class: "fal fa-times-circle fa-2x") %>
+    </button>
+    <div data-modal-target="content" class="overflow-y-scroll h-full">
+      <%= turbo_frame_tag "modal", target: "_top", lazy: true %>
+      <turbo-frame id="modal" loading="lazy">
+      </turbo-frame>
+    </div>
+  </div>
+</div>

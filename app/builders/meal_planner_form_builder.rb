@@ -72,7 +72,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
           value_method: value_method
         ) + @template.tag.input(
           type: "text",
-          class: "mt-1 px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+          class: "mt-1 px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
           value: options[:value]
         )
         end
@@ -119,7 +119,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
   
     def collection_select_input(method, collection, value_method, text_method, options = {}, html_options = {})
       label_text, label_options = extract_label_text_and_options(options)
-      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
+      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
       @template.tag.div(class: "mb-3") do
         label(method, label_text, label_options) +
           collection_select(method, collection, value_method, text_method, options, html_options)
@@ -129,7 +129,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
     def searchable_collection_select_input(method, collection, value_method, text_method, options = {}, html_options = {})
       label_text, label_options = extract_label_text_and_options(options)
       html_options[:data] = { controller: "searchable-select" }
-      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
+      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
       @template.tag.div(class: "mb-3") do
         label(method, label_text, label_options) +
           collection_select(method, collection, value_method, text_method, options, html_options)
@@ -139,7 +139,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
     def multiple_searchable_collection_select_input(method, collection, value_method, text_method, options = {}, html_options = {})
       label_text, label_options = extract_label_text_and_options(options)
       html_options[:data] = { controller: "searchable-select" }
-      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
+      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
       @template.tag.div(class: "mb-3") do
         label(method, label_text, label_options) +
           collection_select(method, collection, value_method, text_method, options, html_options.merge(multiple: true))
@@ -148,7 +148,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
   
     def select_input(method, choices = [], options = {}, html_options = {})
       label_text, label_options = extract_label_text_and_options(options)
-      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
+      html_options = html_options.merge(class: @template.class_names("px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]))
       @template.tag.div(class: "mb-3") do
         label(method, label_text, label_options) +
           select(method, choices, options, html_options)
@@ -161,7 +161,7 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
       label_text, label_options = extract_label_text_and_options(options)
       options = options.merge(
         class: @template.class_names(
-          { "mt-1 px-4 py-3 block w-full rounded-md border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50" => as != :rich_text_area },
+          { "mt-1 px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50" => as != :rich_text_area },
           options[:class]
         )
       )
