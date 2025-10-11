@@ -1,0 +1,42 @@
+<%= render ContainerComponent.new %>
+  <%= tag.h1 "Terms of Service" %>
+
+  <%= tag.p "Last updated: #{Date.today.strftime('%B %d, %Y')}" %>
+
+  <%= tag.h2 "1. Acceptance of Terms" %>
+  <%= tag.p "By accessing or using Prep2Plate (the “Service”), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service." %>
+
+  <%= tag.h2 "2. Description of Service" %>
+  <%= tag.p "Prep2Plate allows users to create, import, and manage recipes, generate meal plans, sync with calendar tools, and export grocery lists. Additional features may be added over time." %>
+
+  <%= tag.h2 "3. User Content" %>
+  <%= tag.p "You retain ownership of recipes or content you create or import into your account. By using the Service, you confirm that you have the rights to store and use any content you import or upload, including recipes from other sources." %>
+
+  <%= tag.h2 "4. Recipe Import Policy" %>
+  <%= tag.p "Prep2Plate allows users to import recipes for personal use only. If you import recipes from third-party websites, you are responsible for ensuring you have the right to use and store that content. We recommend including attribution where applicable (e.g., 'Inspired by [source]')." %>
+
+  <%= tag.h2 "5. Use of the Service" %>
+  <%= tag.ul do %>
+    <%= tag.li "You agree not to misuse the Service or access it in unauthorized ways." %>
+    <%= tag.li "You may not use the Service to distribute copyrighted material without permission." %>
+    <%= tag.li "You agree not to use automated tools to scrape or collect data from the platform without consent." %>
+  <% end %>
+
+  <%= tag.h2 "6. Calendar Integration" %>
+  <%= tag.p "When using calendar integrations, you agree to grant the necessary permissions to sync your events. We will only access your calendar data to provide relevant planning features and will never sell or share your data without consent." %>
+
+  <%= tag.h2 "7. Termination" %>
+  <%= tag.p "We reserve the right to suspend or terminate accounts that violate these Terms, or that use the Service in ways that could harm the experience of others." %>
+
+  <%= tag.h2 "8. Limitation of Liability" %>
+  <%= tag.p "Prep2Plate is provided “as is” and “as available.” We are not liable for any indirect or consequential damages arising from your use of the Service." %>
+
+  <%= tag.h2 "9. Changes to These Terms" %>
+  <%= tag.p "We may update these Terms from time to time. We will notify you of significant changes, and continued use of the Service constitutes your agreement to the new terms." %>
+
+  <%= tag.h2 "10. Contact" %>
+  <%= tag.p do %>
+    If you have any questions about these Terms, you can reach us at:
+    <%# ISSUE: add contact info %>
+  <% end %>
+<% end %>

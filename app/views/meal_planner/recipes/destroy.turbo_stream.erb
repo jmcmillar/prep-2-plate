@@ -1,0 +1,2 @@
+<%= turbo_stream.replace("list-view", partial: "meal_planners/calendar", locals: { facade: @facade}) %>
+<%= turbo_stream.replace("selected-recipes", partial: "meal_planners/selected_recipes", locals: { selected_recipes: @facade.selected_recipes }) %>

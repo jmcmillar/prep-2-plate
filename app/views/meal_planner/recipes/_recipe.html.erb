@@ -1,0 +1,23 @@
+<div
+  data-recipe-id="<%= recipe.id %>"
+  class="border border-[#EDEADE] rounded-xl bg-white shadow-sm w-full"
+>
+  <div class="relative">
+    <div class="absolute top-0 right-0 z-10">
+      <%= button_to render(IconComponent.new(IconComponent::Data[:plus_circle, :fal])),
+        meal_planner_recipes_path(recipe_id: recipe.id, day: params[:day]),
+        data: { turbo_method: :post, action: "click->modal#toggle" },
+        class: "m-2 p-3 flex items-center text-xl bg-secondary/80 text-white rounded-full hover:bg-[#e68f3f] active:bg-[#e68f3f] active:scale-[0.98] transition transform duration-100 touch-manipulation"
+      %>
+    </div>
+
+    <%= image_tag(
+      recipe.image.attached? ? url_for(recipe.image) : image_url('no-recipe-image.png'),
+      class: "w-full h-24 object-cover rounded-md"
+    ) %>
+    <div class="p-3">
+      <h3 class="text-sm lg:text-base font-semibold text-[#2E2E2E] mb-1"><%= recipe.name %></h3>
+      <p class="text-sm text-[#6b6b6b] line-clamp-2"><%= recipe.description %></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<%= tag.div(id: "recipe_list") do %>
+  <%= tag.div(class: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6") do %>
+    <%= render partial: "recipe", collection: recipes %>
+  <% end %>
+  <% if pagy.try(:pages) && pagy.pages > 1 %>
+    <div class="flex justify-end pt-6"><%== pagy_nav(pagy) %></div>
+  <% end %>
+<% end %>

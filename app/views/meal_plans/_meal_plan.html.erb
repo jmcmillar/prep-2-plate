@@ -1,0 +1,14 @@
+<%= link_to meal_plan.resource, class: "block bg-gray-100 rounded-xl shadow-sm bg-primary/20 hover:shadow-md hover:border-primary transition p-6 flex items-start gap-4" do %>
+  <div class="flex-shrink-0 text-primary">
+    <%= render IconComponent.new(IconComponent::Data[:utensils]) %>
+  </div>
+  <div>
+    <h2 class="text-lg font-semibold text-primary mb-1">
+      <%= meal_plan.name %>
+    </h2>
+    <hr class="mb-4">
+    <p class="text-sm text-gray-600 line-clamp-3">
+      <%= meal_plan.description.presence || "No description available." %>
+    </p>
+  </div>
+<% end %>

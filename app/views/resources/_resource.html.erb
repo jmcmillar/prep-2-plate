@@ -1,0 +1,13 @@
+<%= link_to resource.attachment, class: "bg-gray-100 block bg-white rounded-xl shadow-sm border-l-4 border-primary hover:shadow-md hover:border-primary transition p-6 flex items-start gap-4" do %>
+  <div class="flex-shrink-0 text-primary">
+    <%= render IconComponent.new(IconComponent::Data[:link]) %>
+  </div>
+  <div>
+    <h2 class="text-lg font-semibold text-primary mb-1">
+      <%= resource.name %>
+    </h2>
+    <p class="text-sm text-gray-600 line-clamp-3">
+      <%= resource.description.presence || "No description available." %>
+    </p>
+  </div>
+<% end %>

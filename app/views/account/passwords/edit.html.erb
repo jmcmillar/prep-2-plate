@@ -1,0 +1,12 @@
+<%= render HeaderBarComponent.new(title: "Account Settings") %>
+<%= tag.div(class: "p-6") do %>
+  <%= render SectionCardComponent.new(title: "Edit Profile") do %>
+    <%= meal_planner_form_with(model: @facade.user, url: account_password_path) do |form| %>
+      <%= render 'components/errors', model: @facade.user %>
+      <%= form.input :current_password, as: :password_field, label_text: "Current Password", class: "col-4", required: true %>
+      <%= form.input :password, as: :password_field, label_text: "New Password", class: "col-4", required: true %>
+      <%= form.input :password_confirmation, as: :password_field, label_text: "Password Confirmation", class: "col-4", required: true %>
+      <%= form.actions cancel_path: account_profile_path %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,40 @@
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <%= tag.div(class: "flex justify-between items-center") do %>
+      <%= tag.h1 {@facade.name} %>
+      <%= render ModalButtonComponent.new(button_link_data: @facade.export_button_data) %>
+    <% end %>
+  <% end %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <div class="mb-8">
+    <p class="text-gray-700 text-base"><%= @facade.description.presence || "No description provided." %></p>
+  </div>
+  <%= tag.div(class: "row") do %>
+    <div class="mb-12 lg:col-8 col-12">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recipes</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @facade.recipes.each do |recipe| %>
+          <%= render partial: "recipes/recipe", locals: { recipe: recipe } %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mb-6 lg:col-4 col-12">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold text-gray-800">Ingredients</h2>
+      </div>
+
+      <ul class="list-none mb-6 h-[750px] overflow-y-scroll">
+        <% @facade.ingredients.each_with_index do |ingredient, index| %>
+          <li class="py-3 px-4 mb-3 rounded-lg shadow-sm <%= 'bg-gray-50' if index.even? %> hover:bg-gray-100 transition">
+            <%= ingredient.name %>
+            <%= tag.span(class: "text-gray-500 text-sm") do %>
+              <%= ingredient.formatted_quantity %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

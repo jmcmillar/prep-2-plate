@@ -18,5 +18,31 @@ class Recipe < ApplicationRecord
   has_many :recipe_favorites, dependent: :destroy
   has_one :user_recipe, dependent: :destroy
 
-  scope :featured, -> { where(featured: true) }
+  accepts_nested_attributes_for :recipe_ingredients, allow_destroy: true
+
+  scope :imported, -> { where.not(recipe_import_id: nil) }
+
+  scope :filtered_by_recipe_categories, -> (category_ids) {
+    return all if category_ids.blank?
+    includes(:recipe_categories).where(recipe_categories: { id: category_ids })
+  }
+
+  scope :filtered_by_meal_types, -> (meal_type_ids) {
+    return all if meal_type_ids.blank?
+    includes(:meal_types).where(meal_types: { id: meal_type_ids })
+  }
+
+  scope :filtered_by_recipe_category_ids, -> (category_ids) {
+    return all if category_ids.blank?
+    joins(:recipe_category_assignments).where(recipe_category_assignments: { recipe_category_id: category_ids })
+  }
+
+  scope :filtered_by_duration, -> (duration) {
+    return all if duration.blank?
+    where("recipes.duration_minutes <= ?", duration)
+  }
+
+  scope :featured, -> {
+    where(featured: true)
+  }
 end

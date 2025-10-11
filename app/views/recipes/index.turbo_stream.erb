@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "recipe_list" do %>
+  <%= render partial: "recipes/recipe_list", locals: { recipes: @facade.collection.to_a, pagy: @facade.pagy } %>
+<% end %>

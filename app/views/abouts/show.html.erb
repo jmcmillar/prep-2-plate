@@ -1,0 +1,80 @@
+<div class="bg-gray-100">
+  <%= render BackgroundImageContainerComponent.new(image: 'public-hero.jpg', settings: BackgroundImageData.new(position: "center center")) do %>
+    <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <span class="block">Intentional Planning. Better Results.</span>
+        <span class="block text-indigo-600">Join Our Community.</span>
+      </h2>
+      <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+        <div class="inline-flex rounded-md shadow">
+          <%= link_to(
+            "Get started",
+            new_user_registration_path,
+            class: "inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-5 py-3 text-base font-medium text-white hover:bg-indigo-700"
+          ) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<%= render ContainerComponent.new do %>
+<div class=" text-[#2E2E2E] min-h-screen py-12 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <h1 class="text-3xl font-bold mb-4 text-[#8CB369] inline-block">About</h1>
+    <%= image_tag 'prep-2-plate.png', class: "max-w-[120px] mr-12 inline-block" %>
+    <p class="text-md md:text-lg mb-8 text-[#4a4a4a]">
+      Prep2Plate is a clean, focused meal planning tool built for home cooks who are tired of fighting popups and scrolling past essays just to get to a recipe. Our goal is simple: help you eat better with less friction.
+    </p>
+  </div>
+
+  <div class="max-w-4xl mx-auto grid gap-8 md:grid-cols-2 mt-12">
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-[#EDEADE]">
+      <div class="flex items-center mb-3 text-[#BC4B51]">
+        <i class="fas fa-ad fa-lg mr-2"></i>
+        <h2 class="text-lg font-semibold">No Ads or Distractions</h2>
+      </div>
+      <p class="text-sm text-[#2E2E2E]">
+        Recipes on Prep2Plate are clean and to the point. No life stories, no autoplay videos, no clutter — just what you need to cook.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-[#EDEADE]">
+      <div class="flex items-center mb-3 text-[#8CB369]">
+        <i class="fas fa-book fa-lg mr-2"></i>
+        <h2 class="text-lg font-semibold">Import Your Own Recipes</h2>
+      </div>
+      <p class="text-sm text-[#2E2E2E]">
+        Easily bring in your favorite recipes from around the web or from your personal collection. Keep your cookbook in one place.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-[#EDEADE]">
+      <div class="flex items-center mb-3 text-[#F4A259]">
+        <i class="fas fa-calendar-week fa-lg mr-2"></i>
+        <h2 class="text-lg font-semibold">Plan Weekly with Ease</h2>
+      </div>
+      <p class="text-sm text-[#2E2E2E]">
+        Build your weekly meal plan using your own recipes or ones from our growing library. Then shop, cook, and repeat without stress.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-[#EDEADE]">
+      <div class="flex items-center mb-3 text-[#6C584C]">
+        <i class="fas fa-notes-medical fa-lg mr-2"></i>
+        <h2 class="text-lg font-semibold">Stay Organized</h2>
+      </div>
+      <p class="text-sm text-[#2E2E2E]">
+        Add notes, adjust as needed, and reuse plans — perfect for busy parents, meal preppers, or anyone who wants dinner handled.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto text-center mt-16">
+    <h2 class="text-xl font-bold mb-4 text-[#2E2E2E]">Ready to simplify your meals?</h2>
+    <a href="/users/sign_up" class="inline-block bg-[#8CB369] hover:bg-[#769e59] text-white font-semibold py-3 px-6 rounded-full transition">
+      Get Started Free
+    </a>
+  </div>
+</div>
+
+<% end %>

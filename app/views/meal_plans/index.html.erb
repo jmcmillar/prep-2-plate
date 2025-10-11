@@ -1,0 +1,9 @@
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <h1>Meal Plan Templates</h1>
+    <%= render SearchFormComponent.new(@facade.search_data) %>
+  <% end %>
+<% end %>
+<%= render ContainerComponent.new do %>
+  <%= render "meal_plan_list", meal_plans: @facade.collection.to_a %>
+<% end %>

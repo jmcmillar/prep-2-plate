@@ -1,0 +1,1 @@
+<%= turbo_stream.replace("recipe_list", partial: "meal_planner/recipes/recipe_list", locals: { recipes: @facade.collection.to_a }) %>

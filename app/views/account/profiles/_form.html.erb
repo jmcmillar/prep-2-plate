@@ -1,0 +1,6 @@
+<%= meal_planner_form_with(model: [:admin, user]) do |form| %>
+  <%= render 'components/errors', model: user %>
+  <%= form.input :email, as: :email_field %>
+  <%= form.input :image, as: :file_field %>
+  <%= form.actions cancel_path: :back %>
+<% end %>

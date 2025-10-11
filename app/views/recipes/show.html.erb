@@ -1,0 +1,102 @@
+<%= render ContainerComponent.new do %>
+  <%= tag.h1(class: "text-3xl font-semibold text-gray-900 mb-4") { @facade.resource.name } %>
+  <%= tag.p(class: "mb-10 text-gray-600") { @facade.description } %>
+
+  <%= render BackgroundImageContainerComponent.new(
+    image: (@facade.resource.image.attached? ? url_for(@facade.resource.image) : image_url('no-recipe-landscape-image.png')),
+    class: "w-full h-64 object-cover rounded-xl mb-10",
+    settings: BackgroundImageData.new(position: "center center")
+  ) %>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <%= tag.span "Level:" %>
+      <%= tag.span(class: "font-semibold text-gray-900") { @facade.level } %>
+    </div>
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <%= tag.span "Duration:" %>
+      <%= tag.span(class: "font-semibold text-gray-900") { @facade.duration } %>
+    </div>
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <%= tag.span "Yield:" %>
+      <%= tag.span(class: "font-semibold text-gray-900") { @facade.yield } %>
+    </div>
+  </div>
+
+  <div class="flex gap-4 mb-8">
+    <% @facade.meal_types.each do |meal_type| %>
+      <span class="text-xs bg-primary text-white px-2 py-1 rounded-full">
+        <%= meal_type %>
+      </span>
+    <% end %>
+
+    <% @facade.recipe_categories.each do |category| %>
+      <span class="text-xs bg-secondary text-white px-2 py-1 rounded-full">
+        <%= category %>
+      </span>
+    <% end %>
+  </div>
+
+  <!-- Serving Size -->
+  <%= turbo_frame_tag(dom_id(@facade.resource)) do %>
+    <div class="flex flex-col items-end mb-8">
+      <%= tag.h2("Serving Size", class: "text-lg font-semibold") %>
+      <%= form_tag([@facade.resource], method: :get, data: { turbo_frame: dom_id(@facade.resource) }) do %>
+        <%= select_tag(
+          :serving_size,
+          options_for_select(@facade.serving_size_collection, @facade.current_size),
+          onchange: "this.form.submit()",
+          selected: @facade.current_size,
+          class: "inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white pl-4 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
+        ) %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Tabs: Ingredients and Instructions -->
+  <div data-controller="tabs" class="w-full mx-auto">
+    <div class="flex border-b border-gray-200 mb-6">
+      <button data-tabs-target="tab" data-action="click->tabs#select"
+        class="px-4 py-2 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none hover:text-blue-600">
+        Ingredients
+      </button>
+      <button data-tabs-target="tab" data-action="click->tabs#select"
+        class="px-4 py-2 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none hover:text-blue-600">
+        Instructions
+      </button>
+    </div>
+
+    <div class="mt-4">
+      <div data-tabs-target="panel" class="text-gray-700">
+        <%= tag.ul(class: 'list-none mb-6') do %>
+          <% @facade.ingredients.each_with_index do |ingredient, index| %>
+            <%= tag.li(class: "py-3 px-4 mb-3 rounded-lg shadow-sm #{'bg-gray-50' if index.even?} hover:bg-gray-100 transition") do %>
+              <%= tag.span(class: "text-gray-500 text-sm mr-3") do %>
+                <%= ingredient.formatted_quantity %>
+              <% end %>  
+              <%= ingredient.ingredient_name %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <!-- Instructions Panel -->
+    <div data-tabs-target="panel" class="text-gray-700 hidden">
+      <%= tag.ol(class: 'space-y-4') do %>
+        <% @facade.instructions.each_with_index do |step, index| %>
+          <%= tag.li(class: "flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm hover:bg-gray-50 transition") do %>
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold">
+              <%= index + 1 %>
+            </div>
+
+            <p class="text-base text-gray-800 leading-relaxed">
+              <%= step.instruction %>
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  </div>
+<% end %>
+

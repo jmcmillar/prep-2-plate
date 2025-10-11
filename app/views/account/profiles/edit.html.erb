@@ -1,0 +1,6 @@
+<%= render HeaderBarComponent.new(title: "Account Settings") %>
+<%= tag.div(class: "p-6") do %>
+  <%= render SectionCardComponent.new(title: "Edit Profile") do %>
+    <%= render "form", user: @facade.user %>
+  <% end %>
+<% end %>

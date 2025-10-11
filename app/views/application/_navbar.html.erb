@@ -6,11 +6,11 @@
 
   <div class="flex justify-between items-center w-full">
     <div class="flex items-center space-x-6">
-      <%# render NavItemComponent.with_collection(@facade.layout.menu) %>
+      <%= render NavItemComponent.with_collection(@facade.layout.menu) %>
     </div>
 
     <ul class="flex items-center space-x-4">
-      <%# render @facade.shopping_list_link %>
+      <%= render @facade.shopping_list_link %>
       <%= render @facade.sign_out_link %>
       <%= render @facade.sign_in_link %>
     </ul>
@@ -32,16 +32,16 @@
 
   <!-- Mobile Dropdown Menu -->
   <nav data-navbar-target="navbar" class="hidden flex flex-col gap-4 pt-4">
-    <%# render NavItemComponent.with_collection(
+    <%= render NavItemComponent.with_collection(
       BuildNavItemCollectionService.call(MenuData.main_menu, :recipes, formatter: MenuData::Format.main_menu)
     ) %>
 
     <hr class="my-3 border-gray-200" />
 
     <ul class="flex flex-col gap-3">
-      <%# render @facade.shopping_list_link %>
-      <%# render @facade.sign_out_link %>
-      <%# render @facade.sign_in_link %>
+      <%= render @facade.shopping_list_link %>
+      <%= render @facade.sign_out_link %>
+      <%= render @facade.sign_in_link %>
     </ul>
   </nav>
 </header>

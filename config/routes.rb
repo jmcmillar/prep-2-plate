@@ -13,6 +13,30 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'public#index'
+    resources :recipes, only: %i[index show]
+  resources :user_recipes, only: %i[new create edit update destroy]
+  resources :meal_plans, only: %i[index show] do
+    resource :export_to_shopping_list, only: [:new, :create], controller: 'meal_plans/export_to_shopping_lists'
+  end
+  resources :shopping_lists, only: [:index, :create, :update, :show, :destroy] do
+    resources :items, only: [:create], controller: "shopping_list_items"
+  end
+  resource :meal_planner, only: [:show]
+
+  post "/meal_planners/notes", to: "meal_planners#update_note"
+  namespace :meal_planner do
+    resource :export_to_shopping_list, only: [:new, :create]
+    resources :recipes, only: %i[index create destroy]
+    resources :calendar_exports, only: [:new]
+    resources :calendar_exports, only: [:create], default: { format: :ics }
+  end
+  namespace :account do
+    resource :profile, only: %i[show edit update]
+    resource :password, only: %i[edit update]
+  end
+  resources :resources, only: %i[index]
   resources :table_actions, only: :index
+  resource :terms_of_service, only: :show
+  resource :about, only: :show
   draw "admin"
 end

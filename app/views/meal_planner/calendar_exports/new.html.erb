@@ -1,0 +1,9 @@
+<%= turbo_frame_tag :modal do %>
+  <%= tag.div(class: "p-6") do %>
+    <%= meal_planner_form_with(url: "/meal_planner/calendar_exports", method: :post, target: "top") do |form| %>
+      <%= form.hidden_field :format, value: :ics %>
+      <%= form.select_input(:start_date, options_for_select(@facade.start_day_options)) %>
+      <%= form.submit("Export", class: "rounded bg-secondary px-4 py-2 text-white font-medium hover:bg-gray-500") %>
+    <% end %>
+  <% end %>
+<% end %>

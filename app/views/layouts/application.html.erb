@@ -31,13 +31,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body data-controller="navbar modal" class="min-h-screen flex flex-col">
     <main class="flex-1">
-      <%= render 'navbar' %>
+      <%= render 'application/navbar' %>
       <%= tag.div do %>
         <%= yield %>
       <% end %>
     </main>
-    <%= render "footer" %>
+    <%= render "application/footer" %>
   </body>
 </html>

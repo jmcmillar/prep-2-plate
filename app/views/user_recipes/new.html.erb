@@ -1,0 +1,10 @@
+<%= render ContainerComponent.new do %>
+  <%= turbo_frame_tag :modal do %>
+    <%= tag.div(id: "recipe_list") do %>
+      <%= render SectionCardComponent.new(title: "New Recipe") do %>
+        <%= render "form", facade: @facade %>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+<% end %>
