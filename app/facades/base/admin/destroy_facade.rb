@@ -19,7 +19,7 @@ class Base::Admin::DestroyFacade < BaseFacade
   end
 
   def authorized?
-    @user.admin?
+    Base::AdminPolicy.new(@user, nil).destroy?
   end
 
   def breadcrumb_trail

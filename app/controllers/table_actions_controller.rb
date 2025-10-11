@@ -1,5 +1,5 @@
-class TableActionsController < Authenticated::BaseController
+class TableActionsController < AuthenticatedController
   def index
-    @facade = TableActions::IndexFacade.new current_user, params, request
+    @facade = TableActions::IndexFacade.new Current.user, params, request
   end
 end

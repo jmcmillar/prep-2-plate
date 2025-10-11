@@ -19,6 +19,6 @@ class Base::Admin::NewFacade < BaseFacade
   end
 
   def authorized?
-    @user.admin?
+    Base::AdminPolicy.new(@user, nil).create?
   end
 end

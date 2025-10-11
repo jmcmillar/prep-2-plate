@@ -4,8 +4,7 @@ class Admin::Recipes::IndexFacade < Base::Admin::IndexFacade
   end
   
   def base_collection
-    # Base::AdminPolicy::Scope.new(@user, Recipe.order(:name)).resolve
-    Recipe.order(:name)
+    Base::AdminPolicy::Scope.new(@user, Recipe.order(:name)).resolve
   end
 
   def breadcrumb_trail

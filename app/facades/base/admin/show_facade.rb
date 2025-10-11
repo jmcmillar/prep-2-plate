@@ -20,7 +20,7 @@ class Base::Admin::ShowFacade < BaseFacade
   end
 
   def authorized?
-    @user.admin?
+    Base::AdminPolicy.new(@user, nil).show?
   end
 
 

@@ -43,8 +43,7 @@ class Base::Admin::IndexFacade < BaseFacade
   end
 
   def authorized?
-    # Base::AdminPolicy.new(@user, nil).index?
-    @user.admin?
+    Base::AdminPolicy.new(@user, nil).index?
   end
 
   def pagy_limit
