@@ -24,8 +24,7 @@ class Admin::Recipes::IndexFacade < Base::Admin::IndexFacade
   end
 
   def header_actions
-    [new_action_data]
-    # [import_action_data, new_action_data]
+    [import_action_data, new_action_data]
   end
 
   def import_action_data

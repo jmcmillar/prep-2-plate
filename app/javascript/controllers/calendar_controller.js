@@ -5,13 +5,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
-EVENT_COLOR = "#1B8C57"
-PLUGINS = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]
-TOOLBAR = {
+const EVENT_COLOR = "#1B8C57";
+const PLUGINS = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin];
+const TOOLBAR = {
   left: 'prev,next today',
   center: 'title',
   right: 'dayGridMonth,timeGridWeek,listWeek'
-}
+};
 
 export default class extends Controller {
   static outlets = ["modal"]
@@ -42,7 +42,7 @@ export default class extends Controller {
       events: this.calendarItems,
       eventColor: EVENT_COLOR,
       plugins: PLUGINS,
-      initialView: PLUGINS.dayGridPlugin,
+      initialView: 'dayGridMonth', // Fixed: should be string, not PLUGINS.dayGridPlugin
       headerToolbar: TOOLBAR,
       dateClick: (info) => this.addRecipeEvent(info)
     })
@@ -55,5 +55,4 @@ export default class extends Controller {
     )
     this.modalOutlet.toggle()
   }
-
 }

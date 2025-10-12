@@ -24,7 +24,7 @@
   <% end %>
 <% end %>
 <%= tag.div(class: "mb-6") do %>
-  <%# turbo_frame_tag :recipe_ingredients, src: admin_recipe_recipe_ingredients_path(@facade.recipe) %>
+  <%= turbo_frame_tag :recipe_ingredients, src: admin_recipe_recipe_ingredients_path(@facade.recipe) %>
 <% end %>
 
-<%# turbo_frame_tag :recipe_instructions, src: admin_recipe_recipe_instructions_path(@facade.recipe) %>
+<%= turbo_frame_tag :recipe_instructions, src: admin_recipe_recipe_instructions_path(@facade.recipe) %>

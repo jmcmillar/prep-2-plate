@@ -3,9 +3,10 @@ class Recipe < ApplicationRecord
   #   easy: "easy",
   #   medium: "medium",
   #   hard: "hard"
-  # }, _suffix: true
   has_rich_text :description
   has_one_attached :image
+  
+  belongs_to :recipe_import, optional: true
   has_many :recipe_ingredients, dependent: :destroy
   has_many :recipe_instructions, dependent: :destroy
   has_many :meal_plan_recipes, dependent: :destroy
@@ -45,4 +46,8 @@ class Recipe < ApplicationRecord
   scope :featured, -> {
     where(featured: true)
   }
+
+  def self.difficulty_levels
+    { easy: "easy", medium: "medium", hard: "hard" }
+  end
 end

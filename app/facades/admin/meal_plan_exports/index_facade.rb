@@ -21,7 +21,7 @@ class Admin::MealPlanExports::IndexFacade < Base::Admin::IndexFacade
   end
 
   def calendar_export
-    @calendar_export ||= Recipe::Calendar.new(recipes).build
+    @calendar_export ||= Recipes::Calendar.new(recipes).build
   end
 
   private

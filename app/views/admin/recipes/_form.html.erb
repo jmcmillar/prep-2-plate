@@ -6,7 +6,7 @@
     <%= form.input :description, as: :rich_text_area %>
     <%= form.input :serving_size, as: :number_field, class: "col-4" %>
     <%= form.input :duration_minutes, as: :number_field, class: "col-4" %>
-    <%# form.collection_select_input(
+    <%= form.collection_select_input(
       :difficulty_level,
       facade.difficulty_levels,
       :name,

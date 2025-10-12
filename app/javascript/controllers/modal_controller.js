@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import focusLock from 'dom-focus-lock';
-
+import { createFocusTrap } from "focus-trap"
 export default class extends Controller {
   static targets = ['modal', 'content', 'overlay', 'wrapper'];
 
@@ -79,7 +78,9 @@ export default class extends Controller {
   }
 
   setFocusLock() {
-    focusLock[this.openValue ? 'on' : 'off'](this.wrapperTarget);
+    const trap = createFocusTrap(this.modalTarget, { escapeDeactivates: true });
+    trap.activate();
+    
   }
 
   setScrollLock() {

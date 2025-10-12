@@ -2,7 +2,7 @@
   <%= render "application/flash", flash: flash %>
   <%= render ContainerComponent.new do %>
     <%= render SectionCardComponent.new(title: "Recipe Instructions") do |card| %>
-      <% card.icon_link_collection(@facade.header_actions) %>
+      <% card.with_icon_link_collection(@facade.header_actions) %>
       <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
     <% end %>
   <% end %>

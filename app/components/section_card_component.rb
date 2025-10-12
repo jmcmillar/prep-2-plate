@@ -2,7 +2,7 @@
 
 class SectionCardComponent < ApplicationComponent
   renders_one :icon_link_collection, ->(collection) { 
-    IconLinkComponent.with_collection(collection, class: "mx-1 bg-secondary p-2 self-start rounded text-white") 
+    render IconLinkComponent.with_collection(collection, class: "mx-1 bg-secondary p-2 self-start rounded text-white") 
   }
 
   def initialize(title: nil, **options)

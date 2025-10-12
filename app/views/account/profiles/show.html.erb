@@ -1,7 +1,7 @@
 <%= render HeaderBarComponent.new(title: "Account Settings") %>
 <%= tag.div(class: "p-6") do %>
   <%= render SectionCardComponent.new(title: "Account Profile", class: "mb-8") do |card| %>
-    <% card.icon_link_collection([
+    <% card.with_icon_link_collection([
       IconLinkComponent::Data[edit_account_profile_path, :edit, "Edit Profile", {class: "bg-primary px-3 py-3 rounded text-white"}]
     ]) %>
     <%= tag.p(class: "font-medium mb-2") { "email"} %>

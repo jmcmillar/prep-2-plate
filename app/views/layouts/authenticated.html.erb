@@ -8,12 +8,17 @@
       href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
       rel="stylesheet"
     >
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
     <link
       crossorigin="anonymous"
       href="https://pro.fontawesome.com/releases/v5.15.3/css/all.css"
       integrity="sha384-iKbFRxucmOHIcpWdX9NTZ5WETOPm0Goy0WmfyNcl52qSYtc2Buk0NCe6jU1sWWNB"
       rel="stylesheet"
     >
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+    />
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -54,7 +59,7 @@
         <%# render NavItemComponent.with_collection(@active_menu_items) %>
       </nav>
     </header>
-      <div class="w-full overflow-x-hidden border-t flex flex-col">
+      <div class="w-full overflow-x-hidden border-t border-gray-200 flex flex-col">
         <main class="w-full flex-grow border-l h-screen overflow-y-scroll">
           <%= yield %>
         </main>
