@@ -50,4 +50,8 @@ class Recipe < ApplicationRecord
   def self.difficulty_levels
     { easy: "easy", medium: "medium", hard: "hard" }
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["name"]
+  end
 end

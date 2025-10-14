@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import focusTrap from "focus-trap"
+import { createFocusTrap } from "focus-trap"  // Changed from default import
 export default class extends Controller {
   static targets = ['modal', 'content', 'overlay', 'wrapper'];
 
@@ -7,10 +7,15 @@ export default class extends Controller {
 
   connect() {
     this.defaultContent = this.contentTarget.innerHTML;
+    this.focusTrap = null;
   }
 
   disconnect() {
     this.defaultContent = "";
+    if (this.focusTrap) {
+      this.focusTrap.deactivate();
+      this.focusTrap = null;
+    }
   }
 
   toggle(event) {
@@ -79,7 +84,7 @@ export default class extends Controller {
 
     setFocusLock() {
     if (this.openValue) {
-      this.focusTrap = focusTrap.createFocusTrap(this.modalTarget, { 
+      this.focusTrap = createFocusTrap(this.modalTarget, {  // Use named export directly
         escapeDeactivates: false,
         onDeactivate: () => this.openValue = false
       });

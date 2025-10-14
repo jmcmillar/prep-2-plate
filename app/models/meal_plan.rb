@@ -10,4 +10,8 @@ class MealPlan < ApplicationRecord
   scope :featured, -> {
     where(featured: true)
   }
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["name"]
+  end
 end
