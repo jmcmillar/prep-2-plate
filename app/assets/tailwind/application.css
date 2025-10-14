@@ -12,3 +12,38 @@
     color: theme('colors.gray.700');
     font-family: 'Roboto', sans-serif;
   }
+
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 1.875rem; /* 36px */
+    line-height: 2.5rem; /* 40px */
+  }
+  h2 {
+    font-size: 1.5rem; /* 30px */
+    line-height: 2.25rem; /* 36px */
+  }
+  h3 {
+    font-size: 1.25rem; /* 24px */
+    line-height: 2rem; /* 32px */
+  }
+  h4 {
+    font-size: 1.125rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
+  }
+  h5 {
+    font-size: 1rem; /* 18px */
+    line-height: 1.5rem; /* 24px */
+  }
+  h6 {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5rem; /* 24px */
+  }
