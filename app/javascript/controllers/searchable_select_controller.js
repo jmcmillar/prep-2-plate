@@ -4,6 +4,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    new Choices(this.element)
+    new Choices(this.element, {
+      // Optional configuration
+      searchEnabled: true,
+      removeItemButton: true,
+    })
   }
 }

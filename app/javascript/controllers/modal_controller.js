@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { createFocusTrap } from "focus-trap"
+import focusTrap from "focus-trap"
 export default class extends Controller {
   static targets = ['modal', 'content', 'overlay', 'wrapper'];
 
@@ -77,10 +77,17 @@ export default class extends Controller {
     }, 300);
   }
 
-  setFocusLock() {
-    const trap = createFocusTrap(this.modalTarget, { escapeDeactivates: true });
-    trap.activate();
-    
+    setFocusLock() {
+    if (this.openValue) {
+      this.focusTrap = focusTrap.createFocusTrap(this.modalTarget, { 
+        escapeDeactivates: false,
+        onDeactivate: () => this.openValue = false
+      });
+      this.focusTrap.activate();
+    } else if (this.focusTrap) {
+      this.focusTrap.deactivate();
+      this.focusTrap = null;
+    }
   }
 
   setScrollLock() {

@@ -1,6 +1,6 @@
 // app/javascript/controllers/filter_controller.js
 import { Controller } from "@hotwired/stimulus"
-import { turboFetch } from "../utils/turbo_fetch"
+import { turboFetch } from "utils/turbo_fetch"
 
 export default class extends Controller {
   static targets = ["input"]
