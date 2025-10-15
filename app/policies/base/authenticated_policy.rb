@@ -1,27 +1,27 @@
 class Base::AuthenticatedPolicy < ApplicationPolicy
   def index?
-    user.active_for_authentication?
+    user.persisted?
   end
 
   def show?
-    user.active_for_authentication?
+    user.persisted?
   end
 
   def create?
-    user.active_for_authentication?
+    user.persisted?
   end
 
   def update?
-    user.active_for_authentication?
+    user.persisted?
   end
 
   def destroy?
-    user.active_for_authentication?
+    user.persisted?
   end
 
   class Scope < Scope
     def resolve
-      user.active_for_authentication? ? scope.all : scope.none
+      user.persisted? ? scope.all : scope.none
     end
   end
 end

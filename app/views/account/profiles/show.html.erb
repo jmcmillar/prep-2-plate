@@ -5,6 +5,6 @@
       IconLinkComponent::Data[edit_account_profile_path, :edit, "Edit Profile", {class: "bg-primary px-3 py-3 rounded text-white"}]
     ]) %>
     <%= tag.p(class: "font-medium mb-2") { "email"} %>
-    <%= tag.p(class: "mb-8") { @facade.user.email } %>
+    <%= tag.p(class: "mb-8") { @facade.user.email_address } %>
   <% end %>
 <% end %>

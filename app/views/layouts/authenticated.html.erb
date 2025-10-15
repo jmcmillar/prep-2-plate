@@ -27,7 +27,7 @@
     <%= tag.div do %>
       <%# render "flash", flash: flash %>
     <% end %>
-    <%# render "modal" %>
+    <%= render "application/modal" %>
     <%= render "application/sidebar" %>
     <div class="w-full flex flex-col h-screen overflow-y-hidden">
       <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
@@ -36,11 +36,11 @@
             <button
               data-action="click->toggle#setToggle"
               class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-200 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
-                <%# image_tag current_user.image if current_user.image.persisted? %>
+                <%= image_tag Current.user.image if Current.user.image.persisted? %>
             </button>
             <div class="z-20 absolute w-32 bg-white rounded-lg border border-gray-200 py-2 mt-12 hidden" data-toggle-target="toggle">
-              <%# link_to("Profile", account_profile_path, class: "block px-4 py-2") %>
-              <%# link_to("Sign Out", destroy_user_session_path, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
+              <%= link_to("Profile", account_profile_path, class: "block px-4 py-2") %>
+              <%= link_to("Sign Out", session_path, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
             </div>
         </div>
       </header>
