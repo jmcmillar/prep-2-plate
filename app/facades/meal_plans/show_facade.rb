@@ -16,7 +16,7 @@ class MealPlans::ShowFacade < BaseFacade
   end
 
   def ingredients
-    MealPlanIngredient::NameDecorator.decorate_collection(MealPlanIngredient.where(meal_plan_id: resource.id))
+   MealPlanIngredient::NameDecorator.decorate_collection(MealPlanIngredient.where(meal_plan_id: resource.id))
   end
 
   def active_key

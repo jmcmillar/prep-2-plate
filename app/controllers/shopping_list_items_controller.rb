@@ -13,6 +13,6 @@ class ShoppingListItemsController < AuthenticatedController
   private
 
   def set_shopping_list
-    @shopping_list = current_user.shopping_lists.find(params[:shopping_list_id])
+    @shopping_list = Current.user.shopping_lists.find(params[:shopping_list_id])
   end
 end

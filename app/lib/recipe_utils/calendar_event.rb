@@ -33,6 +33,13 @@ class RecipeUtils::CalendarEvent
   end
 
   def add_description
-    @event.description = Rails.application.routes.url_helpers.url_for(controller: 'recipes', action: 'show', id: @recipe.id, host: Rails.application.config.action_mailer.asset_host)
+    # Use a simpler path-based approach
+    @event.description = Rails.application.routes.url_helpers.recipe_url(@recipe, host: default_host)
+  end
+
+  private
+
+  def default_host
+    Rails.application.config.action_mailer.default_url_options[:host] || 'localhost:3000'
   end
 end

@@ -5,7 +5,7 @@ class MealPlanner::CalendarExports::NewFacade < BaseFacade
   end
 
   def calendar_export
-    @calendar_export = Recipes::Calendar.new(recipes).build
+    @calendar_export =  RecipeUtils::Calendar.new(recipes).build
   end
 
   def calendar_file_options

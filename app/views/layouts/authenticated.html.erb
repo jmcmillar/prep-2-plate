@@ -4,6 +4,8 @@
   <%= yield :head %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
+    <link rel="icon" href="<%= asset_path 'favicon.png' %>" type="image/png">
+
     <link
       href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
       rel="stylesheet"
@@ -40,7 +42,7 @@
             </button>
             <div class="z-20 absolute w-32 bg-white rounded-lg border border-gray-200 py-2 mt-12 hidden" data-toggle-target="toggle">
               <%= link_to("Profile", account_profile_path, class: "block px-4 py-2") %>
-              <%= link_to("Sign Out", session_path, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
+              <%= button_to("Sign Out", [:session], method: :delete, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
             </div>
         </div>
       </header>

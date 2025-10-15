@@ -13,7 +13,7 @@
     <% end %>
   <% end %>
 <% end %>
-<%= tag.div id: "recipes", class: "container mb-8" do %>
+<%= render ContainerComponent.new(id: "recipe") do %>
   <%= render "recipe_list", recipes: @facade.collection.to_a, pagy: @facade.pagy %>
 <% end %>
 

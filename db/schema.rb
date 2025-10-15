@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_10_001000) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_15_235413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -253,4 +253,59 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_10_001000) do
   add_foreign_key "user_meal_plans", "users"
   add_foreign_key "user_recipes", "recipes"
   add_foreign_key "user_recipes", "users"
+
+  create_view "meal_plan_ingredients", sql_definition: <<-SQL
+      WITH ingredient_unit_totals AS (
+           SELECT meal_plans.id AS meal_plan_id,
+              ingredients.name,
+              recipe_ingredients.ingredient_id,
+              measurement_units.name AS unit_name,
+              sum((recipe_ingredients.quantity)::double precision) AS quantity,
+              sum(
+                  CASE
+                      WHEN (recipe_ingredients.denominator = 0) THEN (0)::double precision
+                      ELSE ((recipe_ingredients.numerator)::double precision / (recipe_ingredients.denominator)::double precision)
+                  END) AS total_amount
+             FROM ((((meal_plans
+               LEFT JOIN meal_plan_recipes ON ((meal_plan_recipes.meal_plan_id = meal_plans.id)))
+               LEFT JOIN recipe_ingredients ON ((meal_plan_recipes.recipe_id = recipe_ingredients.recipe_id)))
+               JOIN ingredients ON ((recipe_ingredients.ingredient_id = ingredients.id)))
+               LEFT JOIN measurement_units ON ((recipe_ingredients.measurement_unit_id = measurement_units.id)))
+            GROUP BY meal_plans.id, recipe_ingredients.ingredient_id, measurement_units.name, ingredients.name
+          )
+   SELECT ingredient_unit_totals.meal_plan_id,
+      ingredient_unit_totals.ingredient_id,
+      ingredient_unit_totals.unit_name,
+      ingredient_unit_totals.name,
+      ingredient_unit_totals.quantity,
+          CASE
+              WHEN (ingredient_unit_totals.total_amount = (0)::double precision) THEN ''::text
+              WHEN (floor(ingredient_unit_totals.total_amount) = ingredient_unit_totals.total_amount) THEN ((ingredient_unit_totals.total_amount)::integer)::text
+              ELSE
+              CASE
+                  WHEN (floor(ingredient_unit_totals.total_amount) = (0)::double precision) THEN ( WITH frac AS (
+                           SELECT (round((ingredient_unit_totals.total_amount * (24)::double precision)))::integer AS num,
+                              24 AS denom
+                          ), reduced AS (
+                           SELECT (frac.num / gcd(frac.num, frac.denom)) AS n,
+                              (frac.denom / gcd(frac.num, frac.denom)) AS d
+                             FROM frac
+                          )
+                   SELECT ((reduced.n || '/'::text) || reduced.d)
+                     FROM reduced)
+                  ELSE ( WITH frac AS (
+                           SELECT (round(((ingredient_unit_totals.total_amount - floor(ingredient_unit_totals.total_amount)) * (24)::double precision)))::integer AS num,
+                              24 AS denom
+                          ), reduced AS (
+                           SELECT (frac.num / gcd(frac.num, frac.denom)) AS n,
+                              (frac.denom / gcd(frac.num, frac.denom)) AS d
+                             FROM frac
+                          )
+                   SELECT (((((floor(ingredient_unit_totals.total_amount))::text || ' '::text) || reduced.n) || '/'::text) || reduced.d)
+                     FROM reduced)
+              END
+          END AS formatted_amount
+     FROM ingredient_unit_totals
+    ORDER BY ingredient_unit_totals.meal_plan_id, ingredient_unit_totals.name;
+  SQL
 end
