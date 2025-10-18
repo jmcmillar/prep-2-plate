@@ -1,6 +1,4 @@
 class Admin::MealPlanExportsController < AuthenticatedController
-  before_action { set_active_menu :admin_meal_plans }
-  
   def index
     @facade = Admin::MealPlanExports::IndexFacade.new(Current.user, params)
 

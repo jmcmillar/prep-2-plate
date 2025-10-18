@@ -3,7 +3,7 @@
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "Step 3") do %>
-    <%= meal_planner_form_with(url: @facade.form_url, data: {turbo: false}) do |form| %>
+    <%= meal_planner_form_with(model: @facade.recipe,url: @facade.form_url, data: {turbo: false}) do |form| %>
       <%= render 'components/errors', model: @facade.recipe %>
       <% @facade.ingredients.each_with_index do |ingredient, index| %>
         <% recipe_ingredient = @facade.recipe.recipe_ingredients.build %>

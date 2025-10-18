@@ -6,6 +6,24 @@
   --color-secondary: oklch(0.862 0.181 66.41);
   --color-accent: oklch(0.573 0.181 27.14);
   --color-stone: oklch(0.956 0.033 99.41);
+
+  --spacing-13: 3.25rem;
+	--spacing-18: 4.5rem;
+	--spacing-60: 15rem;
+	--spacing-1/4: 25%;
+	--spacing-1/2: 50%;
+	--spacing-3/4: 75%;
+	--spacing-1/12: 8.333333%;
+	--spacing-2/12: 16.666667%;
+	--spacing-3/12: 25%;
+	--spacing-4/12: 33.333333%;
+	--spacing-5/12: 41.666667%;
+	--spacing-6/12: 50%;
+	--spacing-7/12: 58.333333%;
+	--spacing-8/12: 66.666667%;
+	--spacing-9/12: 75%;
+	--spacing-10/12: 83.333333%;
+	--spacing-11/12: 91.666667%;
 }
 
   body {
@@ -47,3 +65,56 @@
     font-size: 0.875rem; /* 14px */
     line-height: 1.5rem; /* 24px */
   }
+
+@utility row { @apply flex flex-wrap -mx-3; }
+  /* Grid columns */
+@utility col-1 { @apply w-1/12; }
+@utility col-2 { @apply w-2/12; }
+@utility col-3 { @apply w-3/12; }
+@utility col-4 { @apply w-4/12; }
+@utility col-5 { @apply w-5/12; }
+@utility col-6 { @apply w-6/12; }
+@utility col-7 { @apply w-7/12; }
+@utility col-8 { @apply w-8/12; }
+@utility col-9 { @apply w-9/12; }
+@utility col-10 { @apply w-10/12; }
+@utility col-11 { @apply w-11/12; }
+@utility col-12 { @apply w-full; }
+
+/* Grid offsets */
+@utility offset-1 { @apply ml-1/12; }
+@utility offset-2 { @apply ml-2/12; }
+@utility offset-3 { @apply ml-3/12; }
+@utility offset-4 { @apply ml-4/12; }
+@utility offset-5 { @apply ml-5/12; }
+@utility offset-6 { @apply ml-6/12; }
+@utility offset-7 { @apply ml-7/12; }
+@utility offset-8 { @apply ml-8/12; }
+@utility offset-9 { @apply ml-9/12; }
+@utility offset-10 { @apply ml-10/12; }
+@utility offset-11 { @apply ml-11/12; }
+
+@utility offset-r-1 { @apply mr-1/12; }
+@utility offset-r-2 { @apply mr-2/12; }
+@utility offset-r-3 { @apply mr-3/12; }
+@utility offset-r-4 { @apply mr-4/12; }
+@utility offset-r-5 { @apply mr-5/12; }
+@utility offset-r-6 { @apply mr-6/12; }
+@utility offset-r-7 { @apply mr-7/12; }
+@utility offset-r-8 { @apply mr-8/12; }
+@utility offset-r-9 { @apply mr-9/12; }
+@utility offset-r-10 { @apply mr-10/12; }
+@utility offset-r-11 { @apply mr-11/12; }
+
+@utility col-12 { @apply max-w-full px-3; }
+@utility col-11 { @apply max-w-full px-3; }
+@utility col-10 { @apply max-w-full px-3; }
+@utility col-9 { @apply max-w-full px-3; }
+@utility col-8 { @apply max-w-full px-3; }
+@utility col-7 { @apply max-w-full px-3; }
+@utility col-6 { @apply max-w-full px-3; }
+@utility col-5 { @apply max-w-full px-3; }
+@utility col-4 { @apply max-w-full px-3; }
+@utility col-3 { @apply max-w-full px-3; }
+@utility col-2 { @apply max-w-full px-3; }
+@utility col-1 { @apply max-w-full px-3; }

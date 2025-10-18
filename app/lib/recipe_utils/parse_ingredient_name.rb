@@ -6,6 +6,7 @@ class RecipeUtils::ParseIngredientName
 
   def to_s
     stripped_chars = strip_numbers_and_special_characters(@ingredient)
+
     ingredient_stripped_of_substrings(stripped_chars)
   end
 

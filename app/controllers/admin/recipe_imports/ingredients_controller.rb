@@ -1,6 +1,4 @@
 class Admin::RecipeImports::IngredientsController < AuthenticatedController
-  before_action { set_active_menu :admin_recipes }
-  
   def new
     @facade = Admin::RecipeImports::Ingredients::NewFacade.new(Current.user, params)
   end
