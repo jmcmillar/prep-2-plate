@@ -20,6 +20,7 @@ gem "tailwindcss-rails"
 gem "jbuilder"
 gem 'pagy'
 gem 'ransack'
+gem 'mailgun-ruby', '~>1.4.0'
 
 gem "view_component", "~> 4.0.1"
 

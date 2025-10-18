@@ -60,6 +60,11 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
+  config.action_mailer.mailgun_settings = {
+    api_key: ENV.fetch("MAILGUN_API_KEY", nil),
+    domain:  "prep2plate.com"
+  }
+  
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
