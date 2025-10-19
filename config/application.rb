@@ -24,5 +24,7 @@ module Prep2Plate
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    MissionControl::Jobs.http_basic_auth_user = ENV.fetch("MISSION_CONTROL_JOBS_HTTP_BASIC_AUTH_USER", "dev")
+    MissionControl::Jobs.http_basic_auth_password = ENV.fetch("MISSION_CONTROL_JOBS_HTTP_BASIC_AUTH_PASSWORD", "secret")
   end
 end
