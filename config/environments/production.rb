@@ -1,4 +1,6 @@
 require "active_support/core_ext/integer/time"
+require_relative "../../app/mailers/mailgun_delivery"
+
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -64,6 +66,13 @@ Rails.application.configure do
     api_key: ENV.fetch("MAILGUN_API_KEY", nil),
     domain:  "prep2plate.com"
   }
+
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings = {
+    api_key: ENV.fetch("MAILGUN_API_KEY", nil),
+    domain:  "prep2plate.com"
+  }
+  ActionMailer::Base.add_delivery_method :mailgun, MailgunDelivery
   
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
