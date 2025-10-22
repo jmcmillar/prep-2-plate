@@ -3,7 +3,7 @@
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "Step 3") do %>
-    <%= meal_planner_form_with(model: @facade.recipe,url: @facade.form_url, data: {turbo: false}) do |form| %>
+    <%= meal_planner_form_with(model: @facade.recipe, url: @facade.form_url, data: {turbo: false}, method: :post) do |form| %>
       <%= render 'components/errors', model: @facade.recipe %>
       <% @facade.ingredients.each_with_index do |ingredient, index| %>
         <% recipe_ingredient = @facade.recipe.recipe_ingredients.build %>
@@ -22,10 +22,10 @@
               ) %>
             <% end %>
             <%= tag.div(class: "col-3") do %>
-              <%= f.input :ingredient_name, value: ingredient[:ingredient], class: "col-6", label_text: "Ingredient" %>
+              <%= f.input :ingredient_name, value: ingredient[:ingredient_name], class: "col-6", label_text: "Ingredient" %>
             <% end %>
             <%= tag.div(class: "col-3") do %>
-              <%= f.input :ingredient_notes, value: ingredient[:notes], class: "col-6", label_text: "Notes" %>
+              <%= f.input :ingredient_notes, value: ingredient[:ingredient_notes], class: "col-6", label_text: "Notes" %>
             <% end %>
           <% end %>
         <% end %>

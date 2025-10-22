@@ -16,8 +16,8 @@ class BuildRecipeIngredients
       set_ingredient(attribute_data).recipe_ingredients.new(
         recipe_id: @recipe_id,
         measurement_unit_id: attribute_data.measurement_unit_id,
-        denominator: Recipes::ParseQuantity.new(attribute_data.quantity).to_value.denominator,
-        numerator: Recipes::ParseQuantity.new(attribute_data.quantity).to_value.numerator,
+        denominator: RecipeUtils::ParseQuantity.new(attribute_data.quantity).to_value.denominator,
+        numerator: RecipeUtils::ParseQuantity.new(attribute_data.quantity).to_value.numerator,
         notes: attribute_data.notes
       ).save
     end

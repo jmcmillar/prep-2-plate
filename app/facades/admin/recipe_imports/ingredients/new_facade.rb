@@ -6,7 +6,7 @@ class Admin::RecipeImports::Ingredients::NewFacade < Base::Admin::IndexFacade
   def build_ingredient_list
     BuildRecipeIngredients.call(
       recipe.id,
-      @params[:recipe_ingredients_attributes]
+      @params[:recipe][:recipe_ingredients_attributes]
     )
   end
 
@@ -24,7 +24,11 @@ class Admin::RecipeImports::Ingredients::NewFacade < Base::Admin::IndexFacade
   end
 
   def form_url
-    [:admin, recipe, :import_ingredients]
+    {
+      controller: "admin/recipe_imports/ingredients",
+      action: "create",
+      recipe_id: recipe.id
+    }
   end
 
   def ingredients
