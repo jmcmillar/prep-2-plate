@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include DestroyFlash
   before_action :set_user
 
   def set_user
