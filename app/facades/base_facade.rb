@@ -30,6 +30,7 @@ class BaseFacade
   end
 
   def sign_in_link
+    return EmptyComponent.new if @user
     ButtonLinkComponent.new(
       button_link_data: ButtonLinkComponent::Data[
         "Sign In",
@@ -41,6 +42,7 @@ class BaseFacade
   end
 
   def sign_out_link
+    return EmptyComponent.new unless @user
     ButtonLinkComponent.new(
       button_link_data: ButtonLinkComponent::Data[
         "Sign Out",
@@ -50,18 +52,9 @@ class BaseFacade
         { class: "self-start", data: { "turbo-method": :delete } }
       ])
   end
-    # ButtonLinkComponent.new(
-    #   button_link_data: ButtonLinkComponent::Data[
-    #     "Sign Out",
-    #     [:destroy, :user_session],
-    #     :sign_out,
-    #     :link,
-    #     { class: "self-start", data: { "turbo-method": :delete } }
-    #   ])
-  # end
 
   def shopping_list_link
-    # return EmptyComponent.new unless @user
+    return EmptyComponent.new unless @user
     IconLinkComponent.new(icon_link: IconLinkComponent::Data[
       [:shopping_lists],
       :shopping_basket,
