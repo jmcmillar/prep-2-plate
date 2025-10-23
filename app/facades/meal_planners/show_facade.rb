@@ -11,7 +11,7 @@ class MealPlanners::ShowFacade < BaseFacade
 
   def export_button_data
     ModalButtonComponent::Data[
-      "Export Meal Plan",
+      "Shopping List",
       [:new, :meal_planner, :export_to_shopping_list],
       :shopping_basket
     ]

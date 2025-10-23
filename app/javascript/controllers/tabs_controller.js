@@ -15,10 +15,10 @@ export default class extends Controller {
   showPanel(index) {
     this.tabTargets.forEach((el, i) => {
       if (i === index) {
-        el.classList.add("border-primary", "text-blue-600")
+        el.classList.add("border-primary", "text-secondary")
         el.classList.remove("text-gray-500", "border-transparent")
       } else {
-        el.classList.remove("border-primary", "text-blue-600")
+        el.classList.remove("border-primary", "text-secondary")
         el.classList.add("text-gray-500", "border-transparent")
       }
     })

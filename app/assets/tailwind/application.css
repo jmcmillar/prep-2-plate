@@ -2,8 +2,8 @@
 
 @theme {
   --color-danger: oklch(0.627 0.233 27.14);
-  --color-primary: oklch(0.684 0.181 137.41);
-  --color-secondary: oklch(0.862 0.181 66.41);
+  --color-primary: "#8CB369";
+  --color-secondary: "#F4A259";
   --color-accent: oklch(0.573 0.181 27.14);
   --color-stone: oklch(0.956 0.033 99.41);
 

@@ -1,11 +1,11 @@
 <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
   <%= render ContainerComponent.new do %>
-    <%= tag.div(class: "flex items-center justify-between") do %>
+    <%= tag.div(class: "lg:flex items-center lg:justify-between") do %>
       <h1>Meal Planner</h1>
       <%= tag.div do %>
         <%= tag.div(class: "flex flex-row gap-2") do %>
           <%= button_to(
-            render(IconComponent.new(IconComponent::Data[:calendar, :fal]).with_content("Export To Calendar")),
+            render(IconComponent.new(IconComponent::Data[:calendar, :fal]).with_content("Calendar")),
             meal_planner_calendar_exports_path(format: :ics),
             method: :post,
             form: { target: "_blank", data: { turbo: false } },

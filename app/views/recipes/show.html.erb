@@ -1,5 +1,5 @@
 <%= render ContainerComponent.new do %>
-  <%= tag.h1(class: "text-3xl font-semibold text-gray-900 mb-4") { @facade.resource.name } %>
+  <%= tag.h1(class: "text-3xl font-semibold text-gray-900 my-4") { @facade.resource.name } %>
   <%= tag.p(class: "mb-10 text-gray-600") { @facade.description } %>
 
   <%= render BackgroundImageContainerComponent.new(
@@ -8,16 +8,16 @@
     settings: BackgroundImageData.new(position: "center center")
   ) %>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+  <div class="flex lg:w-full lg:grid lg:grid-cols-3 gap-6 mb-10">
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm flex flex-col">
       <%= tag.span "Level:" %>
       <%= tag.span(class: "font-semibold text-gray-900") { @facade.level } %>
     </div>
-    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm flex flex-col">
       <%= tag.span "Duration:" %>
       <%= tag.span(class: "font-semibold text-gray-900") { @facade.duration } %>
     </div>
-    <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+    <div class="bg-gray-50 p-6 rounded-lg shadow-sm flex flex-col">
       <%= tag.span "Yield:" %>
       <%= tag.span(class: "font-semibold text-gray-900") { @facade.yield } %>
     </div>
@@ -39,7 +39,7 @@
 
   <!-- Serving Size -->
   <%= turbo_frame_tag(dom_id(@facade.resource)) do %>
-    <div class="flex flex-col items-end mb-8">
+    <div class="flex flex-col lg:items-end mb-8">
       <%= tag.h2("Serving Size", class: "text-lg font-semibold") %>
       <%= form_tag([@facade.resource], method: :get, data: { turbo_frame: dom_id(@facade.resource) }) do %>
         <%= select_tag(
@@ -57,11 +57,11 @@
   <div data-controller="tabs" class="w-full mx-auto">
     <div class="flex border-b border-gray-200 mb-6">
       <button data-tabs-target="tab" data-action="click->tabs#select"
-        class="px-4 py-2 font-medium text-gray-500 border-b border-transparent focus:outline-none hover:text-blue-600">
+        class="px-4 py-2 font-medium text-gray-500 border-b border-transparent focus:outline-none hover:text-gray-600">
         Ingredients
       </button>
       <button data-tabs-target="tab" data-action="click->tabs#select"
-        class="px-4 py-2 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none hover:text-blue-600">
+        class="px-4 py-2 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none hover:text-gray-600">
         Instructions
       </button>
     </div>

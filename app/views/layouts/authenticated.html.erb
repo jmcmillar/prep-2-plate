@@ -29,7 +29,7 @@
   </head>
   <body class="flex min-h-screen modal" data-controller="modal" data-controller="navbar">
     <%= tag.div do %>
-      <%# render "flash", flash: flash %>
+      <%= render "application/flash", flash: flash %>
     <% end %>
     <%= render "application/modal" %>
     <%= render "application/sidebar" %>

@@ -40,7 +40,8 @@
   </head>
 
   <body data-controller="navbar modal" class="min-h-screen flex flex-col">
-    <main class="flex-1">
+    <%= render "application/flash", flash: flash %>
+    <main class="flex-1 overflow-x-hidden overflow-y-scroll">
       <%= render "application/modal" %>
       <%= render 'application/navbar' %>
       <%= tag.div do %>
