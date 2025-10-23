@@ -1,6 +1,6 @@
 <%= meal_planner_form_with(model: facade.recipe, url: facade.form_url) do |form| %>
     <%= render 'components/errors', model: facade.recipe %>
-    <%= form.input :name, class: "col-4" %>
+    <%= form.input :name, class: "col-4", required: true %>
     <%= form.input :image, as: :file_field, class: "col-4" %>
     <%= form.check_box_input(:featured) %>
     <%= form.input :description, as: :rich_text_area %>

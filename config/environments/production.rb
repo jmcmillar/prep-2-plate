@@ -60,7 +60,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "prep2plate.com" }
 
   config.action_mailer.mailgun_settings = {
     api_key: ENV.fetch("MAILGUN_API_KEY", nil),

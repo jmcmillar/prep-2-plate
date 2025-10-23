@@ -33,7 +33,6 @@ class RecipeUtils::CalendarEvent
   end
 
   def add_description
-    # Use a simpler path-based approach
     @event.description = Rails.application.routes.url_helpers.recipe_url(@recipe, host: default_host)
   end
 
