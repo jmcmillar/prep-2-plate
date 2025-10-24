@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   db:
     image: postgres:15
@@ -11,15 +10,21 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    # Add performance tuning
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c max_connections=100
+      -c effective_cache_size=1GB
 
   web:
     build:
       context: .
-      dockerfile: Dockerfile
-    entrypoint: ""   # disables Rails default docker-entrypoint for dev
-    command: bash -c "sleep 5 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000"
+      dockerfile: Dockerfile.dev  # Create separate dev Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && sleep 5 && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000"
     volumes:
-      - .:/rails
+      - .:/rails:cached  # Use cached for better macOS performance
+      - bundle_cache:/usr/local/bundle
     ports:
       - "3000:3000"
     environment:
@@ -27,10 +32,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
       DATABASE_URL: postgres://postgres:password@db:5432/prep_2_plate_development
       SECRET_KEY_BASE: devdummykey
+      # Add performance env vars
+      RAILS_MAX_THREADS: 5
+      WEB_CONCURRENCY: 1
     depends_on:
       - db
 
 volumes:
   db_data:
+  bundle_cache:  # Cache gems

@@ -27,7 +27,7 @@
 
       <ul class="list-none mb-6 h-[750px] overflow-y-scroll">
         <% @facade.ingredients.each_with_index do |ingredient, index| %>
-          <li class="py-3 px-4 mb-3 rounded-lg shadow-sm <%= 'bg-gray-50' if index.even? %> hover:bg-gray-100 transition">
+          <li class="py-3 px-4 mb-3 rounded-lg shadow-sm hover:bg-gray-100 transition">
             <%= ingredient.name %>
             <%= tag.span(class: "text-gray-500 text-sm") do %>
               <%= ingredient.formatted_quantity %>

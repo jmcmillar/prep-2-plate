@@ -70,11 +70,11 @@
       <div data-tabs-target="panel" class="text-gray-700">
         <%= tag.ul(class: 'list-none mb-6') do %>
           <% @facade.ingredients.each_with_index do |ingredient, index| %>
-            <%= tag.li(class: "py-3 px-4 mb-3 rounded-lg shadow-sm #{'bg-gray-50' if index.even?} hover:bg-gray-100 transition") do %>
-              <%= tag.span(class: "text-gray-500 text-sm mr-3") do %>
+            <%= tag.li(class: "py-3 px-4 mb-3 rounded-lg shadow-sm hover:bg-gray-100 transition") do %>
+              <%= ingredient.ingredient_name %>
+              <%= tag.span(class: "text-gray-500 text-sm") do %>
                 <%= ingredient.formatted_quantity %>
               <% end %>  
-              <%= ingredient.ingredient_name %>
             <% end %>
           <% end %>
         <% end %>

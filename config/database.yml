@@ -18,52 +18,20 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  primary: &primary_development
-    <<: *default
-    database: prep_2_plate_development
-    username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
-    password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
-    host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
-    port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
-
-  cache:
-    <<: *primary_development
-    database: prep_2_plate_cache_development
-    migrations_paths: db/cache_migrate
-
-  queue:
-    <<: *primary_development
-    database: prep_2_plate_queue_development
-    migrations_paths: db/queue_migrate
-
-  cable:
-    <<: *primary_development
-    database: prep_2_plate_cable_development
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: prep_2_plate_development
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
+  host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
+  port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
 
 test:
-  primary: &primary_test
-    <<: *default
-    database: prep_2_plate_test
-    username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
-    password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
-    host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
-    port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
-
-  cache:
-    <<: *primary_test
-    database: prep_2_plate_cache_test
-    migrations_paths: db/cache_migrate
-
-  queue:
-    <<: *primary_test
-    database: prep_2_plate_queue_test
-    migrations_paths: db/queue_migrate
-
-  cable:
-    <<: *primary_test
-    database: prep_2_plate_cable_test
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: prep_2_plate_test
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "") %>
+  host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
+  port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
 
 production:
   primary: &primary_production
