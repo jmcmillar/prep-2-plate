@@ -74,7 +74,13 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "bullet"
-  gem 'letter_opener'
+  gem 'letter_opener_web'
+
+  # Performance improvements
+  gem 'spring'           # Application preloader
+  # gem 'spring-commands-rspec' # Uncomment if using RSpec
+  gem 'listen'           # File change detection
+  gem 'rack-mini-profiler' # Request profiling
 end
 
 group :test do

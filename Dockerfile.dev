@@ -1,0 +1,43 @@
+# Development Dockerfile - optimized for fast rebuilds
+FROM ruby:3.2.3-bullseye
+
+# Install dependencies
+RUN apt-get update -qq && \
+  apt-get install --no-install-recommends -y \
+  build-essential \
+  curl \
+  git \
+  libpq-dev \
+  libvips \
+  postgresql-client \
+  nodejs \
+  npm \
+  && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Set up app directory
+WORKDIR /rails
+
+# Set development environment
+ENV RAILS_ENV=development
+ENV BUNDLE_PATH=/usr/local/bundle
+
+# Install bundler
+RUN gem install bundler
+
+# Copy Gemfile first for better Docker layer caching
+COPY Gemfile Gemfile.lock ./
+
+# Install gems
+RUN bundle install
+
+# Copy the rest of the application
+COPY . .
+
+# Precompile bootsnap for faster boot times
+RUN bundle exec bootsnap precompile --gemfile app/ lib/
+
+# Expose port
+EXPOSE 3000
+
+# Default command with PID cleanup
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0"]
