@@ -1,36 +1,51 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <%= yield :head %>
-  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-  <%= javascript_importmap_tags %>
+    <title><%= content_for(:title) || "Prep 2 Plate" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <%= render "application/favicon_meta_data" %>
 
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+      <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <link
       href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
       rel="stylesheet"
     >
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
     <link
       crossorigin="anonymous"
       href="https://pro.fontawesome.com/releases/v5.15.3/css/all.css"
       integrity="sha384-iKbFRxucmOHIcpWdX9NTZ5WETOPm0Goy0WmfyNcl52qSYtc2Buk0NCe6jU1sWWNB"
       rel="stylesheet"
     >
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+    />
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-  </head>
-  <body data-controller="navbar modal" class="min-h-screen flex flex-col">
 
-    <%# render "flash", flash: flash %>
-    <%= render "application/modal" %>
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body>
+    <%= render "application/flash", flash: flash %>
     <section class="h-screen">
       <%= tag.div class: "px-6 h-full text-gray-800" do %>
         <%= tag.div class: class_names(
           "flex xl:justify-center lg:justify-between justify-center items-center", 
-          "flex-wrap h-full g-6") do %>
+          "flex-wrap lg:h-full g-6") do %>
           <%= tag.div class: "grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0" do %>
-            <%# image_tag "auth.png", alt: "planning", class: "w-full" %>
+            <%= image_tag "prep-2-plate.png", alt: "planning", class: "w-full" %>
           <% end %>
           <div class="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
             <%= yield %>
