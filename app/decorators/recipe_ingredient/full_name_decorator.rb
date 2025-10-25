@@ -1,7 +1,7 @@
 class RecipeIngredient::FullNameDecorator < BaseDecorator
 
   def full_name
-    [quantity, measurement_unit, ingredient_name].compact.join(' ')
+    [formatted_quantity, ingredient_name].compact.join(' ')
   end
 
   def ingredient_name
@@ -9,7 +9,8 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
   end
 
   def formatted_quantity
-    [quantity, measurement_unit].compact.join(' ')
+    return nil if quantity_value.nil? || quantity_value.zero?
+    [quantity, pluralized_measurement_unit].compact.join(' ')
   end
 
   def notes
@@ -17,13 +18,19 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
   end
 
   def quantity
-    # return nil if whole_number_quantity.zero?
-    return numerator if whole_number?
-    if numerator < denominator
+    return nil if quantity_value.nil? || quantity_value.zero?
+    
+    if whole_number?
+      whole_number_quantity
+    elsif numerator < denominator
       formatted_fraction(numerator, denominator)
     else
-      mixed_number_faction
+      mixed_number_fraction
     end
+  end
+
+  def quantity_value
+    @quantity_value ||= Rational(numerator, denominator)
   end
 
   def whole_number?
@@ -31,11 +38,15 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
   end
 
   def formatted_fraction(numerator, denominator)
-    Rational(numerator, denominator)
+    Rational(numerator, denominator).to_s
   end
 
-  def mixed_number_faction
-    [whole_number_quantity, fraction_quantity].compact.join(' ')
+  def mixed_number_fraction  # Fixed typo: was "faction"
+    whole_part = numerator / denominator
+    remainder = numerator % denominator
+    
+    return whole_part if remainder.zero?
+    "#{whole_part} #{remainder}/#{denominator}"
   end
 
   def whole_number_quantity
@@ -44,6 +55,16 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
 
   def fraction_quantity
     "#{(numerator % denominator)}/#{denominator}"
+  end
+
+  def pluralized_measurement_unit
+    return nil unless measurement_unit_name.present?
+    
+    if quantity_value > 1
+      measurement_unit_name.pluralize
+    else
+      measurement_unit_name.singularize
+    end
   end
 
   def measurement_unit
