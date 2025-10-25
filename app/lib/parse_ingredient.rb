@@ -5,7 +5,7 @@ class ParseIngredient
 
   def to_h
     {
-      quantity: @ingredient.scan(/^[0-9_ .\/]*/).flatten.first.strip,
+      quantity: @ingredient.scan(/^[0-9_ .\/]*/).flatten.first&.strip || "",
       measurement_unit_id: unit_parser.id,
       ingredient_name: RecipeUtils::ParseIngredientName.new(@ingredient, exclude_from_name).to_s,
       ingredient_notes: RecipeUtils::ParseNotes.new(@ingredient).to_s

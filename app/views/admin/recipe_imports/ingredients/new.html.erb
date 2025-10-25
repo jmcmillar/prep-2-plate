@@ -18,7 +18,7 @@
                 MeasurementUnit.order(:name),
                 :id,
                 :name,
-                {prompt: "Select One", selected: ingredient[:unit_id], include_blank: true}, 
+                {selected: ingredient[:measurement_unit_id], include_blank: true}, 
               ) %>
             <% end %>
             <%= tag.div(class: "col-3") do %>
