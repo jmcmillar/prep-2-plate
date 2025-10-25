@@ -4,6 +4,10 @@ class ParseIngredient
   end
 
   def to_h
+    puts "*" * 100
+    puts "Parsing ingredient: #{@ingredient.inspect}"
+    puts unit_parser.inspect
+    puts "*" * 100
     {
       quantity: @ingredient.scan(/^[0-9_ .\/]*/).flatten.first&.strip || "",
       measurement_unit_id: unit_parser.id,
