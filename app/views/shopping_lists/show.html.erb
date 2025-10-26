@@ -3,13 +3,5 @@
     <%= tag.h1 {@facade.name} %>
   <% end %>
 <% end %>
-<%= render ContainerComponent.new do %>
-  <ul class="list-none mb-6 h-[500px] overflow-y-scroll">
-    <% @facade.shopping_list_items.each_with_index do |item, index| %>
-      <li class="py-3 px-4 mb-3 rounded-lg shadow-sm <%= 'bg-gray-50' if index.even? %> hover:bg-gray-100 transition">
-        <%= item.name %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
+<%= turbo_frame_tag :shopping_list_items, src: shopping_list_items_path(@facade.resource) %>
 

@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resource :export_to_shopping_list, only: [:new, :create], controller: 'meal_plans/export_to_shopping_lists'
   end
   resources :shopping_lists, only: [:index, :create, :update, :show, :destroy] do
-    resources :items, only: [:create], controller: "shopping_list_items"
+    resources :items, except: [:show], controller: "shopping_list_items", shallow: true
   end
   resource :meal_planner, only: [:show]
 

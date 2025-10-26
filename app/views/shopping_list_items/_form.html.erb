@@ -1,0 +1,5 @@
+<%= meal_planner_form_with(model: facade.shopping_list_item, url: facade.form_url) do |form| %>
+  <%= render 'components/errors', model: facade.shopping_list_item %>
+  <%= form.input :name %>
+  <%= form.actions cancel_path: facade.cancel_path %>
+<% end %>

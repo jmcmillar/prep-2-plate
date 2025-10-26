@@ -1,0 +1,7 @@
+<%= turbo_frame_tag :shopping_list_items do %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "New Item") do %>
+      <%= render "form", facade: @facade %>
+    <% end %>
+  <% end %>
+<% end %>
