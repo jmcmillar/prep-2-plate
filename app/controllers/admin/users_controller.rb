@@ -36,12 +36,6 @@ class Admin::UsersController < AuthenticatedController
     end
   end
 
-  # def destroy
-  #   @facade = Admin::Users::DestroyFacade.new(Current.user, params)
-  #   @facade.resource.destroy
-  #   set_destroy_flash_for(@facade.resource)
-  # end
-
   private
 
   def user_params

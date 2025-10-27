@@ -23,7 +23,7 @@ class Admin::RecipeIngredientsController < AuthenticatedController
   end
 
   def update
-    @facade = Admin::RecipeIngredients::EditFacade.new(Current.user, params)
+    @facade = Admin::RecipeIngredients::EditFacade.new(Current.user, params, strong_params: ingredient_params)
     @facade.recipe_ingredient.assign_attributes(@facade.strong_params)
     if @facade.recipe_ingredient.update(ingredient_params)
       redirect_to admin_recipe_recipe_ingredients_url(@facade.recipe), notice: "Recipe Ingredient was successfully updated."

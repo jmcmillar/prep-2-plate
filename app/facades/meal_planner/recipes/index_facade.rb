@@ -37,7 +37,7 @@ class MealPlanner::Recipes::IndexFacade < BaseFacade
       [:new, :user_recipe],
       :plus,
       :primary,
-      { class: "text-sm py-3 px-2", data: { turbo: false}}
+      { class: "text-sm py-3 px-2 mt-4 mx-2", data: { turbo: false}}
     ]
   end
 

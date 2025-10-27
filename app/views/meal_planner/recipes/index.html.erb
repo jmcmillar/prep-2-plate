@@ -1,5 +1,5 @@
 <%= turbo_frame_tag :modal do %>
-    <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6 sticky top-0 z-20 py-4") do %>
+    <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6 sticky top-0 z-20 py-6") do %>
       <%= render ContainerComponent.new do %>
         <%= tag.div(class: "flex justify-between items-center gap-2 flex-wrap") do %>
           <%= render SearchFormComponent.new(@facade.search_data, advance: false) %>
