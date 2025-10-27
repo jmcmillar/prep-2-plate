@@ -1,20 +1,20 @@
-<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4">
+<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4 flex flex-wrap">
   <%= f.hidden_field :_destroy %>
   
-  <div class="grid grid-cols-12 gap-4 items-start">
-    <%= f.input :quantity, class: 'col-span-2' %>
-    <div class="col-span-3">
+  <div class="lg:grid lg:grid-cols-12 gap-4 items-start">
+    <%= f.input :quantity, class: 'lg:col-span-2' %>
+    <div class="lg:col-span-3">
       <%= f.searchable_collection_select_input :measurement_unit_id, facade.measurement_units, :id, :name, label_text: "Unit", include_blank: true %>
     </div>
-    <div class="col-span-4">
-      <%= f.searchable_collection_select_input :ingredient_id, facade.ingredients, :id, :name, label_text: "Ingredient", include_blank: true %>
+    <div class="lg:col-span-4">
+      <%= f.searchable_or_custom_input :ingredient_id, :ingredient_name, facade.ingredients, :id, :name, label_text: "Ingredient", include_blank: "Search ingredients..." %>
     </div>
-    <%= f.input :notes, class: 'col-span-2' %>
-    
-    <div class="col-span-1 flex items-end justify-center">
+    <%= f.input :notes, class: 'lg:col-span-2' %>
+
+    <div class="lg:col-span-1 flex items-end justify-center">
       <button type="button" 
               data-action="nested-fields#remove"
-              class="px-3 py-2 bg-danger text-white rounded hover:bg-danger/90"
+              class="px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
               title="Remove ingredient">
         <i class="fas fa-trash"></i>
       </button>

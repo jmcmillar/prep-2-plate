@@ -145,6 +145,43 @@ class MealPlannerFormBuilder < ActionView::Helpers::FormBuilder
           collection_select(method, collection, value_method, text_method, options, html_options.merge(multiple: true))
       end
     end
+
+    def searchable_or_custom_input(select_method, custom_method, collection, value_method, text_method, options = {}, html_options = {})
+      label_text, label_options = extract_label_text_and_options(options)
+      
+      select_html_options = html_options.merge(
+        class: @template.class_names("px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50", html_options[:class]),
+        data: { 
+          "searchable-or-custom-target": "select"
+        }
+      )
+      
+      custom_html_options = {
+        class: "hidden px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+        data: { 
+          "searchable-or-custom-target": "customInput"
+        },
+        disabled: true,
+        placeholder: "Enter ingredient name..."
+      }
+      
+      @template.tag.div(class: "mb-3", data: { controller: "searchable-or-custom" }) do
+        @template.tag.div(class: "flex items-center justify-between mb-2") do
+          label(select_method, label_text, label_options) +
+          @template.button_tag(
+            "Add New",
+            type: "button",
+            class: "text-sm px-3 py-1 bg-primary text-white rounded hover:bg-primary/90",
+            data: { 
+              action: "searchable-or-custom#toggle",
+              "searchable-or-custom-target": "toggleButton"
+            }
+          )
+        end +
+        collection_select(select_method, collection, value_method, text_method, options, select_html_options) +
+        text_field(custom_method, custom_html_options)
+      end
+    end
   
     def select_input(method, choices = [], options = {}, html_options = {})
       label_text, label_options = extract_label_text_and_options(options)

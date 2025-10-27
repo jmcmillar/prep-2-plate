@@ -19,7 +19,7 @@
     </div>
     <div class="bg-gray-50 p-6 rounded-lg shadow-sm flex flex-col">
       <%= tag.span "Yield:" %>
-      <%= tag.span(class: "font-semibold text-gray-900") { @facade.yield } %>
+      <%= tag.span(class: "font-semibold text-gray-900") { params[:serving_size] || @facade.yield } %>
     </div>
   </div>
 

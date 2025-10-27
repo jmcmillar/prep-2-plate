@@ -19,7 +19,9 @@ class Recipe < ApplicationRecord
   has_many :recipe_favorites, dependent: :destroy
   has_one :user_recipe, dependent: :destroy
 
-  accepts_nested_attributes_for :recipe_ingredients, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :recipe_ingredients, 
+    allow_destroy: true, 
+    reject_if: ->(attrs) { attrs['ingredient_id'].blank? && attrs['ingredient_name'].blank? }
   accepts_nested_attributes_for :recipe_instructions, allow_destroy: true, reject_if: :all_blank
 
   scope :imported, -> { where.not(recipe_import_id: nil) }

@@ -13,7 +13,7 @@ class UserRecipesController < AuthenticatedController
     @facade.user_recipe.assign_attributes(processed_params)
 
     if @facade.user_recipe.save
-      redirect_to [:meal_planner, :recipes], notice: "Recipe was successfully created."
+      redirect_to [:recipes], notice: "Recipe was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class UserRecipesController < AuthenticatedController
     @facade.user_recipe.assign_attributes(processed_params)
 
     if @facade.user_recipe.save
-      redirect_to [:meal_planner, :recipes], notice: "Recipe was successfully updated."
+      redirect_to [:recipes], notice: "Recipe was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -50,7 +50,7 @@ class UserRecipesController < AuthenticatedController
         meal_type_ids: [],
         recipe_ingredients_attributes: [
           :id, :ingredient_id, :ingredient_name, :measurement_unit_id, 
-          :quantity, :ingredient_notes, :_destroy
+          :quantity, :notes, :_destroy
         ],
         recipe_instructions_attributes: [:id, :step_number, :instruction, :_destroy]
       ]

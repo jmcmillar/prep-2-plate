@@ -43,6 +43,7 @@ class UserRecipes::NewFacade < BaseFacade
       [:new, :user_recipe],
       :plus,
       :primary,
+      { data: { turbo: false } }
     ]
   end
 end

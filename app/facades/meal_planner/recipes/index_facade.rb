@@ -33,11 +33,11 @@ class MealPlanner::Recipes::IndexFacade < BaseFacade
   def new_user_recipe_link_data
     return ButtonLinkComponent::Data.new unless @user.present?
     ButtonLinkComponent::Data[
-      "New Recipe",
+      "",
       [:new, :user_recipe],
       :plus,
       :primary,
-      { data: { turbo: false}}
+      { class: "text-sm py-3 px-2", data: { turbo: false}}
     ]
   end
 
