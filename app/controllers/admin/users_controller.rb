@@ -8,7 +8,7 @@ class Admin::UsersController < AuthenticatedController
   end
 
   def new
-    @facade = Admin::Users::NewFacade.new(Current.user)
+    @facade = Admin::Users::NewFacade.new(Current.user, params)
   end
 
   def edit
@@ -17,10 +17,10 @@ class Admin::UsersController < AuthenticatedController
 
   def create
     @facade = Admin::Users::NewFacade.new(Current.user, user_params)
-    @facade.user.assign_attributes(user_params)
+    @facade.resource.assign_attributes(user_params)
 
-    if @facade.user.save
-      redirect_to admin_user_url(@facade.user), notice: "user was successfully created."
+    if @facade.resource.save
+      redirect_to admin_users_url, notice: "user was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -28,23 +28,23 @@ class Admin::UsersController < AuthenticatedController
 
   def update
     @facade = Admin::Users::EditFacade.new(Current.user, params)
-    @facade.user.assign_attributes(user_params)
-    if @facade.user.update(user_params)
-      redirect_to admin_user_url(@facade.user), notice: "user was successfully updated."
+    @facade.resource.assign_attributes(user_params)
+    if @facade.resource.update(user_params)
+      redirect_to admin_users_url, notice: "user was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
-  def destroy
-    @facade = Admin::Users::DestroyFacade.new(Current.user, params)
-    @facade.user.destroy
-    set_destroy_flash_for(@facade.user)
-  end
+  # def destroy
+  #   @facade = Admin::Users::DestroyFacade.new(Current.user, params)
+  #   @facade.resource.destroy
+  #   set_destroy_flash_for(@facade.resource)
+  # end
 
   private
 
   def user_params
-    params.require(:user).permit(:email, :image)
+    params.require(:user).permit(:email_address, :image, :admin)
   end
 end

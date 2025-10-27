@@ -1,6 +1,6 @@
 class Admin::Users::ShowFacade < Base::Admin::ShowFacade
-  def user
-    @user ||= User.find(@params[:id])
+  def resource
+    @resource ||= User.find(@params[:id])
   end
 
   def active_key
@@ -19,13 +19,13 @@ class Admin::Users::ShowFacade < Base::Admin::ShowFacade
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :users]),
       BreadcrumbComponent::Data.new("Users", [:admin, :users]),
-      BreadcrumbComponent::Data.new(user.email_address)
+      BreadcrumbComponent::Data.new(resource.email_address)
     ]
   end
 
   def edit_action_data
     IconLinkComponent::Data[
-      [:edit, :admin, user],
+      [:edit, :admin, resource],
       :edit, 
       "User",
     ]

@@ -16,7 +16,7 @@ class Admin::Users::IndexFacade < Base::Admin::IndexFacade
 
   def new_action_data
     IconLinkComponent::Data[
-      [:new, :admin, :user],
+      {controller: "admin/users", action: "new"},
       :plus, 
       "New User",
       target: "_top"

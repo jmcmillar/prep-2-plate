@@ -1,10 +1,19 @@
 class Admin::Users::NewFacade < Base::Admin::NewFacade
-  def user
-    @user ||= User.new
+  def resource
+    @resource ||= User.new.tap do |user|
+      user.password = SecureRandom.hex(12)
+    end
   end
 
   def active_key
     :admin_users
+  end
+
+    def form_url
+    {
+      controller: "admin/users",
+      action: "create"
+    }
   end
 
   def breadcrumb_trail

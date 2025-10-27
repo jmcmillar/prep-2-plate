@@ -1,8 +1,6 @@
 <%= render HeaderBarComponent.new(title: "Admin") do |c| %>
-  <% c.with_breadcrumb_collection([
-    BreadcrumbComponent::Data.new("Admin", admin_recipes_path),
-    BreadcrumbComponent::Data.new("Users")
-  ]) %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "Users") do |card| %>

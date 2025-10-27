@@ -3,6 +3,6 @@
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "Edit User") do %>
-    <%= render "form", user: @facade.user %>
+    <%= render "form", facade: @facade %>
   <% end %>
 <% end %>

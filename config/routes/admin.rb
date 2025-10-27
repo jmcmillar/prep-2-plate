@@ -27,7 +27,7 @@ namespace :admin do
   resources :measurement_units do
     resources :measurement_unit_aliases, except: :show, shallow: true
   end
-  resources :users, except: %i[new create] do
+  resources :users, except: :destroy do
     resources :shopping_lists, shallow: true do
       resources :shopping_list_items, except: :show, shallow: true
     end
