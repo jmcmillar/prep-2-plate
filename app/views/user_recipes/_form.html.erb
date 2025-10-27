@@ -1,7 +1,7 @@
-<%= meal_planner_form_with(model: facade.user_recipe, url: facade.form_url) do |form| %>
+<%= meal_planner_form_with(model: facade.user_recipe, url: facade.form_url, turbo: false) do |form| %>
     <%= render 'components/errors', model: facade.user_recipe %>
     <%= form.fields_for :recipe, facade.user_recipe.recipe do |ff| %>
-      <%= ff.input :name, class: "col-4" %>
+      <%= ff.input :name, class: "col-4", required: true %>
       <%= ff.input :image, as: :file_field, class: "col-4" %>
       <%= ff.input :description, as: :rich_text_area %>
       <%= ff.input :serving_size, as: :number_field, class: "col-4" %>
@@ -14,7 +14,59 @@
       )  %>
       <%= ff.multiple_searchable_collection_select_input :recipe_category_ids, facade.categories, :id, :name, label_text: "Recipe Categories" %>
       <%= ff.multiple_searchable_collection_select_input :meal_type_ids, facade.meal_types, :id, :name, label_text: "Meal Types" %>
+      <div class="my-6">
+        <h3 class="text-lg font-semibold mb-4">Ingredients</h3>
+        <div data-controller="nested-fields">
+          <div data-nested-fields-target="container">
+            <%# Only show existing ingredients when editing %>
+            <% if facade.user_recipe.recipe.persisted? %>
+              <%= ff.fields_for :recipe_ingredients do |ingredient_fields| %>
+                <%= render 'ingredient_fields', f: ingredient_fields, facade: facade %>
+              <% end %>
+            <% end %>
+          </div>
+          
+          <template data-nested-fields-target="template">
+            <%= ff.fields_for :recipe_ingredients, RecipeIngredient.new, child_index: 'NEW_RECORD' do |ingredient_fields| %>
+              <%= render 'ingredient_fields', f: ingredient_fields, facade: facade %>
+            <% end %>
+          </template>
+          
+          <button type="button" 
+                  data-action="nested-fields#add"
+                  class="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 mb-4">
+            <i class="fas fa-plus mr-2"></i>Add Ingredient
+          </button>
+        </div>
+      </div>
+
+      <div class="my-6">
+        <h3 class="text-lg font-semibold mb-4">Instructions</h3>
+        <div data-controller="nested-fields">
+          <div data-nested-fields-target="container">
+            <%# Only show existing instructions when editing %>
+            <% if facade.user_recipe.recipe.persisted? %>
+              <%= ff.fields_for :recipe_instructions do |instruction_fields| %>
+                <%= render 'instruction_fields', f: instruction_fields %>
+              <% end %>
+            <% end %>
+          </div>
+          
+          <template data-nested-fields-target="template">
+            <%= ff.fields_for :recipe_instructions, RecipeInstruction.new, child_index: 'NEW_RECORD' do |instruction_fields| %>
+              <%= render 'instruction_fields', f: instruction_fields %>
+            <% end %>
+          </template>
+          
+          <button type="button" 
+                  data-action="nested-fields#add"
+                  class="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 mb-4">
+            <i class="fas fa-plus mr-2"></i>Add Instruction
+          </button>
+        </div>
+      </div>
     <% end %>
-    
-  <%= form.actions cancel_path: :back %>
+    <%= tag.div(class: "my-6") do %>
+      <%= form.actions cancel_path: :back %>
+    <% end %>
 <% end %>

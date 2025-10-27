@@ -1,0 +1,14 @@
+<div class="nested-fields my-4 p-4 border border-gray-200 rounded-lg">
+  <%= f.hidden_field :_destroy %>
+    <%= tag.div(class: "flex flex-wrap") do %>
+      <%= f.input :step_number, as: :number_field, class: "col-2" %>
+      <%= f.input :instruction, as: :text_area, class: "col-10" %>
+    <% end %>
+      <button type="button" 
+              data-action="nested-fields#remove"
+              class="px-3 py-2 bg-primary text-white rounded hover:bg-primary/90 self-start"
+              title="Remove instruction">
+        <i class="fas fa-trash"></i>
+      </button>
+   
+</div>
