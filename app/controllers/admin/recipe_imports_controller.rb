@@ -4,7 +4,7 @@ class Admin::RecipeImportsController < AuthenticatedController
   end
 
   def create
-    @facade = Admin::RecipeImports::NewFacade.new(Current.user, params)
+    @facade = Admin::RecipeImports::NewFacade.new(Current.user, params, strong_params: recipe_import_params)
     @facade.import.assign_attributes(recipe_import_params)
     if @facade.import.save
       redirect_to new_admin_recipe_import_recipe_url(@facade.import.id), notice: "Recipe Import was successfully created."

@@ -1,6 +1,6 @@
 class Admin::RecipeImports::NewFacade < Base::Admin::IndexFacade
   def import
-    @import ||= RecipeImport.new
+    @import ||= RecipeImport.find_or_initialize_by(url: @strong_params[:url])
   end
 
   def active_key
