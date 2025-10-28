@@ -7,6 +7,9 @@
   --color-accent: oklch(0.573 0.181 27.14);
   --color-stone: oklch(0.956 0.033 99.41);
 
+  --color-gray-100: rgb(243, 244, 246);
+  --color-gray-200: rgb(229, 231, 235);
+
   --spacing-13: 3.25rem;
 	--spacing-18: 4.5rem;
 	--spacing-60: 15rem;

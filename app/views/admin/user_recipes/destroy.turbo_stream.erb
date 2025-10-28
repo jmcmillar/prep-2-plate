@@ -1,7 +1,7 @@
-<% if @facade.recipe.destroyed? %>
+<% if @facade.user_recipe.destroyed? %>
   <%= turbo_stream_action_tag(
     "remove",
-    target: dom_id(@facade.recipe)
+    target: dom_id(@facade.user_recipe)
   ) %>
 <% end %>
 

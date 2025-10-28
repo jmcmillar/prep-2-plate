@@ -1,0 +1,5 @@
+one:
+  url: https://example.com/recipe_imports/1
+#
+two:
+  url: https://example.com/recipe_imports/2

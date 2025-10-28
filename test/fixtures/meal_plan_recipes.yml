@@ -1,0 +1,9 @@
+one:
+  meal_plan: one
+  recipe: one
+  day_sequence: 1
+
+two:
+  meal_plan: two
+  recipe: two
+  day_sequence: 1

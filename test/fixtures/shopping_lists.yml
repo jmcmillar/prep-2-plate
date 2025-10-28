@@ -1,0 +1,9 @@
+one:
+  name: "Main Shopping List"
+  user: one
+  current: true
+
+two:
+  name: "Secondary Shopping List"
+  user: two
+  current: false

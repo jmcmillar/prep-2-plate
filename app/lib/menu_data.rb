@@ -17,7 +17,8 @@ class MenuData
     [
       MenuItemData[:back, "Admin", :admin_users, true],
       MenuItemData[:admin_user, "Overview", [:admin, user], true],
-      MenuItemData[:admin_shopping_lists, "Shopping Lists", [:admin, user, :shopping_lists], true]
+      MenuItemData[:admin_shopping_lists, "Shopping Lists", [:admin, user, :shopping_lists], true],
+      MenuItemData[:admin_user_recipes, "Recipes", [:admin, user, :user_recipes], true]
     ]
   end
 
@@ -49,6 +50,7 @@ class MenuData
         admin_meal_plans: :calendar,
         admin_users: :users,
         admin_shopping_lists: :shopping_cart,
+        admin_user_recipes: :book,
         admin_resources: :file,
         back: :chevron_left
       }

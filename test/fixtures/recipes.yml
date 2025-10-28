@@ -1,0 +1,9 @@
+one:
+  name: Recipe One
+  recipe_import: one
+
+two:
+  name: Recipe Two
+
+destroyable:
+  name: Recipe Three

@@ -28,6 +28,7 @@ namespace :admin do
     resources :measurement_unit_aliases, except: :show, shallow: true
   end
   resources :users, except: :destroy do
+    resources :user_recipes, shallow: true, except: [:new, :create]
     resources :shopping_lists, shallow: true do
       resources :shopping_list_items, except: :show, shallow: true
     end

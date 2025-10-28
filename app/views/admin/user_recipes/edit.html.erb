@@ -2,7 +2,7 @@
   <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
 <% end %>
 <%= render ContainerComponent.new do %>
-  <%= render SectionCardComponent.new(title: @facade.recipe.name) do %>
+  <%= render SectionCardComponent.new(title: @facade.user_recipe.name) do %>
     <%= render "form", facade: @facade %>
   <% end %>
 <% end %>

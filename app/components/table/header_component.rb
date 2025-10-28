@@ -10,12 +10,6 @@ class Table::HeaderComponent < ApplicationComponent
     @html_options = extract_html_from_options(options, key_list = %i[class])
   end
 
-  def call
-    tag.th(**@html_options.merge(colspan)) do
-      render @header
-    end
-  end
-
   private
 
   def colspan

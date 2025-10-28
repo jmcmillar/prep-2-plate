@@ -1,0 +1,11 @@
+one:
+  recipe: one
+  ingredient: one
+  measurement_unit: one
+  numerator: 1
+  denominator: 2
+
+two:
+  recipe: two
+  ingredient: two
+  measurement_unit: one

@@ -1,0 +1,11 @@
+one:
+  name: MyString
+  description: MyText
+
+two:
+  name: MyString
+  description: MyText
+
+destroyable:
+  name: Destroyable
+  description: Remove

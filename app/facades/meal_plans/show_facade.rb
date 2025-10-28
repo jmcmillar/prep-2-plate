@@ -28,7 +28,7 @@ class MealPlans::ShowFacade < BaseFacade
     ModalButtonComponent::Data.new(
       "Export",
       [:new, resource, :export_to_shopping_list],
-      :shopping_basket
+      :clipboard_list
     )
   end
 end

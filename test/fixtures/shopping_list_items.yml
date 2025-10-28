@@ -1,0 +1,7 @@
+one:
+  name: Item 1
+  shopping_list: one
+
+two:
+  name: Item 2
+  shopping_list: two

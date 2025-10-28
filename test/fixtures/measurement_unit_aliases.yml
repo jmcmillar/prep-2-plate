@@ -1,0 +1,7 @@
+one:
+  measurement_unit: one
+  name: oz
+
+two:
+  measurement_unit: two
+  name: cps

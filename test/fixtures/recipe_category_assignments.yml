@@ -1,0 +1,7 @@
+one:
+  recipe: one
+  recipe_category: one
+
+two:
+  recipe: two
+  recipe_category: two

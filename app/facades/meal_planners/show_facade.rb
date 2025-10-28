@@ -13,7 +13,7 @@ class MealPlanners::ShowFacade < BaseFacade
     ModalButtonComponent::Data[
       "Shopping List",
       [:new, :meal_planner, :export_to_shopping_list],
-      :shopping_basket
+      :clipboard_list
     ]
   end
 

@@ -57,7 +57,7 @@ class BaseFacade
     return EmptyComponent.new unless @user
     IconLinkComponent.new(icon_link: IconLinkComponent::Data[
       [:shopping_lists],
-      :shopping_basket,
+      :clipboard_list,
       "Shopping Lists"
     ])
   end
