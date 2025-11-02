@@ -1,10 +1,11 @@
-class UserRecipes::NewFacade < BaseFacade
+class UserRecipes::EditFacade < BaseFacade
   DifficultyLevel = Struct.new(:name, :value)
   def user_recipe
-    @user_recipe ||= @user.user_recipes.new.tap do |ur|
-      ur.build_recipe.tap do |recipe|
-      end
-    end
+    @user_recipe ||= UserRecipe.find_by(id: @params[:id], user: @user)
+  end
+
+  def recipe
+    user_recipe.recipe
   end
 
   def form_url
@@ -31,16 +32,5 @@ class UserRecipes::NewFacade < BaseFacade
 
   def measurement_units
     @measurement_units ||= MeasurementUnit.all.order(:name)
-  end
-
-  def new_user_recipe_link_data
-    return ButtonLinkComponent::Data.new unless @user.present?
-    ButtonLinkComponent::Data[
-      "New Recipe",
-      [:new, :user_recipe],
-      :plus,
-      :primary,
-      { data: { turbo: false } }
-    ]
   end
 end

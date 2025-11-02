@@ -10,7 +10,7 @@
       <%= tag.i(class: "fal fa-times-circle fa-2x") %>
     </button>
     <%= tag.div(id: "recipe_list") do %>
-      <%= render SectionCardComponent.new(title: "New Recipe") do %>
+      <%= render SectionCardComponent.new(title: @facade.user_recipe.name) do %>
         <%= render "form", facade: @facade %>
       <% end %>
     <% end %>

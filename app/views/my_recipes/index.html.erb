@@ -17,7 +17,7 @@
   <%= render "recipes/recipe_list", recipes: @facade.collection.to_a, pagy: @facade.pagy %>
 <% end %>
 <%= render ContainerComponent.new do %>
-  <h2 class="mt-6">Favorites</h2>
+  <h2 class="my-6">Favorites</h2>
   <%= render "favorites_list", recipes: @facade.favorites.to_a, pagy: @facade.pagy %>
 <% end %>
 

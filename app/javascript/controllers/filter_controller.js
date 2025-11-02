@@ -6,10 +6,11 @@ export default class extends Controller {
   static targets = ["input"]
   static values = {
     filterName: String,
+    advance: { type: Boolean, default: true }
   }
 
   submit() {
-    const url = new URL(window.location.href)
+    const url = this.url();
 
     this.inputTargets.forEach(input => {
       if (input.name === this.filterNameValue) {
@@ -22,10 +23,14 @@ export default class extends Controller {
       .forEach(input => {
         url.searchParams.append(input.name, input.value)
       })
-
-      window.history.pushState({}, "", url)
-
-      turboFetch(url.toString());
+      if (this.advanceValue) {
+        window.history.pushState({}, "", url)
+        turboFetch(url.toString());
+      } else {
+        fetch(url.toString(), { headers: { "Accept": "text/vnd.turbo-stream.html" } })
+          .then(response => response.text())
+          .then(html => Turbo.renderStreamMessage(html));
+      }
   }
 
   clearAll() {
@@ -33,11 +38,28 @@ export default class extends Controller {
       input.checked = false
     })
 
-    const url = new URL(window.location.href)
+    const url = this.url()
     url.searchParams.delete(this.filterNameValue)
 
-    window.history.pushState({}, "", url)
+    if (this.advanceValue) {
+      window.history.pushState({}, "", url)
+      turboFetch(url.toString());
+    } else {
+      fetch(url.toString(), { headers: { "Accept": "text/vnd.turbo-stream.html" } })
+        .then(response => response.text())
+        .then(html => Turbo.renderStreamMessage(html));
+    }
+  }
 
-    turboFetch(url.toString());
+  url() {
+    if (this.advanceValue) {
+      return new URL(window.location.href)
+    } else {
+      return new URL(document.querySelector("turbo-frame#modal").src)
+    }
+  }
+
+  turboFrameElement() {
+    return this.element.closest('turbo-frame')
   }
 }

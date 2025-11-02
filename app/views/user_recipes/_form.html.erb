@@ -1,6 +1,7 @@
 <%= meal_planner_form_with(model: facade.user_recipe, url: facade.form_url, data: { turbo: false }) do |form| %>
     <%= render 'components/errors', model: facade.user_recipe %>
     <%= form.fields_for :recipe, facade.user_recipe.recipe do |ff| %>
+      <%= ff.hidden_field :id %> 
       <%= ff.input :name, class: "col-4", required: true %>
       <%= ff.input :image, as: :file_field, class: "col-4" %>
       <%= ff.input :description, as: :rich_text_area %>

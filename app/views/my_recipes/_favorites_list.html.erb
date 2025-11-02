@@ -1,5 +1,5 @@
 <%= tag.div(id: "favorite_list") do %>
-  <%= tag.div(class: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6") do %>
+  <%= tag.div(class: "grid grid-cols-2 lg:grid-cols-3 gap-6") do %>
     <%= render partial: "recipes/recipe", collection: recipes %>
   <% end %>
   <% if pagy.try(:pages) && pagy.pages > 1 %>

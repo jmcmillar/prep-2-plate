@@ -36,6 +36,17 @@ class Recipes::ShowFacade < BaseFacade
     )
   end
 
+  def edit_button_link_data
+    return ButtonLinkComponent::Data.new unless resource.user_recipe&.user == @user
+    ButtonLinkComponent::Data[
+      "Edit Recipe",
+      {controller: "user_recipes", action: "edit", id: resource.user_recipe.id},
+      :edit,
+      :primary,
+      { data: { turbo: false } }
+    ]
+  end
+
   def meal_types
     resource.meal_types.order(:name).pluck(:name)
   end

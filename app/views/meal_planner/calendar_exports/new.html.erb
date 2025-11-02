@@ -1,4 +1,13 @@
 <%= turbo_frame_tag :modal do %>
+  <button
+    aria-label="Close Dialog"
+    class="absolute top-0 right-0 p-3 leading-none text-sm flex items-center z-30"
+    data-action="click->modal#toggle"
+    type="button"
+    style="z-index: 30;"
+  >
+    <%= tag.i(class: "fal fa-times-circle fa-2x") %>
+  </button>
   <%= tag.div(class: "p-6") do %>
     <%= meal_planner_form_with(url: "/meal_planner/calendar_exports", method: :post, target: "top") do |form| %>
       <%= form.hidden_field :format, value: :ics %>

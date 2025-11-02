@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :recipe_favorites, only: %i[create destroy], shallow: true
   end
   resources :my_recipes, only: %i[index]
-  resources :user_recipes, only: %i[new create edit update destroy]
+  resources :user_recipes, only: %i[new create edit update destroy], shallow: true
   resources :meal_plans, only: %i[index show] do
     resource :export_to_shopping_list, only: [:new, :create], controller: 'meal_plans/export_to_shopping_lists'
   end

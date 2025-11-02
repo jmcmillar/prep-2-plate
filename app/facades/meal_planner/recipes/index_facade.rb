@@ -21,24 +21,30 @@ class MealPlanner::Recipes::IndexFacade < BaseFacade
     ]
   end
 
+  def meal_type_filter_data
+    FilterComponent::Data.new(
+      'Meal Types',
+      "meal_type_ids[]",
+      MealType.all.order(:name),
+      false
+    )
+  end
+
+  def recipe_category_filter_data
+    FilterComponent::Data.new(
+      'Recipe Categories',
+      "recipe_category_ids[]",
+      RecipeCategory.all.order(:name),
+      false
+    )
+  end
+
   def resource_facade_class
     Recipes::ResourceFacade
   end
 
   def active_key
     :meal_plans
-  end
-
-
-  def new_user_recipe_link_data
-    return ButtonLinkComponent::Data.new unless @user.present?
-    ButtonLinkComponent::Data[
-      "",
-      [:new, :user_recipe],
-      :plus,
-      :primary,
-      { class: "text-sm py-3 px-2 mt-4 mx-2", data: { turbo: false}}
-    ]
   end
 
   def pagy_limit

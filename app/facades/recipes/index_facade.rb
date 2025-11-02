@@ -3,7 +3,7 @@ class Recipes::IndexFacade < BaseFacade
     Recipe.order(:name)
       .includes(:user_recipe)
       .with_attached_image
-      .where(user_recipes: { user_id: [@user&.id, nil] })
+      .where(user_recipes: { user_id: nil })
       .filtered_by_meal_types(@params[:meal_type_ids])
       .filtered_by_recipe_categories(@params[:recipe_category_ids])
   end
