@@ -1,4 +1,4 @@
-class Api::AuthRegistrationsController < Api::BaseController
+class Api::AuthRegistrationController < Api::BaseController
   skip_before_action :require_authentication, only: [:create]
   
   def create

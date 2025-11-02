@@ -1,5 +1,5 @@
 class PasswordsController < AuthenticatedController
-  allow_unauthenticated_access
+  skip_before_action :require_authentication, only: [:new, :create, :edit, :update]
   before_action :set_user_by_token, only: %i[ edit update ]
   layout "auth"
 

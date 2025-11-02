@@ -20,6 +20,8 @@ class Api::MealPlansController < Api::BaseController
 
   def destroy
     @meal_plan = UserMealPlan.find(params[:id])
+    @meal_plan.destroy
+  end
 
   def meal_plan_params
     params.permit(:name, :description, :meal_plan_recipes_attributes => [:recipe_id, :day_sequence, :date])
