@@ -1,4 +1,7 @@
 class Current < ActiveSupport::CurrentAttributes
   attribute :session
-  delegate :user, to: :session, allow_nil: true
+    # Add this method to automatically set the user from the session
+  def user
+    session&.user
+  end
 end

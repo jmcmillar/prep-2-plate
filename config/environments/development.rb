@@ -87,4 +87,7 @@ Rails.application.configure do
 
   # Use async queue adapter for faster development (instead of solid_queue)
   config.active_job.queue_adapter = :async
+
+  config.hosts << "localhost"
+  config.hosts << ".localhost"
 end
