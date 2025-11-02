@@ -21,4 +21,8 @@ class ToggleFormComponent < ApplicationComponent
   def icon
     render IconComponent.new(@icon)
   end
+
+  def render?
+    @path.present?
+  end
 end

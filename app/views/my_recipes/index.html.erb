@@ -1,8 +1,8 @@
 <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
     <%= render ContainerComponent.new do %>
     <%= tag.div(class: "flex justify-between items-center mb-2") do %>
-      <h1>Recipes</h1>
-      <%= render ButtonLinkComponent.new(button_link_data: @facade.my_recipes_link_data) %>
+      <h1>My Recipes</h1>
+      <%= render ButtonLinkComponent.new(button_link_data: @facade.new_user_recipe_link_data) %>
     <% end %>
     <%= tag.div(class: "flex flex-wrap items-center gap-2") do %>
       <%= render SearchFormComponent.new(@facade.search_data) %>
@@ -14,6 +14,11 @@
   <% end %>
 <% end %>
 <%= render ContainerComponent.new(id: "recipe") do %>
-  <%= render "recipe_list", recipes: @facade.collection.to_a, pagy: @facade.pagy %>
+  <%= render "recipes/recipe_list", recipes: @facade.collection.to_a, pagy: @facade.pagy %>
 <% end %>
+<%= render ContainerComponent.new do %>
+  <h2 class="mt-6">Favorites</h2>
+  <%= render "favorites_list", recipes: @facade.favorites.to_a, pagy: @facade.pagy %>
+<% end %>
+
 

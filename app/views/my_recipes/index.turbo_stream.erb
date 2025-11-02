@@ -1,0 +1,6 @@
+<%= turbo_stream.replace "recipe_list" do %>
+  <%= render partial: "recipes/recipe_list", locals: { recipes: @facade.collection.to_a, pagy: @facade.pagy } %>
+<% end %>
+<%= turbo_stream.replace "favorite_list" do %>
+  <%= render partial: "my_recipes/favorites_list", locals: { recipes: @facade.favorites.to_a, pagy: @facade.pagy } %>
+<% end %>

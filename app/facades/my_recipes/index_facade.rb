@@ -1,9 +1,9 @@
-class Recipes::IndexFacade < BaseFacade
+class MyRecipes::IndexFacade < BaseFacade
   def base_collection
     Recipe.order(:name)
-      .includes(:user_recipe)
+      .joins(:user_recipe)
       .with_attached_image
-      .where(user_recipes: { user_id: [@user&.id, nil] })
+      .where(user_recipe: { user_id: @user.id })
       .filtered_by_meal_types(@params[:meal_type_ids])
       .filtered_by_recipe_categories(@params[:recipe_category_ids])
   end
@@ -12,9 +12,17 @@ class Recipes::IndexFacade < BaseFacade
     CollectionBuilder.new(base_collection, self)
   end
 
+  def favorites
+    CollectionBuilder.new(favorite_collection, self)
+  end
+
+  def favorite_collection
+    @user.recipes.order(:name)
+  end
+
   def search_data
     SearchFormComponent::Data[
-      form_url: [:recipes],
+      form_url: [:my_recipes],
       query: collection.search_collection,
       label: "Search Name, Meal Types, Categories",
       field: :name_cont
@@ -45,12 +53,12 @@ class Recipes::IndexFacade < BaseFacade
     'Search Recipes'
   end
 
-  def my_recipes_link_data
+  def new_user_recipe_link_data
     return ButtonLinkComponent::Data.new unless @user.present?
     ButtonLinkComponent::Data[
-      "My Recipes",
-      [:my_recipes],
-      :book,
+      "New Recipe",
+      [:new, :user_recipe],
+      :plus,
       :primary,
       { data: { turbo: false}}
     ]

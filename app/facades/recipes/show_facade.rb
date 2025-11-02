@@ -8,6 +8,34 @@ class Recipes::ShowFacade < BaseFacade
     resource.difficulty_level&.titleize || "Not specified"
   end
 
+  def recipe_favorite_toggle_data
+    return ToggleFormComponent::Data.new unless @user.present? && !resource.user_recipe
+
+    if @user.recipes.exists?(resource.id)
+      destroy_favorite_toggle_data
+    else
+      create_favorite_toggle_data
+    end
+  end
+
+  def create_favorite_toggle_data
+    ToggleFormComponent::Data.new(
+      { controller: 'recipe_favorites', action: 'create', recipe_id: resource.id },
+      :post,
+      "Add to Favorites",
+      IconComponent::Data.new(:heart, :fal, class: "text-red-500 text-2xl")
+    )
+  end
+
+  def destroy_favorite_toggle_data
+    ToggleFormComponent::Data.new(
+      { controller: 'recipe_favorites', action: 'destroy', id: RecipeFavorite.find_by(user: @user, recipe: resource).id },
+      :delete,
+      "Remove from Favorites",
+      IconComponent::Data.new(:heart, :fas, class: "text-red-500 text-2xl")
+    )
+  end
+
   def meal_types
     resource.meal_types.order(:name).pluck(:name)
   end
