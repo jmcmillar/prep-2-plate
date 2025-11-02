@@ -11,6 +11,19 @@ class ShoppingLists::IndexFacade < BaseFacade
     collection.to_a.map { |facade| resource_facade_class.to_row(facade) }
   end
 
+
+  def header_actions
+    [new_action_data]
+  end
+
+  def new_action_data
+    IconLinkComponent::Data[
+      {controller: "shopping_lists", action: "new"},
+      :plus, 
+      "New Shopping List",
+    ]
+  end
+
   def collection
     CollectionBuilder.new(base_collection, self)
   end

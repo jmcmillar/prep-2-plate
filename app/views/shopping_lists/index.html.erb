@@ -1,9 +1,9 @@
-<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-4") do %>
+<%= turbo_frame_tag :shopping_lists do %>
+  <%= render "application/flash", flash: flash %>
   <%= render ContainerComponent.new do %>
-    <h1>Shopping Lists</h1>
+    <%= render SectionCardComponent.new(title: "Shopping Lists") do |card| %>
+      <% card.with_icon_link_collection(@facade.header_actions) %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+    <% end %>
   <% end %>
-<% end %>
-
-<%= render ContainerComponent.new do %>
-  <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
 <% end %>

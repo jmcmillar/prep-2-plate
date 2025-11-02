@@ -5,6 +5,20 @@ class ShoppingListsController < AuthenticatedController
     @facade = ShoppingLists::IndexFacade.new Current.user, params
   end
 
+  def new
+    @facade = ShoppingLists::NewFacade.new Current.user, params
+  end
+
+  def create
+    @facade = ShoppingLists::NewFacade.new Current.user, params
+    @facade.shopping_list.assign_attributes(shopping_list_params)
+    if @facade.shopping_list.save
+      redirect_to shopping_lists_path, notice: "Shopping list was successfully created."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def show
     @facade = ShoppingLists::ShowFacade.new Current.user, params
   end
@@ -26,6 +40,6 @@ class ShoppingListsController < AuthenticatedController
   end
 
   def shopping_list_params
-    params.require(:shopping_list).permit(:current)
+    params.require(:shopping_list).permit(:current, :name)
   end
 end

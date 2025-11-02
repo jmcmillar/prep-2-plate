@@ -17,12 +17,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'public#index'
-    resources :recipes, only: %i[index show]
+  resources :recipes, only: %i[index show]
   resources :user_recipes, only: %i[new create edit update destroy]
   resources :meal_plans, only: %i[index show] do
     resource :export_to_shopping_list, only: [:new, :create], controller: 'meal_plans/export_to_shopping_lists'
   end
-  resources :shopping_lists, only: [:index, :create, :update, :show, :destroy] do
+  resources :shopping_lists, only: [:index, :new, :create, :update, :show, :destroy] do
     resources :items, except: [:show], controller: "shopping_list_items", shallow: true
   end
   resource :meal_planner, only: [:show]
