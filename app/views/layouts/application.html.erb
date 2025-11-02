@@ -11,6 +11,8 @@
     <%= csp_meta_tag %>
 
     <%= yield :head %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
@@ -40,7 +42,7 @@
 
   <body data-controller="navbar modal" class="min-h-screen flex flex-col">
     <%= render "application/flash", flash: flash %>
-    <main class="flex-1 overflow-x-hidden overflow-y-scroll">
+    <main class="flex-1 overflow-x-hidden">
       <%= render "application/modal" %>
       <%= render 'application/navbar' %>
       <%= tag.div do %>
