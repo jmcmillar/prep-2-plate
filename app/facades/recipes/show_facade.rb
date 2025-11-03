@@ -1,7 +1,7 @@
 class Recipes::ShowFacade < BaseFacade
   SERVING_SIZES = [2, 4, 6, 8, 10]
   def resource
-    Recipe.find @params[:id]
+    Recipe.includes(:user_recipe).where(user_recipes: { user_id: [nil, @user&.id] }).find(@params[:id])
   end
 
   def level
@@ -40,7 +40,7 @@ class Recipes::ShowFacade < BaseFacade
     return ButtonLinkComponent::Data.new unless resource.user_recipe&.user == @user
     ButtonLinkComponent::Data[
       "Edit Recipe",
-      {controller: "user_recipes", action: "edit", id: resource.user_recipe.id},
+      {controller: "user_recipes", action: "edit", id: resource.user_recipe&.id},
       :edit,
       :primary,
       { data: { turbo: false } }
