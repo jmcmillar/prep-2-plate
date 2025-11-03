@@ -12,7 +12,7 @@ class Admin::Users::ShowFacade < Base::Admin::ShowFacade
   end
 
   def nav_resource
-    user
+    resource
   end
 
   def breadcrumb_trail

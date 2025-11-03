@@ -8,7 +8,7 @@ class Admin::ShoppingListItems::IndexFacade < Base::Admin::IndexFacade
   end
 
   def nav_resource
-    shopping_list
+    shopping_list.user
   end
 
   def base_collection

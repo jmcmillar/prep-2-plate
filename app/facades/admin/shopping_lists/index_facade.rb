@@ -23,7 +23,7 @@ class Admin::ShoppingLists::IndexFacade < Base::Admin::IndexFacade
   end
 
   def shopping_list_user
-    @user ||= User.find(@params[:user_id])
+    @shopping_list_user ||= User.find(@params[:user_id])
   end
 
   def new_action_data

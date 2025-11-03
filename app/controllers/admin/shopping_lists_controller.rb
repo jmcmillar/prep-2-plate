@@ -19,7 +19,7 @@ class Admin::ShoppingListsController < AuthenticatedController
     @facade = Admin::ShoppingLists::NewFacade.new(Current.user, params)
     @facade.shopping_list.assign_attributes(shopping_list_params)
     if @facade.shopping_list.save
-      redirect_to admin_user_shopping_lists_url(@facade.user), notice: "Shopping List was successfully created."
+      redirect_to admin_user_shopping_lists_url(@facade.shopping_list.user), notice: "Shopping List was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class Admin::ShoppingListsController < AuthenticatedController
     @facade = Admin::ShoppingLists::EditFacade.new(Current.user, params)
     @facade.shopping_list.assign_attributes(shopping_list_params)
     if @facade.shopping_list.save
-      redirect_to admin_user_shopping_lists_url(@facade.user), notice: "Shopping List was successfully updated."
+      redirect_to admin_user_shopping_lists_url(@facade.shopping_list.user), notice: "Shopping List was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
