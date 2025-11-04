@@ -6,7 +6,7 @@ class Recipe < ApplicationRecord
   has_rich_text :description
   has_one_attached :image
   
-  belongs_to :recipe_import, optional: true
+  belongs_to :recipe_import, optional: true, inverse_of: :recipes
   has_many :recipe_ingredients, dependent: :destroy, inverse_of: :recipe
   has_many :recipe_instructions, dependent: :destroy, inverse_of: :recipe
   has_many :meal_plan_recipes, dependent: :destroy
@@ -19,10 +19,13 @@ class Recipe < ApplicationRecord
   has_many :recipe_favorites, dependent: :destroy
   has_one :user_recipe, dependent: :destroy
 
+  validates_presence_of :name
+
   accepts_nested_attributes_for :recipe_ingredients, 
     allow_destroy: true, 
     reject_if: ->(attrs) { attrs['ingredient_id'].blank? && attrs['ingredient_name'].blank? }
   accepts_nested_attributes_for :recipe_instructions, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :recipe_import, reject_if: :all_blank
 
   scope :imported, -> { where.not(recipe_import_id: nil) }
 

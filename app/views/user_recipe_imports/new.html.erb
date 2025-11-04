@@ -1,0 +1,5 @@
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "New Recipe") do %>
+    <%= render "form", facade: @facade %>
+  <% end %>
+<% end %>

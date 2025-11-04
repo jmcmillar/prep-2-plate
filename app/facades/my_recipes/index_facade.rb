@@ -56,11 +56,22 @@ class MyRecipes::IndexFacade < BaseFacade
   def new_user_recipe_link_data
     return ButtonLinkComponent::Data.new unless @user.present?
     ButtonLinkComponent::Data[
-      "New Recipe",
+      "",
       [:new, :user_recipe],
       :plus,
       :primary,
       { data: { turbo: false}}
+    ]
+  end
+
+  def import_button_link_data
+    return ButtonLinkComponent::Data.new unless @user.present?
+    ButtonLinkComponent::Data[
+      "",
+      {controller: "user_recipe_imports", action: "new"},
+      :file_import,
+      :primary,
+      { data: { turbo: false } }
     ]
   end
 
