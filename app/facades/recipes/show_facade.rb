@@ -39,11 +39,11 @@ class Recipes::ShowFacade < BaseFacade
   def edit_button_link_data
     return ButtonLinkComponent::Data.new unless resource.user_recipe && resource.user_recipe&.user == @user
     ButtonLinkComponent::Data[
-      "Edit Recipe",
+      "",
       {controller: "user_recipes", action: "edit", id: resource.user_recipe&.id},
       :edit,
       :primary,
-      { data: { turbo: false }, class: "self-start" }
+      { data: { turbo: false } }
     ]
   end
 

@@ -1,11 +1,8 @@
 <%= render ContainerComponent.new do %>
   <%= tag.div(class: "flex items-center gap-4") do %>
     <%= tag.h1(class: "text-3xl font-semibold text-gray-900 my-4") { @facade.resource.name } %>
-    <%= tag.div do %>
       <%= render ToggleFormComponent.new(@facade.recipe_favorite_toggle_data) %>
       <%= render ButtonLinkComponent.new(button_link_data: @facade.edit_button_link_data) %>
-    <% end %>
-      
   <% end %>
   <%= tag.p(class: "mb-10 text-gray-600") { @facade.description } %>
 
