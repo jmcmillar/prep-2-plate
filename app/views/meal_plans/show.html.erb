@@ -1,5 +1,6 @@
 <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
   <%= render ContainerComponent.new do %>
+    <%= render BreadcrumbComponent.with_collection(@facade.breadcrumb_trail) %>
     <%= tag.div(class: "flex justify-between items-center") do %>
       <%= tag.h1 {@facade.name} %>
       <%= render ModalButtonComponent.new(button_link_data: @facade.export_button_data) %>

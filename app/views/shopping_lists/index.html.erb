@@ -1,7 +1,14 @@
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <%= tag.div(class: "flex justify-between items-center mb-2") do %>
+      <h1>Shopping Lists</h1>
+    <% end %>
+  <% end %>
+<% end %> 
 <%= turbo_frame_tag :shopping_lists do %>
   <%= render "application/flash", flash: flash %>
   <%= render ContainerComponent.new do %>
-    <%= render SectionCardComponent.new(title: "Shopping Lists") do |card| %>
+    <%= render SectionCardComponent.new(title: "") do |card| %>
       <% card.with_icon_link_collection(@facade.header_actions) %>
       <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
     <% end %>

@@ -1,4 +1,5 @@
 <%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render BreadcrumbComponent.with_collection(@facade.breadcrumb_trail) %>
     <%= render ContainerComponent.new do %>
     <%= tag.div(class: "flex justify-between items-center mb-2") do %>
       <h1>My Recipes</h1>
@@ -21,6 +22,7 @@
   <%= render "favorites_list", recipes: @facade.favorites.to_a, pagy: @facade.pagy %>
 <% end %>
 <%= render ContainerComponent.new(id: "recipe") do %>
+  <h2 class="my-6">Saved</h2>
   <%= render "recipes/recipe_list", recipes: @facade.collection.to_a, pagy: @facade.pagy %>
 <% end %>
 

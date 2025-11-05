@@ -4,6 +4,13 @@ class Recipes::ShowFacade < BaseFacade
     Recipe.includes(:user_recipe).where(user_recipe: { user_id: [nil, @user&.id] }).find(@params[:id])
   end
 
+    def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Recipes", [:recipes]),
+      BreadcrumbComponent::Data.new(resource.name)
+    ]
+  end
+
   def level
     resource.difficulty_level&.titleize || "Not specified"
   end

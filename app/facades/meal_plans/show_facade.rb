@@ -7,6 +7,13 @@ class MealPlans::ShowFacade < BaseFacade
     resource.description
   end
 
+  def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Meal Plans", [:meal_plans]),
+      BreadcrumbComponent::Data.new(resource.name)
+    ]
+  end
+
   def name
     resource.name
   end

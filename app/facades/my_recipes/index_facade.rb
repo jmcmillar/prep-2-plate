@@ -12,6 +12,14 @@ class MyRecipes::IndexFacade < BaseFacade
     CollectionBuilder.new(base_collection, self)
   end
 
+
+  def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Recipes", [:recipes]),
+      BreadcrumbComponent::Data.new("My Recipes")
+    ]
+  end
+
   def favorites
     CollectionBuilder.new(favorite_collection, self)
   end
