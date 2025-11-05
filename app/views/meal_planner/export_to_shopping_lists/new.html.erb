@@ -25,9 +25,30 @@
     <% end %>
   </div>
 
-  <!-- Ingredients List -->
+ <!-- Ingredients List -->
   <%= render ContainerComponent.new do %>
-    <div class="bg-gray-50 p-4 min-h-screen">
+    <div class="bg-gray-50 p-4 min-h-screen" data-controller="ingredient-item">
+      <!-- Add New Item Form -->
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Add new item..."
+            data-ingredient-item-target="newItemInput"
+            data-action="keydown.enter->ingredient-item#addItem"
+            class="flex-1 border rounded-md px-3 py-2 text-sm focus:border-primary focus:ring-primary"
+          />
+          <button
+            type="button"
+            data-action="ingredient-item#addItem"
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
+          >
+            <i class="fal fa-plus mr-1"></i> Add
+          </button>
+        </div>
+      </div>
+
+      <!-- Ingredients List Container -->
       <div class="bg-white rounded-2xl shadow-sm divide-y divide-gray-100/50">
         <% @facade.ingredients.each_with_index do |ingredient, i| %>
           <div
@@ -44,7 +65,8 @@
 
               <span
                 data-ingredient-item-target="label"
-                class="text-gray-800 text-sm font-medium"
+                class="text-gray-800 text-sm font-medium cursor-pointer"
+                data-action="click->ingredient-item#edit"
               >
                 <%= ingredient.ingredient_name %>
               </span>
@@ -54,24 +76,35 @@
                 value="<%= ingredient.ingredient_name %>"
                 class="hidden border rounded px-2 py-1 text-sm flex-1"
                 data-ingredient-item-target="input"
+                data-action="blur->ingredient-item#saveEdit keydown.enter->ingredient-item#saveEdit keydown.escape->ingredient-item#cancelEdit"
               />
+            </div>
 
+            <!-- Right side: edit and remove buttons -->
+            <div class="flex items-center gap-2">
               <button
                 type="button"
                 data-action="ingredient-item#edit"
-                class="text-gray-400 hover:text-primary transition-colors"
+                class="text-gray-400 hover:text-primary transition-colors p-1"
                 title="Edit item"
               >
                 <i class="fal fa-pencil"></i>
               </button>
+              
+              <button
+                type="button"
+                data-action="ingredient-item#remove"
+                class="text-gray-400 hover:text-red-500 transition-colors p-1"
+                title="Remove item"
+              >
+                <i class="fal fa-trash"></i>
+              </button>
             </div>
-
-            <!-- Right side (for optional quantity/unit or actions) -->
-            <div class="text-primary text-sm font-medium"></div>
           </div>
         <% end %>
       </div>
     </div>
   <% end %>
 <% end %>
+
 

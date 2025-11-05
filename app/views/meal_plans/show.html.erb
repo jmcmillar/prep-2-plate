@@ -13,7 +13,7 @@
   <%= tag.div(class: "row") do %>
     <div class="mb-12 lg:col-8 col-12">
       <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recipes</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
         <% @facade.recipes.each do |recipe| %>
           <%= render partial: "recipes/recipe", locals: { recipe: recipe } %>
         <% end %>
