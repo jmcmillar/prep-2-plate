@@ -1,3 +1,4 @@
+
 class UserRecipeImports::NewFacade < BaseFacade
   DifficultyLevel = Struct.new(:name, :value)
   
@@ -58,7 +59,9 @@ class UserRecipeImports::NewFacade < BaseFacade
       name: parsed_recipe[:name],
       description: parsed_recipe[:description],
       recipe_import: recipe_import
-    )
+    ).tap do |recipe|
+      attach_image_from_url(recipe, parsed_recipe[:image_url])
+    end
   end
 
   def valid?
@@ -73,5 +76,22 @@ class UserRecipeImports::NewFacade < BaseFacade
 
   def parsed_recipe
     @parsed_recipe ||= ParseRecipe.new(@strong_params[:url]).to_h
+  end
+
+  def attach_image_from_url(recipe, image_url)
+  
+    begin
+      downloaded_image = URI.open(image_url)
+      filename = File.basename(URI.parse(image_url).path)
+      
+      recipe.image.attach(
+        io: downloaded_image,
+        filename: filename,
+        content_type: downloaded_image.content_type
+      )
+    rescue => e
+      Rails.logger.error "Failed to attach image: #{e.message}"
+      # Silently fail - don't break recipe import if image fails
+    end
   end
 end
