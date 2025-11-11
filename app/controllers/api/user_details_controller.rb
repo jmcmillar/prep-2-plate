@@ -3,9 +3,9 @@ class Api::UserDetailsController < Api::BaseController
   end
 
   def update
-    current_user.assign_attributes(user_detail_params)
+    Current.user.assign_attributes(user_detail_params)
 
-    if current_user.save
+    if Current.user.save
       render json: "successful", status: :created
     else
       render json: user.errors, status: :unprocessable_entity

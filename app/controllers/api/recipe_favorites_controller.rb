@@ -1,10 +1,10 @@
 class Api::RecipeFavoritesController < Api::BaseController
   def index
-    @facade = Api::RecipeFavorites::IndexFacade.new(current_user)
+    @facade = Api::RecipeFavorites::IndexFacade.new(Current.user)
   end
 
   def create
-    @facade = Api::RecipeFavorites::CreateFacade.new(current_user, params)
+    @facade = Api::RecipeFavorites::CreateFacade.new(Current.user, params)
     @message = @facade.message
 
     if @facade.toggle_favorite

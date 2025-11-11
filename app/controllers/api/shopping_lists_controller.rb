@@ -1,12 +1,12 @@
 class Api::ShoppingListsController < Api::BaseController
   def index
     @shopping_lists = ShoppingList.includes(:shopping_list_items).where(
-      user_id: current_user.id
+      user_id: Current.user.id
     )
   end
 
   def create
-    @shopping_list = ShoppingList.new(name: params[:name], user: current_user)
+    @shopping_list = ShoppingList.new(name: params[:name], user: Current.user)
 
     if @shopping_list.save
       render json: @shopping_list, status: :created

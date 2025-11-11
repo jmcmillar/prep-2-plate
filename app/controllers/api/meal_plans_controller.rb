@@ -1,6 +1,6 @@
 class Api::MealPlansController < Api::BaseController
   def create
-    @meal_plan = current_user.meal_plans.new(meal_plan_params)
+    @meal_plan = Current.user.meal_plans.new(meal_plan_params)
 
     if @meal_plan.save
       render json: @meal_plan, status: :created

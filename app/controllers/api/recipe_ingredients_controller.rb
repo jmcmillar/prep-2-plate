@@ -1,5 +1,5 @@
 class Api::RecipeIngredientsController < Api::BaseController
   def index
-    @facade = Api::RecipeIngredients::IndexFacade.new(current_user, params)
+    @facade = Api::RecipeIngredients::IndexFacade.new(Current.user, params)
   end
 end

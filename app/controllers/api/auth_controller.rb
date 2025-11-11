@@ -13,6 +13,9 @@ class Api::AuthController < Api::BaseController
         ip_address: request.remote_ip
       )
       
+      # Set JWT token in Authorization header
+      response.headers['Authorization'] = "Bearer #{session.id}"
+      
       render json: {
         status: { 
           code: 200, 

@@ -3,11 +3,11 @@ class Api::UserPasswordsController < Api::BaseController
   end
 
   def update
-    if current_user.update_with_password(user_password_params)
+    if Current.user.update_with_password(user_password_params)
       render json: { message: "Password updated successfully" }, status: :created
-      bypass_sign_in(current_user)
+      bypass_sign_in(Current.user)
     else
-      render json: current_user.errors, status: :unprocessable_entity
+      render json: Current.user.errors, status: :unprocessable_entity
     end
   end
 

@@ -1,7 +1,7 @@
 class Api::RecipeCategoriesController < Api::BaseController
   def index
     @facade = Api::RecipeCategories::IndexFacade.new(
-      current_user,
+      Current.user,
       params,
       request
     )
@@ -9,7 +9,7 @@ class Api::RecipeCategoriesController < Api::BaseController
 
   def show
     @facade = Api::RecipeCategories::ShowFacade.new(
-      current_user,
+      Current.user,
       params,
       request
     )

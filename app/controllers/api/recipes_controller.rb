@@ -4,11 +4,11 @@ class Api::RecipesController < Api::BaseController
   end
 
   def show
-    @facade = Api::Recipes::ShowFacade.new(current_user, params)
+    @facade = Api::Recipes::ShowFacade.new(Current.user, params)
   end
 
   def create
-    @facade = Api::Recipes::NewFacade.new(current_user, recipe_params)
+    @facade = Api::Recipes::NewFacade.new(Current.user, recipe_params)
     if @facade.recipe.save
       render json: { message: 'Recipe created successfully', recipe: @facade.recipe }, status: :created
     else
