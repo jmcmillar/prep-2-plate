@@ -26,7 +26,7 @@ gem 'pagy'
 gem 'ransack'
 gem 'mailgun-ruby', '~>1.4.0'
 
-gem "view_component", "~> 4.0.1"
+gem "view_component", "~> 4.1.1"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
