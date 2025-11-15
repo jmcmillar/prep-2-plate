@@ -4,10 +4,13 @@ namespace :api do
   delete "auth/sign_out", to: "auth#destroy"
   resource :home, only: [:show]
   resources :categories, only: %i[index], controller: "filters/categories"
+  resources :meal_types, only: %i[index], controller: "filters/meal_types"
   resources :measurement_units, only: [:index]
   resources :recipes, only: [:index, :show, :create]
   resources :recipe_ingredients, only: [:index]
   resource :recipe_imports, only: [:show, :create]
+  resources :current_shopping_lists, only: [:create]
+  resource :user_notifications, only: [:update, :show]
   resources :recipe_favorites, only: [:index, :create]
   resources :shopping_lists, only: [:index, :create, :destroy] do
     resources :shopping_list_items, only: [:index, :create, :destroy], shallow: true

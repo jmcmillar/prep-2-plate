@@ -1,6 +1,6 @@
 class Api::RecipeFavoritesController < Api::BaseController
   def index
-    @facade = Api::RecipeFavorites::IndexFacade.new(Current.user)
+    @facade = Api::RecipeFavorites::IndexFacade.new(Current.user, params)
   end
 
   def create

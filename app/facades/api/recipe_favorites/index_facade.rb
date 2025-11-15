@@ -1,12 +1,14 @@
 class Api::RecipeFavorites::IndexFacade
-  def initialize(user)
+  def initialize(user, params = {})
     @user = user
+    @params = params
   end
 
   def favorite_recipes
-    Recipe.includes(:recipe_favorites)
-          .where(recipe_favorites: { user: @user })
-          .with_attached_image
+    puts "*" * 20
+    puts @user.recipes
+    puts "*" * 20
+    @user.recipes.with_attached_image
   end
 
   def imported_recipes

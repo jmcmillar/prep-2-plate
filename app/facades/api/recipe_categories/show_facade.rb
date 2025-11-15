@@ -10,6 +10,9 @@ class Api::RecipeCategories::ShowFacade
   end
 
   def recipes
+    puts "*" * 100
+    puts @params
+    puts "*" * 100
     @recipes ||= recipe_category.recipes.filtered_by_duration(@params.dig(:filter, :duration)).ransack(@params[:q]).result
   end
 end
