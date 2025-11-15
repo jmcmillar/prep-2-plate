@@ -16,10 +16,19 @@ class Api::RecipeCategories::IndexFacade
         name: category.name,
         recipes: category_recipes(category)
       }
-    }
+    }.prepend(my_recipe_category)
   end
 
   private
+
+  def my_recipe_category
+    {
+      id: 0,
+      name: "My Recipes",
+      recipes: Recipe.includes(:user_recipe).where(user_recipe: { user_id: @user.id }).filtered_by_duration((@params.dig(:filter, :duration) || nil))
+        .ransack(@params[:q]).result
+    }
+  end
 
   def categories
     @categories ||= RecipeCategory.joins(:recipes).filtered_by_ids(@params.dig(:filter, :category_ids))

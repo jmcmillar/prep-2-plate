@@ -12,14 +12,14 @@ class Api::RecipesController < Api::BaseController
     if @facade.recipe.save
       render json: { message: 'Recipe created successfully', recipe: @facade.recipe }, status: :created
     else
-      render json: { errors: @recipe.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @facade.recipe.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
 
   def recipe_params
     params.require(:recipe).permit(
-      :title, :imageUri, ingredients: [], steps: []
+      :title, :image, ingredients: [], steps: []
     )
   end
 end

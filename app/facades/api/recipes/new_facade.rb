@@ -5,8 +5,8 @@ class Api::Recipes::NewFacade
   end
 
   def recipe
-    @recipe ||= Recipe.create(name: @params[:title]).tap do |recipe|
-      recipe.image.attach(@params[:imageUri]) if @params[:imageUri].present?
+    @recipe ||= Recipe.create!(name: @params[:title]).tap do |recipe|
+      recipe.image.attach(@params[:image]) if @params[:image].present?
       recipe.build_user_recipe(user: @user)
       build_instructions(recipe)
       BuildRecipeIngredients.call(recipe.id, parsed_ingredients)
