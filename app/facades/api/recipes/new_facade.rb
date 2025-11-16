@@ -14,8 +14,8 @@ class Api::Recipes::NewFacade
   end
 
   def build_instructions(recipe)
-    @params[:steps] = @params[:steps].map(&:strip).reject(&:empty?)
     return [] if @params[:steps].blank?
+    @params[:steps] = @params[:steps].map(&:strip).reject(&:empty?)
     @params[:steps]&.each_with_index do |instruction, index|
       recipe.recipe_instructions.new(step_number: index + 1, instruction: instruction)
     end
@@ -23,8 +23,8 @@ class Api::Recipes::NewFacade
 
   def parsed_ingredients
     # trim whitespace and remove empty strings
-    @params[:ingredients] = @params[:ingredients].map(&:strip).reject(&:empty?)
     return [] if @params[:ingredients].blank?
+    @params[:ingredients] = @params[:ingredients].map(&:strip).reject(&:empty?)
     @params[:ingredients]&.map do |ing|
       ParseIngredient.new(ing).to_h
     end

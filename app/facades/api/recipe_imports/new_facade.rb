@@ -8,6 +8,7 @@ class Api::RecipeImports::NewFacade
     recipe_record.tap do |recipe|
       build_instructions(recipe)
       build_ingredients(recipe)
+      attach_image(recipe)
     end
   end
 
@@ -24,8 +25,12 @@ class Api::RecipeImports::NewFacade
     parsed_recipe[:ingredients]&.each do |ingredient|
       parsed_recipe = ParseIngredient.new(ingredient).to_h
       quantity = QuantityFactory.new(parsed_recipe[:quantity]).create
+
+      # Skip if ingredient name is blank
+      next if parsed_recipe[:ingredient_name].blank?
+
       recipe.recipe_ingredients.new(
-        ingredient: Ingredient.find_or_initialize_by(name: parsed_recipe[:ingredient_name]),
+        ingredient: Ingredient.find_or_create_by(name: parsed_recipe[:ingredient_name].strip.downcase),
         quantity: parsed_recipe[:quantity],
         measurement_unit_id: parsed_recipe[:measurement_unit_id],
         numerator: quantity.numerator,
@@ -51,5 +56,28 @@ class Api::RecipeImports::NewFacade
 
   def recipe_import
     @recipe_import ||= RecipeImport.find_or_create_by(url: @params[:url])
+  end
+
+  def attach_image(recipe)
+    return if parsed_recipe[:image_url].blank?
+
+    begin
+      require 'open-uri'
+
+      image_url = parsed_recipe[:image_url]
+      downloaded_image = URI.open(image_url)
+
+      # Extract filename from URL or use a default
+      filename = File.basename(URI.parse(image_url).path).presence || "recipe_image.jpg"
+
+      recipe.image.attach(
+        io: downloaded_image,
+        filename: filename,
+        content_type: downloaded_image.content_type
+      )
+    rescue => e
+      Rails.logger.error "Failed to attach image from URL #{parsed_recipe[:image_url]}: #{e.message}"
+      # Continue without image rather than failing the whole import
+    end
   end
 end
