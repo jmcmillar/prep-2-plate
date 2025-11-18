@@ -6,13 +6,16 @@ class Api::RecipeCategories::ShowFacade
   end
 
   def recipe_category
-    @recipe_category ||= RecipeCategory.find(@params[:id])
+    @recipe_category ||= RecipeCategory.find_by(id: @params[:id])
   end
 
   def recipes
-    puts "*" * 100
-    puts @params
-    puts "*" * 100
-    @recipes ||= recipe_category.recipes.filtered_by_duration(@params.dig(:filter, :duration)).ransack(@params[:q]).result
+    @recipes ||= base_recipes.filtered_by_duration(@params.dig(:filter, :duration)).ransack(@params[:q]).result
+  end
+
+  def base_recipes
+    return Recipe.includes(:user_recipe).where(user_recipe: { user_id: @user.id }) unless recipe_category
+
+    recipe_category.recipes
   end
 end

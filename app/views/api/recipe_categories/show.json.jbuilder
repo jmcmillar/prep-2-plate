@@ -1,5 +1,5 @@
-json.id @facade.recipe_category.id
-json.name @facade.recipe_category.name
+json.id @facade.recipe_category&.id
+json.name @facade.recipe_category&.name || "My Recipes"
 json.recipes do
   json.array! @facade.recipes do |recipe|
     json.id recipe.id
