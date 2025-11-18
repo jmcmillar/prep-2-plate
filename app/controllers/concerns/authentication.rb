@@ -18,21 +18,37 @@ module Authentication
   end
 
   def resume_session
+    session = nil
+
     if request.headers['Authorization'].present? && request.headers['Authorization'].start_with?('Bearer ')
       token = request.headers['Authorization'].split(' ').last
-      Current.session = Session.find_by(id: token)
-    elsif !is_api_controller? && cookies.signed[:session_id].present?
-      Current.session = Session.find_by(id: cookies.signed[:session_id])
-    else
-      Current.session = nil
+      session = Session.find_by_token(token)
+
+      # Log suspicious activity
+      if session && session.suspicious_activity?(current_ip: request.remote_ip, current_user_agent: request.user_agent)
+        Rails.logger.warn("Suspicious session activity detected - Session ID: #{session.id}, IP: #{request.remote_ip}")
+      end
+    elsif !is_api_controller? && cookies.signed[:session_token].present?
+      token = cookies.signed[:session_token]
+      session = Session.find_by_token(token)
+
+      # Log suspicious activity
+      if session && session.suspicious_activity?(current_ip: request.remote_ip, current_user_agent: request.user_agent)
+        Rails.logger.warn("Suspicious session activity detected - Session ID: #{session.id}, IP: #{request.remote_ip}")
+      end
     end
-    
+
+    Current.session = session
+    log_authentication_attempt(session.present?)
+
     Current.session
   end
 
   def find_session_by_cookie
     return nil if is_api_controller?
-    Session.find_by(id: cookies.signed[:session_id])
+    return nil unless cookies.signed[:session_token].present?
+
+    Session.find_by_token(cookies.signed[:session_token])
   end
 
   def request_authentication
@@ -54,23 +70,50 @@ module Authentication
   def start_new_session_for(user)
     user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
       Current.session = session
+      log_authentication_event('session_created', user_id: user.id, session_id: session.id)
+
       unless is_api_controller?
-        cookies.signed.permanent[:session_id] = {
-          value: session.id,
+        cookies.signed.permanent[:session_token] = {
+          value: session.token,
           httponly: true,
-          same_site: :lax
+          same_site: :lax,
+          secure: Rails.env.production?
         }
       end
     end
   end
 
   def terminate_session
-    Current.session&.destroy
-    cookies.delete(:session_id) unless is_api_controller?
+    if Current.session
+      log_authentication_event('session_terminated', session_id: Current.session.id)
+      Current.session.destroy
+    end
+    cookies.delete(:session_token) unless is_api_controller?
     Current.session = nil
   end
 
   def is_api_controller?
     self.class.ancestors.include?(ActionController::API) || request.path.start_with?('/api')
+  end
+
+  def log_authentication_attempt(success)
+    return unless Rails.env.production? || Rails.env.development?
+
+    event_type = success ? 'authentication_success' : 'authentication_failure'
+    log_authentication_event(event_type)
+  end
+
+  def log_authentication_event(event_type, additional_data = {})
+    return unless Rails.env.production? || Rails.env.development?
+
+    log_data = {
+      event: event_type,
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent,
+      path: request.path,
+      timestamp: Time.current
+    }.merge(additional_data)
+
+    Rails.logger.info("AUTH_EVENT: #{log_data.to_json}")
   end
 end

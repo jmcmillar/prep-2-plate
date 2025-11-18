@@ -14,16 +14,16 @@ class Api::AuthController < Api::BaseController
       )
       
       # Set JWT token in Authorization header
-      response.headers['Authorization'] = "Bearer #{session.id}"
-      
+      response.headers['Authorization'] = "Bearer #{session.token}"
+
       render json: {
-        status: { 
-          code: 200, 
-          message: 'Logged in successfully.' 
+        status: {
+          code: 200,
+          message: 'Logged in successfully.'
         },
         data: {
           user: UserSerializer.new(user).serializable_hash[:data][:attributes],
-          token: session.id # Session ID becomes the bearer token
+          token: session.token # Session token for authentication
         }
       }, status: :ok
     else

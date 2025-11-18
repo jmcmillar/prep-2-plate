@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :set_user
 
   def set_user
-    return unless cookies.signed[:session_id]
+    return unless cookies.signed[:session_token]
     resume_session
   end
 
@@ -12,6 +12,6 @@ class ApplicationController < ActionController::Base
   end
 
   def find_session_by_cookie
-    Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+    Session.find_by_token(cookies.signed[:session_token]) if cookies.signed[:session_token]
   end
 end
