@@ -19,6 +19,8 @@ class Admin::RecipeImports::RecipesController < AuthenticatedController
       :name, 
       :serving_size,
       :duration_minutes,
+      meal_type_ids: [],
+      recipe_category_ids: [],
       recipe_instructions_attributes: [:id, :step_number, :instruction, :_destroy]
     )
   end
