@@ -1,12 +1,10 @@
 class Api::ShoppingListsController < Api::BaseController
   def index
-    @shopping_lists = ShoppingList.includes(:shopping_list_items).where(
-      user_id: Current.user.id
-    )
+    @shopping_lists = Current.user.shopping_lists.includes(:shopping_list_items)
   end
 
   def create
-    @shopping_list = ShoppingList.new(name: params[:name], user: Current.user)
+    @shopping_list = Current.user.shopping_lists.new(name: params[:name])
 
     if @shopping_list.save
       render json: @shopping_list, status: :created
@@ -16,12 +14,12 @@ class Api::ShoppingListsController < Api::BaseController
   end
 
   def destroy
-    @shopping_list_item = ShoppingListItem.find(params[:id])
+    @shopping_list = Current.user.shopping_lists.find(params[:id])
 
-    if @shopping_list_item.destroy
-      head :ok
+    if @shopping_list.destroy
+      head :no_content
     else
-      render json: @shopping_list_item.errors, status: :unprocessable_entity
+      render json: @shopping_list.errors, status: :unprocessable_entity
     end
   end
 end

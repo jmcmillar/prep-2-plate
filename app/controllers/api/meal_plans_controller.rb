@@ -10,20 +10,21 @@ class Api::MealPlansController < Api::BaseController
   end
 
   def update
-    @meal_plan = UserMealPlan.find(params[:id])
+    @meal_plan = Current.user.meal_plans.find(params[:id])
     if @meal_plan.update(meal_plan_params)
-      render json: @meal_plan, status: :updated
+      render json: @meal_plan, status: :ok
     else
       render json: @meal_plan.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @meal_plan = UserMealPlan.find(params[:id])
+    @meal_plan = Current.user.meal_plans.find(params[:id])
     @meal_plan.destroy
+    head :no_content
   end
 
   def meal_plan_params
-    params.permit(:name, :description, :meal_plan_recipes_attributes => [:recipe_id, :day_sequence, :date])
+    params.permit(:name, :description, meal_plan_recipes_attributes: [ :recipe_id, :day_sequence, :date ])
   end
 end

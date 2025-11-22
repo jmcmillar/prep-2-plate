@@ -14,7 +14,7 @@ class Recipes::IndexFacade < BaseFacade
 
   def search_data
     SearchFormComponent::Data[
-      form_url: [:recipes],
+      form_url: [ :recipes ],
       query: collection.search_collection,
       label: "Search Name, Meal Types, Categories",
       field: :name_cont
@@ -23,17 +23,21 @@ class Recipes::IndexFacade < BaseFacade
 
   def meal_type_filter_data
     FilterComponent::Data.new(
-      'Meal Types',
+      "Meal Types",
       "meal_type_ids[]",
-      MealType.all.order(:name)
+      Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+        MealType.order(:name).to_a
+      end
     )
   end
 
   def recipe_category_filter_data
     FilterComponent::Data.new(
-      'Recipe Categories',
+      "Recipe Categories",
       "recipe_category_ids[]",
-      RecipeCategory.all.order(:name)
+      Rails.cache.fetch("recipe_categories_ordered", expires_in: 12.hours) do
+        RecipeCategory.order(:name).to_a
+      end
     )
   end
 
@@ -42,17 +46,17 @@ class Recipes::IndexFacade < BaseFacade
   end
 
   def search_label
-    'Search Recipes'
+    "Search Recipes"
   end
 
   def my_recipes_link_data
     return ButtonLinkComponent::Data.new unless @user.present?
     ButtonLinkComponent::Data[
       "My Recipes",
-      [:my_recipes],
+      [ :my_recipes ],
       :book,
       :primary,
-      { data: { turbo: false}}
+      { data: { turbo: false } }
     ]
   end
 

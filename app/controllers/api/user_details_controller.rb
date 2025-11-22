@@ -3,12 +3,16 @@ class Api::UserDetailsController < Api::BaseController
   end
 
   def update
-    Current.user.assign_attributes(user_detail_params)
-
-    if Current.user.save
-      render json: "successful", status: :created
+    if Current.user.update(user_detail_params)
+      render json: {
+        status: 200,
+        message: "Profile updated successfully",
+        data: UserSerializer.new(Current.user).serializable_hash[:data][:attributes]
+      }, status: :ok
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: {
+        errors: Current.user.errors.full_messages
+      }, status: :unprocessable_entity
     end
   end
 

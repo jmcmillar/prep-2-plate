@@ -8,7 +8,7 @@ class UserRecipes::NewFacade < BaseFacade
   end
 
   def form_url
-    [user_recipe]
+    [ user_recipe ]
   end
 
   def difficulty_levels
@@ -18,26 +18,34 @@ class UserRecipes::NewFacade < BaseFacade
   end
 
   def categories
-    @categories ||= RecipeCategory.all.order(:name)
+    @categories ||= Rails.cache.fetch("recipe_categories_ordered", expires_in: 12.hours) do
+      RecipeCategory.order(:name).to_a
+    end
   end
 
   def meal_types
-    @meal_types ||= MealType.all.order(:name)
+    @meal_types ||= Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+      MealType.order(:name).to_a
+    end
   end
 
   def ingredients
-    @ingredients ||= Ingredient.all.order(:name)
+    @ingredients ||= Rails.cache.fetch("ingredients_ordered", expires_in: 12.hours) do
+      Ingredient.order(:name).to_a
+    end
   end
 
   def measurement_units
-    @measurement_units ||= MeasurementUnit.all.order(:name)
+    @measurement_units ||= Rails.cache.fetch("measurement_units_ordered", expires_in: 12.hours) do
+      MeasurementUnit.order(:name).to_a
+    end
   end
 
   def new_user_recipe_link_data
     return ButtonLinkComponent::Data.new unless @user.present?
     ButtonLinkComponent::Data[
       "New Recipe",
-      [:new, :user_recipe],
+      [ :new, :user_recipe ],
       :plus,
       :primary,
       { data: { turbo: false } }

@@ -6,10 +6,13 @@ class Public::IndexFacade < BaseFacade
     @session = options.fetch(:session, {})
   end
   def recipes
-    []
-    Recipe.order(:name).featured.map do |recipe|
-      Recipes::ResourceFacade.new(recipe)
-    end
+    @recipes ||= Recipe
+      .order(:name)
+      .featured
+      .with_attached_image
+      .includes(:meal_types, :recipe_categories, recipe_ingredients: [ :measurement_unit, :ingredient ])
+      .to_a
+      .map { |recipe| Recipes::ResourceFacade.new(recipe) }
   end
 
   def meal_plans

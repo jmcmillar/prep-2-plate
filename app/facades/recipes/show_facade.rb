@@ -1,12 +1,21 @@
 class Recipes::ShowFacade < BaseFacade
-  SERVING_SIZES = [2, 4, 6, 8, 10]
+  SERVING_SIZES = [ 2, 4, 6, 8, 10 ]
   def resource
-    Recipe.includes(:user_recipe).where(user_recipe: { user_id: [nil, @user&.id] }).find(@params[:id])
+    @resource ||= Recipe
+      .includes(
+        :user_recipe,
+        :meal_types,
+        :recipe_categories,
+        :recipe_instructions,
+        recipe_ingredients: [ :measurement_unit, :ingredient ]
+      )
+      .where(user_recipe: { user_id: [ nil, @user&.id ] })
+      .find(@params[:id])
   end
 
     def breadcrumb_trail
     [
-      BreadcrumbComponent::Data.new("Recipes", [:recipes]),
+      BreadcrumbComponent::Data.new("Recipes", [ :recipes ]),
       BreadcrumbComponent::Data.new(resource.name)
     ]
   end
@@ -27,7 +36,7 @@ class Recipes::ShowFacade < BaseFacade
 
   def create_favorite_toggle_data
     ToggleFormComponent::Data.new(
-      { controller: 'recipe_favorites', action: 'create', recipe_id: resource.id },
+      { controller: "recipe_favorites", action: "create", recipe_id: resource.id },
       :post,
       "Add to Favorites",
       IconComponent::Data.new(:heart, :fal, class: "text-red-500 text-2xl")
@@ -36,7 +45,7 @@ class Recipes::ShowFacade < BaseFacade
 
   def destroy_favorite_toggle_data
     ToggleFormComponent::Data.new(
-      { controller: 'recipe_favorites', action: 'destroy', id: RecipeFavorite.find_by(user: @user, recipe: resource).id },
+      { controller: "recipe_favorites", action: "destroy", id: RecipeFavorite.find_by(user: @user, recipe: resource).id },
       :delete,
       "Remove from Favorites",
       IconComponent::Data.new(:heart, :fas, class: "text-red-500 text-2xl")
@@ -47,7 +56,7 @@ class Recipes::ShowFacade < BaseFacade
     return ButtonLinkComponent::Data.new unless resource.user_recipe && resource.user_recipe&.user == @user
     ButtonLinkComponent::Data[
       "",
-      {controller: "user_recipes", action: "edit", id: resource.user_recipe&.id},
+      { controller: "user_recipes", action: "edit", id: resource.user_recipe&.id },
       :edit,
       :primary,
       { data: { turbo: false } }
@@ -77,7 +86,7 @@ class Recipes::ShowFacade < BaseFacade
   end
 
   def serving_size_collection
-    SERVING_SIZES.map { |size| [size, size] }
+    SERVING_SIZES.map { |size| [ size, size ] }
   end
 
   def current_size
@@ -91,7 +100,7 @@ class Recipes::ShowFacade < BaseFacade
   end
 
   def recipe_ingredients
-    @recipe_ingredients ||= resource.recipe_ingredients.includes(:measurement_unit, :ingredient)
+    @recipe_ingredients ||= resource.recipe_ingredients
   end
 
   def instructions

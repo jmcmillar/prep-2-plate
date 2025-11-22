@@ -10,14 +10,14 @@ class Admin::Recipes::NewFacade < Base::Admin::NewFacade
 
   def breadcrumb_trail
     [
-      BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
-      BreadcrumbComponent::Data.new("Recipes", [:admin, :recipes]),
-      BreadcrumbComponent::Data.new("New"),
+      BreadcrumbComponent::Data.new("Admin", [ :admin, :recipes ]),
+      BreadcrumbComponent::Data.new("Recipes", [ :admin, :recipes ]),
+      BreadcrumbComponent::Data.new("New")
     ]
   end
 
   def form_url
-    [:admin, recipe]
+    [ :admin, recipe ]
   end
 
   def difficulty_levels
@@ -28,10 +28,14 @@ class Admin::Recipes::NewFacade < Base::Admin::NewFacade
 
 
   def categories
-    @categories ||= RecipeCategory.all.order(:name)
+    @categories ||= Rails.cache.fetch("recipe_categories_ordered", expires_in: 12.hours) do
+      RecipeCategory.order(:name).to_a
+    end
   end
 
   def meal_types
-    @meal_types ||= MealType.all.order(:name)
+    @meal_types ||= Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+      MealType.order(:name).to_a
+    end
   end
 end
