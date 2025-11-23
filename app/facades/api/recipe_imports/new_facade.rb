@@ -5,7 +5,7 @@ class Api::RecipeImports::NewFacade
   end
 
   def recipe
-    recipe_record.tap do |recipe|
+    @recipe_with_associations ||= recipe_record.tap do |recipe|
       build_instructions(recipe)
       build_ingredients(recipe)
       attach_image(recipe)
