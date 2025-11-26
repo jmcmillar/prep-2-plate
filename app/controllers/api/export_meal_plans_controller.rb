@@ -1,9 +1,7 @@
 class Api::ExportMealPlansController < Api::BaseController
   def create
-  @facade = Api::CalendarExports::NewFacade.new(Current.user, calendar_export_params)
-    respond_to do |format|
-      format.ics { send_data @facade.calendar_export.to_ical, **@facade.calendar_file_options }
-    end
+    @facade = Api::CalendarExports::NewFacade.new(Current.user, calendar_export_params)
+    send_data @facade.calendar_export.to_ical, **@facade.calendar_file_options
   end
 
   def calendar_export_params

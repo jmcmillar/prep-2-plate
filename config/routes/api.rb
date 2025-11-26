@@ -15,7 +15,7 @@ namespace :api do
   resources :shopping_lists, only: [ :index, :create, :update, :destroy ] do
     resources :shopping_list_items, only: [ :index, :create, :destroy ], shallow: true
   end
-  resource :export_meal_plans, only: [ :create ]
+  resource :export_meal_plans, only: [:create]
   resources :recipe_categories, only: [ :index, :show ]
   resource :user_details, only: %i[show update]
   resource :user_password, only: %i[update]

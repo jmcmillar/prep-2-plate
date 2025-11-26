@@ -6,7 +6,7 @@ class Api::CalendarExports::NewFacade
   end
 
   def calendar_export
-    @calendar_export = Recipe::Calendar.new(recipes).build
+    @calendar_export = RecipeUtils::Calendar.new(recipes).build
   end
 
   def calendar_file_options
@@ -17,10 +17,12 @@ class Api::CalendarExports::NewFacade
   end
   
   def recipes
-    @params.each.map do |(recipe_date, day_data)|
-      day_data.map do |recipe|
-        RecipeCalendarData.new(recipe["id"], recipe["name"], recipe_date.to_date)
-      end.flatten
-    end.flatten
+    @params.each.flat_map do |(recipe_date, day_data)|
+      recipe_ids = day_data["recipeIds"] || day_data[:recipeIds] || []
+
+      Recipe.where(id: recipe_ids).map do |recipe|
+        RecipeCalendarData.new(recipe.id, recipe.name, recipe_date.to_date)
+      end
+    end
   end
 end
