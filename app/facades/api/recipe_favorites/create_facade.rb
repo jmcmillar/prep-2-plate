@@ -23,7 +23,7 @@ class Api::RecipeFavorites::CreateFacade
   private
 
   def favorite
-    @favorite ||= @user.recipe_favorites.find_by(recipe_id: recipe_id)
+    @user.recipe_favorites.find_by(recipe_id: recipe_id)
   end
 
   def recipe_id

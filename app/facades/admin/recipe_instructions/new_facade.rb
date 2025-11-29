@@ -15,10 +15,6 @@ class Admin::RecipeInstructions::NewFacade < Base::Admin::NewFacade
     @measurement_units ||= MeasurementUnit.order(:name)
   end
 
-  def instructions
-    @instructions ||= Instruction.order(:name)
-  end
-
   def breadcrumb_trail
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
