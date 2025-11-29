@@ -17,9 +17,21 @@ production:
     class: SessionCleanupJob
     queue: default
     schedule: every 3 days at 2am
+  orphaned_ingredient_cleanup:
+    class: OrphanedIngredientCleanupJob
+    queue: default
+    schedule: every day at 3am
+  orphaned_recipe_import_cleanup:
+    class: OrphanedRecipeImportCleanupJob
+    queue: default
+    schedule: every day at 4am
 
 development:
   session_cleanup:
     class: SessionCleanupJob
+    queue: default
+    schedule: every day
+  orphaned_ingredient_cleanup:
+    class: OrphanedIngredientCleanupJob
     queue: default
     schedule: every day

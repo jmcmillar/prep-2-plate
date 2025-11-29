@@ -77,6 +77,44 @@ bin/rails sessions:cleanup         # Remove expired sessions
 bin/rails sessions:stats           # Show session statistics
 ```
 
+## Code Quality & Design Principles
+
+When writing or modifying code, prioritize clean code conventions and SOLID principles:
+
+### Clean Code Conventions
+- **Meaningful Names**: Use descriptive, intention-revealing names for classes, methods, and variables
+- **Single Responsibility**: Each method should do one thing and do it well
+- **DRY (Don't Repeat Yourself)**: Extract repeated code into reusable methods or classes
+- **Small Methods**: Keep methods short and focused (generally under 10 lines)
+- **Avoid Deep Nesting**: Prefer guard clauses and early returns over nested conditionals
+- **Comments**: Write self-documenting code; use comments only when necessary to explain "why", not "what"
+
+### SOLID Principles
+- **Single Responsibility Principle**: A class should have only one reason to change
+  - Controllers handle HTTP requests/responses
+  - Facades handle presentation logic
+  - Services handle business logic
+  - Models handle data persistence and validations
+  - Jobs handle background processing
+- **Open/Closed Principle**: Classes should be open for extension but closed for modification
+  - Use inheritance and composition over modifying existing code
+  - Leverage Rails concerns for shared behavior
+- **Liskov Substitution Principle**: Subclasses should be substitutable for their base classes
+  - Ensure inherited classes don't break parent class contracts
+- **Interface Segregation Principle**: Prefer small, focused interfaces over large ones
+  - Keep service objects focused on a single operation
+  - Use multiple small concerns over one large concern
+- **Dependency Inversion Principle**: Depend on abstractions, not concretions
+  - Inject dependencies rather than hard-coding them
+  - Use dependency injection in service objects and jobs
+
+### Practical Application
+- **Keep models lean**: Use service objects, jobs, or concerns for complex business logic
+- **Fat models, skinny controllers** is outdated: Extract business logic to service objects
+- **One level of abstraction per method**: Don't mix high-level and low-level operations
+- **Prefer composition over inheritance**: Use modules and dependency injection
+- **Write testable code**: If it's hard to test, it's probably not well-designed
+
 ## Architecture Patterns
 
 ### Facade Pattern (Presentation Layer)
@@ -98,6 +136,8 @@ UI components in `app/components/` are Ruby classes with templates:
 Simple service classes in `app/services/` for business logic:
 - `BuildRecipeIngredients` - Parses and creates recipe ingredients
 - `FlashService` - Manages flash messages
+
+**Important**: Keep models lean. Do NOT add business logic methods to models. Use service objects or job classes for complex operations.
 
 ### API Structure
 API controllers in `app/controllers/api/` and facades in `app/facades/api/`:
@@ -168,6 +208,7 @@ Mailgun for production (`mailgun-ruby` gem). In development, use Letter Opener W
 - JSON schema matchers available (`json_matchers` gem)
 - SimpleCov for coverage
 - System tests with Selenium WebDriver
+- **Test naming convention**: Use method-style test definitions (e.g., `def test_does_something`) instead of block-style (e.g., `test "does something" do`)
 
 ## Important Conventions
 
