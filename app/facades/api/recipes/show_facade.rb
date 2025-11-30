@@ -32,6 +32,11 @@ class Api::Recipes::ShowFacade
     !recipe.user_recipe
   end
 
+  def allow_edit?
+    return false unless recipe.user_recipe
+    recipe.user_recipe.user_id == @user.id
+  end
+
   def recipe
     @recipe ||= Recipe.includes(recipe_ingredients: [:measurement_unit, :ingredient]).find_by(id: @params[:id])
   end

@@ -26,7 +26,7 @@ class Api::RecipeCategories::IndexFacade
       id: 0,
       name: "My Recipes",
       recipes: Recipe.includes(:user_recipe).where(user_recipe: { user_id: @user.id }).filtered_by_duration((@params.dig(:filter, :duration) || nil))
-        .ransack(@params[:q]).result
+        .ransack(@params[:q]).result.limit(10)
     }
   end
 
@@ -38,7 +38,7 @@ class Api::RecipeCategories::IndexFacade
   def category_recipes(category)
     category.recipes
       .filtered_by_duration((@params.dig(:filter, :duration) || nil))
-      .ransack(@params[:q]).result
+      .ransack(@params[:q]).result.limit(10)
   end
 
   def recipe_favorite(recipe)

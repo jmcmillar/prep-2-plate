@@ -6,14 +6,14 @@ namespace :api do
   resources :categories, only: %i[index], controller: "filters/categories"
   resources :meal_types, only: %i[index], controller: "filters/meal_types"
   resources :measurement_units, only: [ :index ]
-  resources :recipes, only: [ :index, :show, :create ]
+  resources :recipes, only: [ :index, :show, :create, :update ]
   resources :recipe_ingredients, only: [ :index ]
   resource :recipe_imports, only: [ :show, :create ]
   resources :current_shopping_lists, only: [ :create ]
   resource :user_notifications, only: [ :update, :show ]
   resources :recipe_favorites, only: [ :index, :create ]
   resources :shopping_lists, only: [ :index, :create, :update, :destroy ] do
-    resources :shopping_list_items, only: [ :index, :create, :destroy ], shallow: true
+    resources :shopping_list_items, only: [ :index, :create, :update, :destroy ], shallow: true
   end
   resource :export_meal_plans, only: [:create]
   resources :recipe_categories, only: [ :index, :show ]

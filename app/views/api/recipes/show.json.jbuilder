@@ -5,6 +5,7 @@ json.servings @facade.servings
 json.difficultyLevel @facade.difficulty_level
 json.favorite @facade.favorite?
 json.allowFavorite @facade.allow_favorite?
+json.allowEdit @facade.allow_edit?
 json.ingredients do
   json.array! @facade.ingredients do |ingredient|
     json.id ingredient.id

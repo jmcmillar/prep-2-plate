@@ -15,6 +15,16 @@ class Api::ShoppingListItemsController < Api::BaseController
     end
   end
 
+  def update
+    @shopping_list_item = Current.user.shopping_list_items.find(params[:id])
+
+    if @shopping_list_item.update(shopping_list_item_params)
+      render json: @shopping_list_item
+    else
+      render json: @shopping_list_item.errors, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     shopping_list_item = Current.user.shopping_list_items.find(params[:id])
 

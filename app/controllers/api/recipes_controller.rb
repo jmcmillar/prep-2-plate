@@ -16,6 +16,16 @@ class Api::RecipesController < Api::BaseController
     end
   end
 
+  def update
+    @facade = Api::Recipes::EditFacade.new(Current.user, params, strong_params: recipe_params)
+    if @facade.recipe.save
+      render json: { message: 'Recipe updated successfully', recipe: @facade.recipe }
+    else
+      render json: { errors: @facade.recipe.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  private
 
   def recipe_params
     params.require(:recipe).permit(
