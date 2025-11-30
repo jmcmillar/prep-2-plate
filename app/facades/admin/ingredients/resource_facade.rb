@@ -4,18 +4,22 @@ class Admin::Ingredients::ResourceFacade
   end
 
   def self.headers
-    [Table::DefaultHeaderComponent.new("Name")]
+    [Table::DefaultHeaderComponent.new("Name"), Table::DefaultHeaderComponent.new("Category")]
   end
 
   def self.to_row(facade)
     Table::RowComponent.new(
-      [facade.name, facade.action],
+      [facade.name, facade.category, facade.action],
       id: facade.id
     )
   end
 
   def name
     Table::DataComponent.new(@resource.name)
+  end
+
+  def category
+    Table::DataComponent.new(@resource.ingredient_category_name || "Uncategorized")
   end
 
   def id

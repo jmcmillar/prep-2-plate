@@ -3,11 +3,12 @@ class MenuData
   def self.admin_menu
     [
       MenuItemData[:admin_recipes, "Recipes", :admin_recipes, true],
+      MenuItemData[:admin_recipe_categories, "Recipe Categories", :admin_recipe_categories, true],
       MenuItemData[:admin_ingredients, "Ingredients", :admin_ingredients, true],
+      MenuItemData[:admin_ingredient_categories, "Ingredient Categories", :admin_ingredient_categories, true],
       MenuItemData[:admin_meal_plans, "Meal Plans", :admin_meal_plans, true],
       MenuItemData[:admin_meal_types, "Meal Types", :admin_meal_types, true],
       MenuItemData[:admin_measurement_units, "Measurement Units", :admin_measurement_units, true],
-      MenuItemData[:admin_recipe_categories, "Recipe Categories", :admin_recipe_categories, true],
       MenuItemData[:admin_resources, "Resources", :admin_resources, true],
       MenuItemData[:admin_users, "Users", :admin_users, true]
     ]
@@ -46,6 +47,7 @@ class MenuData
         admin_meal_types: :utensils,
         admin_recipe_categories: :th_large,
         admin_ingredients: :list,
+        admin_ingredient_categories: :tags,
         admin_measurement_units: :balance_scale,
         admin_meal_plans: :calendar,
         admin_users: :users,

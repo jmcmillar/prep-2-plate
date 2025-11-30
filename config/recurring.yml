@@ -25,6 +25,10 @@ production:
     class: OrphanedRecipeImportCleanupJob
     queue: default
     schedule: every day at 4am
+  categorize_ingredients:
+    class: CategorizeIngredientsJob
+    queue: default
+    schedule: every day at 1am
 
 development:
   session_cleanup:
@@ -35,3 +39,11 @@ development:
     class: OrphanedIngredientCleanupJob
     queue: default
     schedule: every day
+  orphaned_recipe_import_cleanup:
+    class: OrphanedRecipeImportCleanupJob
+    queue: default
+    schedule: every day at 4am
+  categorize_ingredients:
+    class: CategorizeIngredientsJob
+    queue: default
+    schedule: every day at 1am

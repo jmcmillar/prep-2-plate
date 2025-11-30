@@ -20,6 +20,7 @@ namespace :admin do
   end
   resources :meal_types, except: :show
   resources :recipe_categories, except: :show
+  resources :ingredient_categories, except: :show
   resources :ingredients, except: :show
   resources :shopping_lists do
     resources :shopping_list_items, except: :show

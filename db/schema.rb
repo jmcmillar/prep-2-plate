@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_18_024656) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_194007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,10 +52,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_18_024656) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "ingredient_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "ingredient_category_id"
+    t.string "categorized_by"
+    t.datetime "categorized_at"
+    t.index ["ingredient_category_id"], name: "index_ingredients_on_ingredient_category_id"
   end
 
   create_table "meal_plan_recipes", force: :cascade do |t|
@@ -240,6 +250,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_18_024656) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "ingredients", "ingredient_categories"
   add_foreign_key "meal_plan_recipes", "meal_plans"
   add_foreign_key "meal_plan_recipes", "recipes"
   add_foreign_key "measurement_unit_aliases", "measurement_units"
