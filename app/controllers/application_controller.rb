@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include DestroyFlash
+  include Pagy::Frontend
   before_action :set_user
 
   def set_user
