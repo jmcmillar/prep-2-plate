@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../stylesheets/pagy.css";
 
 @theme {
   --color-danger: oklch(0.627 0.233 27.14);
