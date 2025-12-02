@@ -38,7 +38,7 @@ class Api::Recipes::ShowFacade
   end
 
   def recipe
-    @recipe ||= Recipe.includes(recipe_ingredients: [:measurement_unit, :ingredient]).find_by(id: @params[:id])
+    @recipe ||= Recipe.includes(recipe_ingredients: [:measurement_unit, { ingredient: :ingredient_category }]).find_by(id: @params[:id])
   end
 
   def instructions
@@ -47,5 +47,17 @@ class Api::Recipes::ShowFacade
 
   def ingredients
     @decorated_ingredients ||= RecipeIngredient::FullNameDecorator.decorate_collection(recipe.recipe_ingredients)
+  end
+
+  def grouped_ingredients
+    @grouped_ingredients ||= ingredients.group_by do |recipe_ingredient|
+      recipe_ingredient.ingredient.ingredient_category || uncategorized_category
+    end.sort_by { |category, _| category.name }
+  end
+
+  private
+
+  def uncategorized_category
+    @uncategorized_category ||= IngredientCategory.new(id: nil, name: "Uncategorized")
   end
 end
