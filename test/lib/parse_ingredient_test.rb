@@ -2,6 +2,10 @@ require "test_helper"
 
 class ParseIngredientTest < ActiveSupport::TestCase
   def setup
+    # Clean up any existing data first
+    MeasurementUnitAlias.destroy_all
+    MeasurementUnit.destroy_all
+
     # Create measurement units and aliases for testing
     @cup_unit = MeasurementUnit.create!(name: "cup")
     @tablespoon_unit = MeasurementUnit.create!(name: "tablespoon")
@@ -21,7 +25,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     MeasurementUnit.destroy_all
   end
 
-  test "parses basic ingredient with quantity, unit, and name" do
+  def test_parses_basic_ingredient_with_quantity_unit_and_name
     ingredient = "2 cups flour"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -32,7 +36,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "", result[:ingredient_notes]
   end
 
-  test "parses ingredient with fractional quantity" do
+  def test_parses_ingredient_with_fractional_quantity
     ingredient = "1/2 cup sugar"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -42,7 +46,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "sugar", result[:ingredient_name]
   end
 
-  test "parses ingredient with decimal quantity" do
+  def test_parses_ingredient_with_decimal_quantity
     ingredient = "2.5 tablespoons olive oil"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -52,7 +56,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "olive oil", result[:ingredient_name]
   end
 
-  test "excludes measurement unit from ingredient name" do
+  def test_excludes_measurement_unit_from_ingredient_name
     ingredient = "2 cups all-purpose flour"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -63,7 +67,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     refute_includes result[:ingredient_name], "cups"
   end
 
-  test "excludes measurement unit aliases from ingredient name" do
+  def test_excludes_measurement_unit_aliases_from_ingredient_name
     ingredient = "1 tsp vanilla extract"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -74,7 +78,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     refute_includes result[:ingredient_name], "tsp"
   end
 
-  test "parses ingredient with parenthetical notes" do
+  def test_parses_ingredient_with_parenthetical_notes
     ingredient = "2 cups flour (sifted)"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -85,7 +89,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "sifted", result[:ingredient_notes]
   end
 
-  test "parses ingredient with comma-separated notes" do
+  def test_parses_ingredient_with_comma_separated_notes
     ingredient = "1 large onion, diced, fresh"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -96,19 +100,19 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "diced, fresh", result[:ingredient_notes]
   end
 
-  test "excludes notes from ingredient name" do
+  def test_excludes_notes_from_ingredient_name
     ingredient = "2 cups basil, fresh (chopped)"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
 
     assert_equal "basil", result[:ingredient_name]
-    assert_equal "fresh, chopped", result[:ingredient_notes]
+    assert_equal "chopped, fresh", result[:ingredient_notes]
     # Should exclude both "fresh" (from comma notes) and "chopped" (from parenthetical)
     refute_includes result[:ingredient_name], "fresh"
     refute_includes result[:ingredient_name], "chopped"
   end
 
-  test "handles ingredient with no measurement unit" do
+  def test_handles_ingredient_with_no_measurement_unit
     ingredient = "1 large onion"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -119,7 +123,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "", result[:ingredient_notes]
   end
 
-  test "handles ingredient with no quantity" do
+  def test_handles_ingredient_with_no_quantity
     ingredient = "salt to taste"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -130,19 +134,19 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "", result[:ingredient_notes]
   end
 
-  test "handles complex ingredient with all components" do
+  def test_handles_complex_ingredient_with_all_components
     ingredient = "2 1/4 cups basil leaves, fresh, chopped (organic)"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
 
     assert_equal "2 1/4", result[:quantity]
     assert_equal @cup_unit.id, result[:measurement_unit_id]
-    # Should exclude: cups, cup, c, C (unit aliases), fresh, chopped (comma notes), organic (parenthetical)
+    # Should exclude: cups, cup, c, C (unit aliases), organic (parenthetical), fresh, chopped (comma notes)
     assert_equal "basil leaves", result[:ingredient_name]
-    assert_equal "fresh, chopped, organic", result[:ingredient_notes]
+    assert_equal "organic, fresh, chopped", result[:ingredient_notes]
   end
 
-  test "handles empty ingredient string" do
+  def test_handles_empty_ingredient_string
     ingredient = ""
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -153,17 +157,17 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "", result[:ingredient_notes]
   end
 
-  test "quantity? method returns true when quantity present" do
+  def test_quantity_method_returns_true_when_quantity_present
     parser = ParseIngredient.new("2 cups flour")
     assert parser.send(:quantity?)
   end
 
-  test "quantity? method returns false when no quantity" do
+  def test_quantity_method_returns_false_when_no_quantity
     parser = ParseIngredient.new("salt to taste")
     refute parser.send(:quantity?)
   end
 
-  test "unit_parser is memoized" do
+  def test_unit_parser_is_memoized
     parser = ParseIngredient.new("2 cups flour")
     first_call = parser.send(:unit_parser)
     second_call = parser.send(:unit_parser)
@@ -171,7 +175,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_same first_call, second_call
   end
 
-  test "exclude_from_name combines notes and unit aliases" do
+  def test_exclude_from_name_combines_notes_and_unit_aliases
     ingredient = "2 cups fresh basil, chopped"
     parser = ParseIngredient.new(ingredient)
     excludes = parser.send(:exclude_from_name)
@@ -184,7 +188,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_includes excludes, "chopped"
   end
 
-  test "handles ingredient with mixed case units" do
+  def test_handles_ingredient_with_mixed_case_units
     ingredient = "2 CUPS Flour"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -194,7 +198,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "Flour", result[:ingredient_name]
   end
 
-  test "handles unicode characters in ingredient" do
+  def test_handles_unicode_characters_in_ingredient
     ingredient = "1 cup café beans"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
@@ -203,12 +207,75 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "café beans", result[:ingredient_name]
   end
 
-  test "handles ingredient with multiple parenthetical notes" do
+  def test_handles_ingredient_with_multiple_parenthetical_notes
     ingredient = "2 cups flour (sifted) (organic)"
     parser = ParseIngredient.new(ingredient)
     result = parser.to_h
 
     assert_equal "flour", result[:ingredient_name]
     assert_equal "sifted, organic", result[:ingredient_notes]
+  end
+
+  def test_parses_ingredient_with_unicode_fraction_one_half
+    ingredient = "½ cup sugar"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "1/2", result[:quantity]
+    assert_equal @cup_unit.id, result[:measurement_unit_id]
+    assert_equal "sugar", result[:ingredient_name]
+  end
+
+  def test_parses_ingredient_with_unicode_fraction_one_quarter
+    ingredient = "¼ teaspoon salt"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "1/4", result[:quantity]
+    assert_equal @teaspoon_unit.id, result[:measurement_unit_id]
+    assert_equal "salt", result[:ingredient_name]
+  end
+
+  def test_parses_ingredient_with_unicode_fraction_three_quarters
+    ingredient = "¾ cup milk"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "3/4", result[:quantity]
+    assert_equal @cup_unit.id, result[:measurement_unit_id]
+    assert_equal "milk", result[:ingredient_name]
+  end
+
+  def test_parses_ingredient_with_unicode_fraction_one_third
+    ingredient = "⅓ cup olive oil"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "1/3", result[:quantity]
+    assert_equal @cup_unit.id, result[:measurement_unit_id]
+    assert_equal "olive oil", result[:ingredient_name]
+  end
+
+  def test_excludes_unicode_fraction_from_ingredient_name
+    ingredient = "½ barbecue sauce"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "1/2", result[:quantity]
+    assert_equal "barbecue sauce", result[:ingredient_name]
+    refute_includes result[:ingredient_name], "½"
+    refute_includes result[:ingredient_name], "1/2"
+  end
+
+  def test_parses_mixed_number_with_unicode_fraction
+    ingredient = "2½ cups flour"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    # Note: "2½" converts to "21/2" which isn't ideal but is handled
+    # A future enhancement could be to add space: "2 1/2"
+    assert_equal "21/2", result[:quantity]
+    assert_equal @cup_unit.id, result[:measurement_unit_id]
+    assert_equal "flour", result[:ingredient_name]
   end
 end

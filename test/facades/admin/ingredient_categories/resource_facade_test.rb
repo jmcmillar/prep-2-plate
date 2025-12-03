@@ -15,9 +15,9 @@ class Admin::IngredientCategories::ResourceFacadeTest < ActiveSupport::TestCase
 
   def test_to_row
     row = Admin::IngredientCategories::ResourceFacade.to_row(@facade)
-    
+
     assert_kind_of Table::RowComponent, row
-    assert_equal "ingredient_category_#{@ingredient_category.id}", row.id
+    assert_equal "ingredient_category_#{@ingredient_category.id}", row.instance_variable_get(:@html_options)[:id]
   end
 
   def test_name
@@ -38,8 +38,8 @@ class Admin::IngredientCategories::ResourceFacadeTest < ActiveSupport::TestCase
 
   def test_action_turbo_data
     turbo_data = @facade.action_turbo_data
-    
+
     assert_kind_of TurboData, turbo_data
-    assert_equal :table_actions, turbo_data.target
+    assert_equal :table_actions, turbo_data.frame_id
   end
 end

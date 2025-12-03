@@ -5,9 +5,6 @@ class Api::RecipeFavorites::IndexFacade
   end
 
   def favorite_recipes
-    puts "*" * 20
-    puts @user.recipes
-    puts "*" * 20
     @user.recipes.with_attached_image
   end
 

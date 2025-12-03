@@ -38,7 +38,11 @@ class RecipeUtils::ParseUnit
   end
 
   def ingredient_words
-    @ingredient_words ||= @ingredient.gsub(/^[0-9_ .\/]*/, "").split.map(&:downcase)
+    @ingredient_words ||= @ingredient
+      .gsub(/^[0-9_ .\/]*/, "")  # Strip leading numbers and fractions
+      .split                      # Split into words
+      .map { |word| word.gsub(/[^\p{L}\p{N}]/, "").downcase }  # Remove punctuation and downcase
+      .reject(&:blank?)           # Remove empty strings
   end
 
   def grouped_by_measurement

@@ -1,25 +1,22 @@
 class ParseIngredient
   def initialize(ingredient_string)
     @ingredient = ingredient_string
+    @normalized_ingredient = RecipeUtils::UnicodeFractions.convert(ingredient_string)
   end
 
   def to_h
-    puts "*" * 100
-    puts "Parsing ingredient: #{@ingredient.inspect}"
-    puts unit_parser.inspect
-    puts "*" * 100
     {
-      quantity: @ingredient.scan(/^[0-9_ .\/]*/).flatten.first&.strip || "",
+      quantity: @normalized_ingredient.scan(/^[0-9_ .\/]*/).flatten.first&.strip || "",
       measurement_unit_id: unit_parser.id,
-      ingredient_name: RecipeUtils::ParseIngredientName.new(@ingredient, exclude_from_name).to_s,
-      ingredient_notes: RecipeUtils::ParseNotes.new(@ingredient).to_s
+      ingredient_name: RecipeUtils::ParseIngredientName.new(@normalized_ingredient, exclude_from_name).to_s,
+      ingredient_notes: RecipeUtils::ParseNotes.new(@normalized_ingredient).to_s
     }
   end
 
   private
 
   def unit_parser
-    @unit_parser ||= RecipeUtils::ParseUnit.to_data(@ingredient)
+    @unit_parser ||= RecipeUtils::ParseUnit.to_data(@normalized_ingredient)
   end
 
   def exclude_from_name
@@ -31,10 +28,10 @@ class ParseIngredient
   end
 
   def note_parser
-    RecipeUtils::ParseNotes.new(@ingredient)
+    RecipeUtils::ParseNotes.new(@normalized_ingredient)
   end
 
   def quantity?
-    @ingredient.scan(/^[0-9_ .\/]*/).flatten.first.present?
+    @normalized_ingredient.scan(/^[0-9_ .\/]*/).flatten.first.present?
   end
 end

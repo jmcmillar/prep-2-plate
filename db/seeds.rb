@@ -21,6 +21,7 @@ if Rails.env.development?
   Recipe.delete_all
   Ingredient.delete_all
   IngredientCategory.delete_all
+  MeasurementUnitAlias.delete_all
   MeasurementUnit.delete_all
   Session.delete_all
   User.delete_all
@@ -41,12 +42,75 @@ categories.each do |parent, _subcats|
   ingredient_categories[parent] = IngredientCategory.find_or_create_by!(name: parent)
 end
 
-# Create measurement units
-puts "  Creating measurement units..."
-unit_names = ["pieces", "cups", "tablespoons", "teaspoons", "lbs", "oz", "medium", "cloves", "head"]
+# Create measurement units with aliases
+puts "  Creating measurement units with aliases..."
+measurement_units_data = {
+  # Volume - Metric
+  "liter" => ["l", "litre", "litres", "liters"],
+  "milliliter" => ["ml", "millilitre", "millilitres", "milliliters"],
+
+  # Volume - US/Imperial
+  "cup" => ["c", "cups"],
+  "tablespoon" => ["tbsp", "tbs", "T", "tablespoons"],
+  "teaspoon" => ["tsp", "t", "teaspoons"],
+  "fluid ounce" => ["fl oz", "fl. oz.", "fluid ounces"],
+  "pint" => ["pt", "pints"],
+  "quart" => ["qt", "quarts"],
+  "gallon" => ["gal", "gallons"],
+
+  # Weight - Metric
+  "gram" => ["g", "grams"],
+  "kilogram" => ["kg", "kilo", "kilos", "kilograms"],
+  "milligram" => ["mg", "milligrams"],
+
+  # Weight - US/Imperial
+  "pound" => ["lb", "lbs", "pounds"],
+  "ounce" => ["oz", "ounces"],
+
+  # Length
+  "inch" => ["in", "inches", "\""],
+  "centimeter" => ["cm", "centimeters", "centimetre", "centimetres"],
+
+  # Count/Descriptive
+  "piece" => ["pc", "pcs", "pieces"],
+  "whole" => ["wholes"],
+  "slice" => ["slices"],
+  "clove" => ["cloves"],
+  "head" => ["heads"],
+  "bunch" => ["bunches"],
+  "sprig" => ["sprigs"],
+  "stalk" => ["stalks"],
+  "leaf" => ["leaves"],
+  "handful" => ["handfuls"],
+  "pinch" => ["pinches"],
+  "dash" => ["dashes"],
+  "can" => ["cans", "tin", "tins"],
+  "package" => ["pkg", "pkgs", "packages", "pack", "packs"],
+  "container" => ["containers"],
+  "jar" => ["jars"],
+  "bottle" => ["bottles"],
+  "box" => ["boxes"],
+  "bag" => ["bags"],
+
+  # Size descriptors (often used with produce)
+  "small" => ["sm"],
+  "medium" => ["med", "md"],
+  "large" => ["lg"],
+  "extra large" => ["xl", "x-large"]
+}
+
 measurement_units = {}
-unit_names.each do |unit_name|
-  measurement_units[unit_name] = MeasurementUnit.find_or_create_by!(name: unit_name)
+measurement_units_data.each do |unit_name, aliases|
+  unit = MeasurementUnit.find_or_create_by!(name: unit_name)
+  measurement_units[unit_name] = unit
+
+  # Create aliases for this measurement unit
+  aliases.each do |alias_name|
+    MeasurementUnitAlias.find_or_create_by!(
+      measurement_unit: unit,
+      name: alias_name
+    )
+  end
 end
 
 # Create ingredients
@@ -103,11 +167,11 @@ recipes_data = [
     cook_time: 30,
     servings: 4,
     ingredients: [
-      { name: "Chicken Breast", quantity: "4", unit: "pieces" },
+      { name: "Chicken Breast", quantity: "4", unit: "piece" },
       { name: "Parmesan Cheese", quantity: "1", unit: "cup" },
-      { name: "Tomatoes", quantity: "2", unit: "cups" },
-      { name: "Garlic", quantity: "3", unit: "cloves" },
-      { name: "Olive Oil", quantity: "2", unit: "tablespoons" }
+      { name: "Tomatoes", quantity: "2", unit: "cup" },
+      { name: "Garlic", quantity: "3", unit: "clove" },
+      { name: "Olive Oil", quantity: "2", unit: "tablespoon" }
     ]
   },
   {
@@ -117,7 +181,7 @@ recipes_data = [
     cook_time: 15,
     servings: 6,
     ingredients: [
-      { name: "Ground Beef", quantity: "1", unit: "lb" },
+      { name: "Ground Beef", quantity: "1", unit: "pound" },
       { name: "Onions", quantity: "1", unit: "medium" },
       { name: "Tomatoes", quantity: "2", unit: "medium" },
       { name: "Cheddar Cheese", quantity: "1", unit: "cup" },
@@ -132,9 +196,9 @@ recipes_data = [
     cook_time: 12,
     servings: 2,
     ingredients: [
-      { name: "Salmon Fillet", quantity: "2", unit: "pieces" },
-      { name: "Butter", quantity: "3", unit: "tablespoons" },
-      { name: "Garlic", quantity: "4", unit: "cloves" },
+      { name: "Salmon Fillet", quantity: "2", unit: "piece" },
+      { name: "Butter", quantity: "3", unit: "tablespoon" },
+      { name: "Garlic", quantity: "4", unit: "clove" },
       { name: "Salt", quantity: "1", unit: "teaspoon" },
       { name: "Black Pepper", quantity: "1/2", unit: "teaspoon" }
     ]
@@ -149,9 +213,9 @@ recipes_data = [
       { name: "Bell Peppers", quantity: "2", unit: "medium" },
       { name: "Carrots", quantity: "2", unit: "medium" },
       { name: "Onions", quantity: "1", unit: "medium" },
-      { name: "Garlic", quantity: "3", unit: "cloves" },
-      { name: "Rice", quantity: "2", unit: "cups" },
-      { name: "Olive Oil", quantity: "2", unit: "tablespoons" }
+      { name: "Garlic", quantity: "3", unit: "clove" },
+      { name: "Rice", quantity: "2", unit: "cup" },
+      { name: "Olive Oil", quantity: "2", unit: "tablespoon" }
     ]
   },
   {
@@ -161,13 +225,13 @@ recipes_data = [
     cook_time: 20,
     servings: 6,
     ingredients: [
-      { name: "Pasta", quantity: "1", unit: "lb" },
+      { name: "Pasta", quantity: "1", unit: "pound" },
       { name: "Bell Peppers", quantity: "1", unit: "medium" },
       { name: "Tomatoes", quantity: "2", unit: "medium" },
-      { name: "Garlic", quantity: "3", unit: "cloves" },
+      { name: "Garlic", quantity: "3", unit: "clove" },
       { name: "Milk", quantity: "1", unit: "cup" },
       { name: "Parmesan Cheese", quantity: "1/2", unit: "cup" },
-      { name: "Butter", quantity: "2", unit: "tablespoons" }
+      { name: "Butter", quantity: "2", unit: "tablespoon" }
     ]
   }
 ]
@@ -281,6 +345,8 @@ puts "  Recipes: #{Recipe.count}"
 puts "  User-Owned Recipes: #{UserRecipe.count}"
 puts "  Ingredients: #{Ingredient.count}"
 puts "  Ingredient Categories: #{IngredientCategory.count}"
+puts "  Measurement Units: #{MeasurementUnit.count}"
+puts "  Measurement Unit Aliases: #{MeasurementUnitAlias.count}"
 puts "  Favorites: #{RecipeFavorite.count}"
 puts "  Meal Plans: #{MealPlan.count}"
 puts "  Meal Plan Recipes: #{MealPlanRecipe.count}"

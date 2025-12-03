@@ -1,30 +1,26 @@
 require "test_helper"
 
-class FlashServiceTest < ViewComponent::TestCase
+class FlashServiceTest < ActiveSupport::TestCase
   def test_valid_alert
-    with_controller_class ApplicationController do
-      controller.flash[:alert] = "Something Bad!"
-      flash_notice = FlashService.call(controller.flash)
-      flash_notice.tap { |flash|
-        assert_kind_of ActionView::OutputBuffer, flash
-      }
-    end
+    flash_hash = ActionDispatch::Flash::FlashHash.new
+    flash_hash[:alert] = "Something Bad!"
+    flash_notice = FlashService.call(flash_hash)
+
+    assert_kind_of ActiveSupport::SafeBuffer, flash_notice
   end
 
   def test_valid_notice
-    with_controller_class ApplicationController do
-      controller.flash[:notice] = "Something Good!"
-      flash_notice = FlashService.call(controller.flash)
-      flash_notice.tap { |flash|
-        assert_kind_of ActionView::OutputBuffer, flash
-      }
-    end
+    flash_hash = ActionDispatch::Flash::FlashHash.new
+    flash_hash[:notice] = "Something Good!"
+    flash_notice = FlashService.call(flash_hash)
+
+    assert_kind_of ActiveSupport::SafeBuffer, flash_notice
   end
 
   def test_nil_flash
-    with_controller_class ApplicationController do
-      flash_notice = FlashService.call(controller.flash)
-      refute flash_notice
-    end
+    flash_hash = ActionDispatch::Flash::FlashHash.new
+    flash_notice = FlashService.call(flash_hash)
+
+    refute flash_notice
   end
 end

@@ -15,15 +15,17 @@ class RecipeUtils::ParseNotes
 
   def ingredient_notes
     notes = []
-  
+
     @ingredient.scan(/\(([^)]+)\)/) do |match|
       notes << match.first
     end
-  
+
     @ingredient.split(/,\s*/).drop(1).each do |part|
-      notes << part.strip
+      # Remove parenthetical content from comma-separated parts
+      cleaned_part = part.gsub(/\([^)]*\)/, "").strip
+      notes << cleaned_part unless cleaned_part.empty?
     end
-  
+
     notes
   end
 end

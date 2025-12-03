@@ -5,12 +5,15 @@ class RecipeUtils::ParseIngredientName
   end
 
   def to_s
-    # First strip numbers and get the core text
-    stripped_chars = strip_numbers_and_special_characters(@ingredient)
-    
+    # First normalize Unicode fractions to ASCII
+    normalized = RecipeUtils::UnicodeFractions.convert(@ingredient)
+
+    # Then strip numbers and get the core text
+    stripped_chars = strip_numbers_and_special_characters(normalized)
+
     # Then remove excluded words
     result = ingredient_stripped_of_substrings(stripped_chars)
-    
+
     # Final cleanup of multiple spaces and trim
     result.gsub(/\s+/, " ").strip
   end
