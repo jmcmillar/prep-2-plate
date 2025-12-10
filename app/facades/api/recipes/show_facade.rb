@@ -25,7 +25,7 @@ class Api::Recipes::ShowFacade
   end
 
   def favorite?
-    @user.recipes.include?(recipe)
+    @favorite ||= RecipeFavorite.exists?(user: @user, recipe: recipe)
   end
 
   def allow_favorite?
@@ -38,7 +38,10 @@ class Api::Recipes::ShowFacade
   end
 
   def recipe
-    @recipe ||= Recipe.includes(recipe_ingredients: [:measurement_unit, { ingredient: :ingredient_category }]).find_by(id: @params[:id])
+    @recipe ||= Recipe.includes(
+      :recipe_instructions,
+      recipe_ingredients: [:measurement_unit, { ingredient: :ingredient_category }]
+    ).find_by(id: @params[:id])
   end
 
   def instructions

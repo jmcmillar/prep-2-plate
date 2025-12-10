@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_08_023030) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_10_023602) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -128,6 +128,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_023030) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_recipe_favorites_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_recipe_favorites_on_user_and_recipe", unique: true
     t.index ["user_id"], name: "index_recipe_favorites_on_user_id"
   end
 
@@ -179,6 +180,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_023030) do
     t.boolean "featured", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_recipes_on_created_at"
+    t.index ["duration_minutes"], name: "index_recipes_on_duration_minutes"
+    t.index ["featured"], name: "index_recipes_on_featured"
     t.index ["recipe_import_id"], name: "index_recipes_on_recipe_import_id"
   end
 
@@ -216,6 +220,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_023030) do
     t.boolean "current", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "shopping_list_items_count", default: 0, null: false
+    t.index ["current"], name: "index_shopping_lists_on_current"
+    t.index ["user_id", "current"], name: "index_shopping_lists_on_user_id_and_current"
     t.index ["user_id"], name: "index_shopping_lists_on_user_id"
   end
 
@@ -234,6 +241,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_08_023030) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_user_recipes_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_user_recipes_on_user_and_recipe", unique: true
     t.index ["user_id"], name: "index_user_recipes_on_user_id"
   end
 

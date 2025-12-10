@@ -10,13 +10,20 @@ class Api::RecipeCategories::IndexFacade
   end
 
   def recipe_categories
-    categories.includes(:recipes).map { |category| 
-      { 
+    # Preload favorited recipe IDs to avoid N+1 queries
+    preload_favorited_recipe_ids
+
+    categories.includes(:recipes).map { |category|
+      {
         id: category.id,
         name: category.name,
         recipes: category_recipes(category)
       }
     }.prepend(my_recipe_category)
+  end
+
+  def recipe_favorite(recipe)
+    @favorited_recipe_ids.include?(recipe.id)
   end
 
   private
@@ -41,8 +48,18 @@ class Api::RecipeCategories::IndexFacade
       .ransack(@params[:q]).result.limit(10)
   end
 
-  def recipe_favorite(recipe)
-    RecipeFavorite.find_by(user: @user, recipe: recipe).present?
+  def preload_favorited_recipe_ids
+    return if @favorited_recipe_ids
+
+    # Collect all recipe IDs that will be displayed
+    all_recipe_ids = categories.flat_map { |category| category_recipes(category).pluck(:id) }
+    all_recipe_ids += my_recipe_category[:recipes].pluck(:id)
+
+    # Load favorites in one query
+    @favorited_recipe_ids = RecipeFavorite
+      .where(user: @user, recipe_id: all_recipe_ids)
+      .pluck(:recipe_id)
+      .to_set
   end
 
   def default_image
