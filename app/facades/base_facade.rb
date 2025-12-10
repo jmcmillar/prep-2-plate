@@ -34,7 +34,7 @@ class BaseFacade
     ButtonLinkComponent.new(
       button_link_data: ButtonLinkComponent::Data[
         "Sign In",
-        [:new, :session],
+        [:new, :user, :session],
         :sign_in,
         :link,
         { class: "self-start" }
@@ -46,7 +46,7 @@ class BaseFacade
     ButtonLinkComponent.new(
       button_link_data: ButtonLinkComponent::Data[
         "Sign Out",
-        [:session],
+        [:destroy, :user, :session],
         :sign_out,
         :link,
         { class: "self-start", data: { "turbo-method": :delete } }

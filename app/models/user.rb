@@ -1,10 +1,23 @@
 class User < ApplicationRecord
-  has_secure_password
-  has_one_attached :image, dependent: :destroy
+  # Devise modules for web authentication
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable,
+         :confirmable, :lockable, :timeoutable, :trackable
+
+  # Keep Session model for API Bearer token authentication
   has_many :sessions, dependent: :destroy
 
-  normalizes :email_address, with: ->(e) { e.strip.downcase }
+  # Active Storage
+  has_one_attached :image, dependent: :destroy
 
+  # Validations
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+
+  # Normalizations - updated to use :email instead of :email_address
+  normalizes :email, with: ->(e) { e.strip.downcase }
+
+  # Associations
   has_many :user_recipes, dependent: :destroy
   has_many :recipe_favorites, dependent: :destroy
   has_many :recipes, through: :recipe_favorites
@@ -12,4 +25,14 @@ class User < ApplicationRecord
   has_many :meal_plans, through: :user_meal_plans
   has_many :shopping_lists, dependent: :destroy
   has_many :shopping_list_items, through: :shopping_lists
+
+  # Override Devise method to ensure account isn't locked
+  def active_for_authentication?
+    super && !locked_at
+  end
+
+  # Custom message when account is locked
+  def inactive_message
+    locked_at ? :locked : super
+  end
 end

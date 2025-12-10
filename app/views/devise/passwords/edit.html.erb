@@ -1,0 +1,19 @@
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Change your password</h2>
+
+  <%= meal_planner_form_with(model: resource, as: resource_name, url: password_path(resource_name), method: :put) do |f| %>
+    <%= render 'components/errors', model: resource %>
+    <%= f.hidden_field :reset_password_token %>
+
+    <% password_label = "New password" %>
+    <% password_label += " (#{@minimum_password_length} characters minimum)" if @minimum_password_length %>
+    <%= f.input :password, as: :password_field, label_text: password_label, autofocus: true, autocomplete: "new-password", required: true %>
+    <%= f.input :password_confirmation, as: :password_field, label_text: "Confirm new password", autocomplete: "new-password", required: true %>
+
+    <%= f.actions cancel_path: root_path, submit_text: "Change my password" %>
+  <% end %>
+
+  <div class="mt-4">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

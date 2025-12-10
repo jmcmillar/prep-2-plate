@@ -1,0 +1,15 @@
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Resend confirmation instructions</h2>
+
+  <%= meal_planner_form_with(model: resource, as: resource_name, url: user_confirmation_path, method: :post) do |f| %>
+    <%= render 'components/errors', model: resource %>
+
+    <%= f.input :email, as: :email_field, label_text: "Email", autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), required: true %>
+
+    <%= f.actions cancel_path: root_path, submit_text: "Resend confirmation instructions" %>
+  <% end %>
+
+  <div class="mt-4">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

@@ -19,7 +19,7 @@ class Admin::Users::ShowFacade < Base::Admin::ShowFacade
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :users]),
       BreadcrumbComponent::Data.new("Users", [:admin, :users]),
-      BreadcrumbComponent::Data.new(resource.email_address)
+      BreadcrumbComponent::Data.new(resource.email)
     ]
   end
 

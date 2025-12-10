@@ -46,7 +46,7 @@
             </button>
             <div class="z-20 absolute w-32 bg-white rounded-lg border border-gray-200 py-2 mt-12 hidden" data-toggle-target="toggle">
               <%= link_to("Profile", account_profile_path, class: "block px-4 py-2") %>
-              <%= button_to("Sign Out", [:session], method: :delete, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
+              <%= button_to("Sign Out", [:user, :session], method: :delete, data: { "turbo-method": :delete }, class: "block px-4 py-2") %>
             </div>
         </div>
       </header>

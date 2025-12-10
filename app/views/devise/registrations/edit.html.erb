@@ -1,0 +1,35 @@
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Edit <%= resource_name.to_s.humanize %></h2>
+
+  <%= meal_planner_form_with(model: resource, as: resource_name, url: registration_path(resource_name), method: :put) do |f| %>
+    <%= render 'components/errors', model: resource %>
+
+    <%= f.input :first_name, label_text: "First name", autofocus: true, autocomplete: "given-name", required: true %>
+    <%= f.input :last_name, label_text: "Last name", autocomplete: "family-name", required: true %>
+    <%= f.input :email, as: :email_field, label_text: "Email", autocomplete: "email", required: true %>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div class="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+        Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+      </div>
+    <% end %>
+
+    <% password_label = "Password (leave blank if you don't want to change it)" %>
+    <% password_label += " - #{@minimum_password_length} characters minimum" if @minimum_password_length %>
+    <%= f.input :password, as: :password_field, label_text: password_label, autocomplete: "new-password" %>
+    <%= f.input :password_confirmation, as: :password_field, label_text: "Password confirmation", autocomplete: "new-password" %>
+    <%= f.input :current_password, as: :password_field, label_text: "Current password (required to confirm changes)", autocomplete: "current-password", required: true %>
+
+    <%= f.actions cancel_path: :back, submit_text: "Update" %>
+  <% end %>
+
+  <div class="mt-8 pt-8 border-t border-gray-200">
+    <h3 class="text-lg font-semibold mb-4">Cancel my account</h3>
+    <p class="text-sm text-gray-600 mb-4">Unhappy with the service?</p>
+    <%= button_to "Cancel my account",
+        registration_path(resource_name),
+        data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" },
+        method: :delete,
+        class: "h-10 rounded bg-red-600 px-4 py-2 text-white font-medium hover:bg-red-700" %>
+  </div>
+</div>

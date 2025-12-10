@@ -5,6 +5,6 @@
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "User", class: "mb-8") do %>
     <%= tag.p(class: "font-medium mb-2") { "Email"} %>
-    <%= tag.p(class: "mb-8") { @facade.resource.email_address } %>
+    <%= tag.p(class: "mb-8") { @facade.resource.email } %>
   <% end %>
 <% end %>

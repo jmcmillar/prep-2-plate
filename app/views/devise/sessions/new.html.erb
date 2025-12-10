@@ -1,0 +1,18 @@
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Log in</h2>
+
+  <%= meal_planner_form_with(model: resource, as: resource_name, url: session_path(resource_name), data: {turbo: false}) do |f| %>
+    <%= f.input :email, as: :email_field, label_text: "Email", autofocus: true, autocomplete: "email" %>
+    <%= f.input :password, as: :password_field, label_text: "Password", autocomplete: "current-password" %>
+
+    <% if devise_mapping.rememberable? %>
+      <%= f.check_box_input :remember_me, label_text: "Remember me" %>
+    <% end %>
+
+    <%= f.actions cancel_path: root_path, submit_text: "Log in" %>
+  <% end %>
+
+  <div class="mt-4">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

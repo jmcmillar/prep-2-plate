@@ -1,6 +1,6 @@
 <%= meal_planner_form_with(model: facade.resource, url: facade.form_url) do |form| %>
   <%= render 'components/errors', model: facade.resource %>
-  <%= form.input :email_address, as: :email_field %>
+  <%= form.input :email, as: :email_field %>
   <%= form.input :first_name %>
   <%= form.input :last_name %>
   <%= form.check_box_input :admin %>

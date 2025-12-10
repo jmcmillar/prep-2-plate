@@ -1,7 +1,5 @@
 class Api::BaseController < ActionController::API
-  include Authentication
-  
-  before_action :require_authentication
+  include Api::TokenAuthentication
   
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
   rescue_from ActiveRecord::RecordNotFound, with: :not_found

@@ -1,0 +1,22 @@
+<div class="max-w-md mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Sign up</h2>
+
+  <%= meal_planner_form_with(model: resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render 'components/errors', model: resource %>
+
+    <%= f.input :first_name, label_text: "First name", autofocus: true, autocomplete: "given-name", required: true %>
+    <%= f.input :last_name, label_text: "Last name", autocomplete: "family-name", required: true %>
+    <%= f.input :email, as: :email_field, label_text: "Email", autocomplete: "email", required: true %>
+
+    <% password_label = "Password" %>
+    <% password_label += " (#{@minimum_password_length} characters minimum)" if @minimum_password_length %>
+    <%= f.input :password, as: :password_field, label_text: password_label, autocomplete: "new-password", required: true %>
+    <%= f.input :password_confirmation, as: :password_field, label_text: "Password confirmation", autocomplete: "new-password", required: true %>
+
+    <%= f.actions cancel_path: root_path, submit_text: "Sign up" %>
+  <% end %>
+
+  <div class="mt-4">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

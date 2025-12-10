@@ -24,7 +24,7 @@ class Admin::UserRecipes::EditFacade < Base::Admin::EditFacade
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
       BreadcrumbComponent::Data.new("Users", [:admin, :users]),
-      BreadcrumbComponent::Data.new(parent_resource.email_address, [:admin, parent_resource]),
+      BreadcrumbComponent::Data.new(parent_resource.email, [:admin, parent_resource]),
       BreadcrumbComponent::Data.new("Recipes", [:admin, parent_resource,:user_recipes]),
       BreadcrumbComponent::Data.new(user_recipe.name, [:admin, user_recipe]),
       BreadcrumbComponent::Data.new("Edit")

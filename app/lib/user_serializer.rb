@@ -6,7 +6,7 @@ class UserSerializer
   def as_json
     {
       id: @user.id,
-      email_address: @user.email_address,
+      email: @user.email,
       created_at: @user.created_at
     }
   end

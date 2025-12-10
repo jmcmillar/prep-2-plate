@@ -1,7 +1,4 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :session
-    # Add this method to automatically set the user from the session
-  def user
-    session&.user
-  end
+  attribute :session  # For API authentication (custom Session model)
+  attribute :user     # For web authentication (Devise)
 end

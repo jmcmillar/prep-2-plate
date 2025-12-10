@@ -15,7 +15,7 @@ class Admin::Users::ResourceFacade
   end
 
   def email
-    Table::DataComponent.new(@resource.email_address)
+    Table::DataComponent.new(@resource.email)
   end
 
   def admin
@@ -33,7 +33,7 @@ class Admin::Users::ResourceFacade
   def action_turbo_data
     TurboData[
       :table_actions,
-      [:table_actions, label: @resource.email_address, id: @resource.id, controller_path: "admin/users"]
+      [:table_actions, label: @resource.email, id: @resource.id, controller_path: "admin/users"]
     ]
   end
 end

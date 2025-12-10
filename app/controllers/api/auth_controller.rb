@@ -2,10 +2,10 @@ class Api::AuthController < Api::BaseController
   skip_before_action :require_authentication, only: [:create]
   
   def create
-    user = User.authenticate_by(
-      email_address: params[:user][:email], 
-      password: params[:user][:password]
-    )
+    user = User.find_by(email: params[:user][:email])
+
+    # Authenticate using Devise's valid_password? method
+    user = nil unless user&.valid_password?(params[:user][:password])
     
     if user
       session = user.sessions.create!(
