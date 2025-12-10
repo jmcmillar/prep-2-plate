@@ -1,5 +1,22 @@
-<p>Welcome <%= @email %>!</p>
+<p class="greeting">Welcome to Prep-2-Plate!</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>We're excited to have you join our community of home cooks and meal planners. To get started, please confirm your email address by clicking the button below.</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+  <tr>
+    <td align="center">
+      <%= link_to 'Confirm My Account', confirmation_url(@resource, confirmation_token: @token), class: 'button', target: '_blank' %>
+    </td>
+  </tr>
+</table>
+
+<p>Once confirmed, you'll be able to save your favorite recipes, create meal plans, and generate shopping lists.</p>
+
+<table class="body-sub" role="presentation">
+  <tr>
+    <td>
+      <p class="f-fallback sub">If you're having trouble with the button above, copy and paste the URL below into your web browser.</p>
+      <p class="f-fallback sub"><%= confirmation_url(@resource, confirmation_token: @token) %></p>
+    </td>
+  </tr>
+</table>

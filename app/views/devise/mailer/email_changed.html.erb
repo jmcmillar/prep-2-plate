@@ -1,7 +1,11 @@
-<p>Hello <%= @email %>!</p>
+<p class="greeting">Email Address Update</p>
 
 <% if @resource.try(:unconfirmed_email?) %>
-  <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %>.</p>
+  <p>This is a confirmation that your Prep-2-Plate account email is being changed to <strong><%= @resource.unconfirmed_email %></strong>.</p>
+
+  <p>You'll need to confirm your new email address to complete this change.</p>
 <% else %>
-  <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %>.</p>
+  <p>This is a confirmation that your Prep-2-Plate account email has been successfully changed to <strong><%= @resource.email %></strong>.</p>
 <% end %>
+
+<p>If you didn't make this change, please contact us immediately at <a href="mailto:support@prep2plate.com">support@prep2plate.com</a>.</p>
