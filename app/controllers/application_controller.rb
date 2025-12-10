@@ -8,7 +8,14 @@ class ApplicationController < ActionController::Base
   # Devise: Configure permitted parameters for sign up and account update
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # Handle Pundit authorization errors
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   protected
+
+  def user_not_authorized
+    redirect_to root_path, alert: "You are not authorized to access this page."
+  end
 
   def set_current_user
     Current.user = current_user if user_signed_in?
