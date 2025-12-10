@@ -36,7 +36,6 @@ Rails.application.routes.draw do
   end
   resource :meal_planner, only: [:show]
 
-  post "/meal_planners/notes", to: "meal_planners#update_note"
   namespace :meal_planner do
     resource :export_to_shopping_list, only: [:new, :create]
     resources :recipes, only: %i[index create destroy]
