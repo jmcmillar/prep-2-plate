@@ -3,7 +3,7 @@ require "test_helper"
 class ShoppingListsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
-    post session_url, params: { email_address: @user.email_address, password: "password" }
+    post session_url, params: { email: @user.email, password: "password" }
   end
 
   test "should get index" do

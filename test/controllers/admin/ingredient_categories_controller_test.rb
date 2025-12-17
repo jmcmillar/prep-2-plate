@@ -3,7 +3,7 @@ require "test_helper"
 class Admin::IngredientCategoriesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
-    post session_url, params: { email_address: @user.email_address, password: "password" }
+    post session_url, params: { email_address: @user.email, password: "password" }
     @ingredient_category = IngredientCategory.create!(name: "Vegetables")
   end
 

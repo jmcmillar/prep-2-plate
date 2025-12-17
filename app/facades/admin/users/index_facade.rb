@@ -4,7 +4,7 @@ class Admin::Users::IndexFacade < Base::Admin::IndexFacade
   end
 
   def base_collection
-    Base::AdminPolicy::Scope.new(@user, User.order(:email_address)).resolve
+    Base::AdminPolicy::Scope.new(@user, User.order(:email)).resolve
   end
 
   def breadcrumb_trail
