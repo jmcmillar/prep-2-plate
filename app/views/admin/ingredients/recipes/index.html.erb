@@ -1,0 +1,12 @@
+<%= turbo_frame_tag :ingredient_recipes do %>
+  <%= render "application/flash", flash: flash %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "Recipes using #{@facade.ingredient.name}") do |card| %>
+      <% if @facade.rows.any? %>
+        <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+      <% else %>
+        <p class="text-gray-500 text-center py-8">No recipes found using this ingredient.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -7,6 +7,10 @@ class Admin::IngredientsController < AuthenticatedController
     @facade = Admin::Ingredients::NewFacade.new(Current.user, params)
   end
 
+  def show
+    @facade = Admin::Ingredients::ShowFacade.new(Current.user, params)
+  end
+
   def edit
     @facade = Admin::Ingredients::EditFacade.new(Current.user, params)
   end

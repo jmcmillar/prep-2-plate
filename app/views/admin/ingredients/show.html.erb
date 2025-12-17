@@ -1,0 +1,21 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions)%>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-10") do %>
+  <%= render SectionCardComponent.new(title: @facade.ingredient.name) do |card| %>
+    <%# card.with_section_row do %>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <span class="font-semibold">Category:</span>
+          <%= @facade.ingredient.ingredient_category_name || "None" %>
+        </div>
+        <div>
+          <span class="font-semibold">Used in Recipes:</span>
+          <%= @facade.recipes_count %>
+        </div>
+      </div>
+    <%# end %>
+  <% end %>
+<% end %>
+<%= turbo_frame_tag :ingredient_recipes, src: admin_ingredient_recipes_path(@facade.ingredient) %>

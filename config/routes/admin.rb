@@ -21,7 +21,9 @@ namespace :admin do
   resources :meal_types, except: :show
   resources :recipe_categories, except: :show
   resources :ingredient_categories, except: :show
-  resources :ingredients, except: :show
+  resources :ingredients do
+    resources :recipes, only: :index, controller: "ingredients/recipes"
+  end
   resources :shopping_lists do
     resources :shopping_list_items, except: :show
   end

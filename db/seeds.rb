@@ -155,6 +155,7 @@ user = User.find_or_create_by!(email: "joyce.clay@test.com") do |u|
   u.last_name = "Clay"
   u.password = "Test123!"
   u.admin = true
+  u.skip_confirmation!
 end
 users << user
 
