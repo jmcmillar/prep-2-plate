@@ -4,7 +4,13 @@ class Admin::Recipes::IndexFacade < Base::Admin::IndexFacade
   end
   
   def base_collection
-    Base::AdminPolicy::Scope.new(@user, Recipe.order(:name).where.missing(:user_recipe)).resolve
+    Base::AdminPolicy::Scope.new(
+      @user,
+      Recipe.order(:name)
+        .where.missing(:user_recipe)
+        .filtered_by_meal_types(@params[:meal_type_ids])
+        .filtered_by_recipe_categories(@params[:recipe_category_ids])
+    ).resolve
   end
 
   def breadcrumb_trail
@@ -41,6 +47,26 @@ class Admin::Recipes::IndexFacade < Base::Admin::IndexFacade
       :plus, 
       "New Recipe",
     ]
+  end
+
+  def meal_type_filter_data
+    FilterComponent::Data.new(
+      "Meal Types",
+      "meal_type_ids[]",
+      Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+        MealType.order(:name).to_a
+      end
+    )
+  end
+
+  def recipe_category_filter_data
+    FilterComponent::Data.new(
+      "Recipe Categories",
+      "recipe_category_ids[]",
+      Rails.cache.fetch("recipe_categories_ordered", expires_in: 12.hours) do
+        RecipeCategory.order(:name).to_a
+      end
+    )
   end
 
   def resource_facade_class

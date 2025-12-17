@@ -40,6 +40,6 @@ class Admin::IngredientsController < AuthenticatedController
   private
 
   def ingredient_params
-    params.require(:ingredient).permit(:name)
+    params.require(:ingredient).permit(:name, :ingredient_category_id)
   end
 end

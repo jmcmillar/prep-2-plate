@@ -5,9 +5,14 @@
   <% end %>
   <%= render ContainerComponent.new do %>
     <%= render SectionCardComponent.new(title: "Ingredients") do %>
-    <%= tag.div(class: "col-4 mb-6") do %>
-      <%= render SearchFormComponent.new(@facade.search_data) %>
-    <% end %>
+      <%= tag.div(class: "mb-6") do %>
+        <%= tag.div(class: "col-4 mb-4") do %>
+          <%= render SearchFormComponent.new(@facade.search_data) %>
+        <% end %>
+        <%= tag.div(class: "flex flex-wrap gap-2") do %>
+          <%= render FilterComponent.new(@facade.ingredient_category_filter_data) %>
+        <% end %>
+      <% end %>
       <%= tag.div(id: "table") do %>
         <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
       <% end %>

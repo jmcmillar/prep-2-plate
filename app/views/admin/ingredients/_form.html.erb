@@ -1,5 +1,13 @@
 <%= meal_planner_form_with(model: facade.ingredient, url: facade.form_url, data: { turbo: false }) do |form| %>
   <%= render 'components/errors', model: facade.ingredient %>
   <%= form.input :name, class: "col-4" %>
+  <%= form.collection_select_input(
+    :ingredient_category_id,
+    facade.ingredient_categories,
+    :id,
+    :name,
+    label_text: "Category",
+    include_blank: "No Category"
+  ) %>
   <%= form.actions cancel_path: facade.cancel_path %>
 <% end %>

@@ -22,4 +22,8 @@ class Admin::Ingredients::NewFacade < Base::Admin::NewFacade
   def cancel_path
     [:admin, :ingredients]
   end
+
+  def ingredient_categories
+    IngredientCategory.order(:name)
+  end
 end

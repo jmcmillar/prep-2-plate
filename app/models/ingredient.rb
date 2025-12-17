@@ -16,4 +16,9 @@ class Ingredient < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
+
+  scope :filtered_by_ingredient_category, ->(category_ids) {
+    return all if category_ids.blank?
+    where(ingredient_category_id: category_ids)
+  }
 end

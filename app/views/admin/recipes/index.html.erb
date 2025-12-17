@@ -4,8 +4,14 @@
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new do  %>
-    <%= tag.div(class: "col-4 mb-6") do %>
-      <%= render SearchFormComponent.new(@facade.search_data) %>
+    <%= tag.div(class: "mb-6") do %>
+      <%= tag.div(class: "col-4 mb-4") do %>
+        <%= render SearchFormComponent.new(@facade.search_data) %>
+      <% end %>
+      <%= tag.div(class: "flex flex-wrap gap-2") do %>
+        <%= render FilterComponent.new(@facade.meal_type_filter_data) %>
+        <%= render FilterComponent.new(@facade.recipe_category_filter_data) %>
+      <% end %>
     <% end %>
     <%= tag.div(id: "table") do %>
       <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
