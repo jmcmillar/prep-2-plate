@@ -92,4 +92,80 @@ class IngredientTest < ActiveSupport::TestCase
   def test_ransackable_associations
     assert_empty Ingredient.ransackable_associations
   end
+
+  # New tests for packaging_form and preparation_style
+
+  def test_allows_nil_packaging_form_and_preparation_style
+    ingredient = Ingredient.create(name: "tomatoes")
+    assert_nil ingredient.packaging_form
+    assert_nil ingredient.preparation_style
+    assert_equal "tomatoes", ingredient.display_name
+  end
+
+  def test_validates_packaging_form_from_allowed_list
+    ingredient = Ingredient.new(name: "tomatoes", packaging_form: "invalid")
+    assert_not ingredient.valid?
+    assert_includes ingredient.errors[:packaging_form], "is not included in the list"
+  end
+
+  def test_validates_preparation_style_from_allowed_list
+    ingredient = Ingredient.new(name: "tomatoes", preparation_style: "invalid")
+    assert_not ingredient.valid?
+    assert_includes ingredient.errors[:preparation_style], "is not included in the list"
+  end
+
+  def test_display_name_includes_only_packaging_when_prep_is_nil
+    ingredient = Ingredient.create(name: "tomatoes", packaging_form: "canned")
+    assert_equal "Canned tomatoes", ingredient.display_name
+  end
+
+  def test_display_name_includes_only_preparation_when_packaging_is_nil
+    ingredient = Ingredient.create(name: "tomatoes", preparation_style: "diced")
+    assert_equal "Diced tomatoes", ingredient.display_name
+  end
+
+  def test_display_name_includes_both_packaging_and_preparation
+    ingredient = Ingredient.create(
+      name: "tomatoes",
+      packaging_form: "canned",
+      preparation_style: "diced"
+    )
+    assert_equal "Canned Diced tomatoes", ingredient.display_name
+  end
+
+  def test_all_forms_of_returns_all_packaging_and_preparation_variants
+    # Note: Until MR #5, we still have the old uniqueness constraint on name only
+    # So we can only create one "tomatoes" ingredient for now
+    # This test will be updated in MR #5 to test multiple variants
+    ingredient = Ingredient.create(name: "tomatoes", packaging_form: "canned", preparation_style: "diced")
+
+    tomato_forms = Ingredient.all_forms_of("tomatoes")
+    assert_equal 1, tomato_forms.count
+    assert_includes tomato_forms, ingredient
+  end
+
+  def test_with_packaging_scope_filters_by_packaging_form
+    Ingredient.create(name: "tomatoes", packaging_form: "canned")
+    Ingredient.create(name: "spinach", packaging_form: "frozen")
+    Ingredient.create(name: "apples", packaging_form: "fresh")
+
+    canned = Ingredient.with_packaging(:canned)
+    assert_equal 1, canned.count
+    assert_equal "tomatoes", canned.first.name
+  end
+
+  def test_with_preparation_scope_filters_by_preparation_style
+    Ingredient.create(name: "tomatoes", preparation_style: "diced")
+    Ingredient.create(name: "carrots", preparation_style: "sliced")
+    Ingredient.create(name: "cheese", preparation_style: "shredded")
+
+    diced = Ingredient.with_preparation(:diced)
+    assert_equal 1, diced.count
+    assert_equal "tomatoes", diced.first.name
+  end
+
+  def test_ransackable_attributes_includes_new_fields
+    assert_includes Ingredient.ransackable_attributes, "packaging_form"
+    assert_includes Ingredient.ransackable_attributes, "preparation_style"
+  end
 end
