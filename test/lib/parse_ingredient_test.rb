@@ -10,6 +10,7 @@ class ParseIngredientTest < ActiveSupport::TestCase
     @cup_unit = MeasurementUnit.create!(name: "cup")
     @tablespoon_unit = MeasurementUnit.create!(name: "tablespoon")
     @teaspoon_unit = MeasurementUnit.create!(name: "teaspoon")
+    @pound_unit = MeasurementUnit.create!(name: "pound")
 
     # Create aliases
     MeasurementUnitAlias.create!(measurement_unit: @cup_unit, name: "c")
@@ -18,6 +19,8 @@ class ParseIngredientTest < ActiveSupport::TestCase
     MeasurementUnitAlias.create!(measurement_unit: @tablespoon_unit, name: "T")
     MeasurementUnitAlias.create!(measurement_unit: @teaspoon_unit, name: "tsp")
     MeasurementUnitAlias.create!(measurement_unit: @teaspoon_unit, name: "t")
+    MeasurementUnitAlias.create!(measurement_unit: @pound_unit, name: "lb")
+    MeasurementUnitAlias.create!(measurement_unit: @pound_unit, name: "lbs")
   end
 
   def teardown
@@ -277,5 +280,139 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal "21/2", result[:quantity]
     assert_equal @cup_unit.id, result[:measurement_unit_id]
     assert_equal "flour", result[:ingredient_name]
+  end
+
+  # New tests for packaging_form and preparation_style extraction
+
+  def test_extracts_both_packaging_and_preparation_from_canned_diced_tomatoes
+    ingredient = "1 can canned diced tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    assert_equal "canned", result[:packaging_form]
+    assert_equal "diced", result[:preparation_style]
+  end
+
+  def test_extracts_packaging_from_frozen_spinach
+    ingredient = "1 package frozen spinach"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "spinach", result[:ingredient_name]
+    assert_equal "frozen", result[:packaging_form]
+    assert_nil result[:preparation_style]
+  end
+
+  def test_extracts_preparation_from_diced_tomatoes_without_packaging
+    ingredient = "2 cups diced tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_equal "diced", result[:preparation_style]
+  end
+
+  def test_extracts_both_from_frozen_chopped_spinach
+    ingredient = "1 package frozen chopped spinach"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "spinach", result[:ingredient_name]
+    assert_equal "frozen", result[:packaging_form]
+    assert_equal "chopped", result[:preparation_style]
+  end
+
+  def test_handles_fresh_preparation_combination
+    ingredient = "2 cups fresh diced tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    assert_equal "fresh", result[:packaging_form]
+    assert_equal "diced", result[:preparation_style]
+  end
+
+  def test_returns_nil_for_both_when_neither_is_present
+    ingredient = "2 cups tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_nil result[:preparation_style]
+  end
+
+  def test_removes_packaging_and_preparation_keywords_from_ingredient_name
+    ingredient = "1 can crushed tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    refute_includes result[:ingredient_name], "crushed"
+    refute_includes result[:ingredient_name], "canned"
+    assert_equal "canned", result[:packaging_form]
+    assert_equal "crushed", result[:preparation_style]
+  end
+
+  def test_handles_ground_beef
+    ingredient = "1 lb ground beef"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "beef", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_equal "ground", result[:preparation_style]
+  end
+
+  def test_handles_shredded_cheese
+    ingredient = "1 cup shredded cheddar cheese"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "cheddar cheese", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_equal "shredded", result[:preparation_style]
+  end
+
+  def test_handles_dried_fruit
+    ingredient = "1/2 cup dried cranberries"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "cranberries", result[:ingredient_name]
+    assert_equal "dried", result[:packaging_form]
+    assert_nil result[:preparation_style]
+  end
+
+  def test_handles_canned_whole_tomatoes
+    ingredient = "1 can canned whole tomatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "tomatoes", result[:ingredient_name]
+    assert_equal "canned", result[:packaging_form]
+    assert_equal "whole", result[:preparation_style]
+  end
+
+  def test_handles_grated_cheese
+    ingredient = "1/4 cup grated parmesan cheese"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "parmesan cheese", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_equal "grated", result[:preparation_style]
+  end
+
+  def test_handles_cubed_potatoes
+    ingredient = "2 cups cubed potatoes"
+    parser = ParseIngredient.new(ingredient)
+    result = parser.to_h
+
+    assert_equal "potatoes", result[:ingredient_name]
+    assert_nil result[:packaging_form]
+    assert_equal "cubed", result[:preparation_style]
   end
 end
