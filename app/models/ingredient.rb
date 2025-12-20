@@ -19,7 +19,8 @@ class Ingredient < ApplicationRecord
     cubed: 'Cubed'
   }.freeze
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true
+  validates :name, uniqueness: { scope: [:packaging_form, :preparation_style], case_sensitive: false }
   validates :packaging_form,
             inclusion: { in: PACKAGING_FORMS.keys.map(&:to_s), allow_nil: true }
   validates :preparation_style,

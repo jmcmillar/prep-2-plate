@@ -2,11 +2,11 @@ class RecipeIngredient < ApplicationRecord
   belongs_to :recipe
   belongs_to :ingredient, optional: true
   belongs_to :measurement_unit, optional: true
-  
-  attr_writer :ingredient_name
-  
+
+  attr_writer :ingredient_name, :packaging_form, :preparation_style
+
   delegate :name, to: :measurement_unit, prefix: true, allow_nil: true
-  delegate :name, to: :ingredient, prefix: true, allow_nil: true
+  delegate :name, :display_name, :packaging_form, :preparation_style, to: :ingredient, prefix: true, allow_nil: true
   
   before_validation :find_or_create_ingredient
   validates :ingredient, presence: true, unless: -> { marked_for_destruction? }
@@ -42,10 +42,14 @@ class RecipeIngredient < ApplicationRecord
   def find_or_create_ingredient
     # If ingredient_id is already set, use it
     return if ingredient_id.present?
-    
+
     # If ingredient_name is provided, find or create the ingredient
     if @ingredient_name.present? && @ingredient_name.strip.present?
-      self.ingredient = Ingredient.find_or_create_by(name: @ingredient_name.strip.downcase)
+      self.ingredient = Ingredient.find_or_create_by!(
+        name: @ingredient_name.strip.downcase,
+        packaging_form: @packaging_form,
+        preparation_style: @preparation_style
+      )
     end
   end
 end
