@@ -40,6 +40,7 @@ class RecipeUtils::ParseUnit
   def ingredient_words
     @ingredient_words ||= @ingredient
       .gsub(/^[0-9_ .\/]*/, "")  # Strip leading numbers and fractions
+      .gsub(/\([^)]*\)/, "")     # Remove parenthetical content
       .split                      # Split into words
       .map { |word| word.gsub(/[^\p{L}\p{N}]/, "").downcase }  # Remove punctuation and downcase
       .reject(&:blank?)           # Remove empty strings

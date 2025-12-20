@@ -7,7 +7,9 @@ class Admin::RecipeIngredients::ResourceFacade
     [
       Table::DefaultHeaderComponent.new("Quantity"),
       Table::DefaultHeaderComponent.new("Unit"),
-      Table::DefaultHeaderComponent.new("Ingredient Name"),
+      Table::DefaultHeaderComponent.new("Ingredient"),
+      Table::DefaultHeaderComponent.new("Packaging"),
+      Table::DefaultHeaderComponent.new("Preparation"),
       Table::DefaultHeaderComponent.new("Notes"),
       Table::DefaultHeaderComponent.new("")
     ]
@@ -19,6 +21,8 @@ class Admin::RecipeIngredients::ResourceFacade
         facade.quantity,
         facade.measurement_unit_name,
         facade.ingredient_name,
+        facade.packaging_form,
+        facade.preparation_style,
         facade.notes,
         facade.action
       ],
@@ -36,6 +40,14 @@ class Admin::RecipeIngredients::ResourceFacade
 
   def ingredient_name
     Table::DataComponent.new(@resource.ingredient_name)
+  end
+
+  def packaging_form
+    Table::DataComponent.new(@resource.ingredient_packaging_form&.titleize)
+  end
+
+  def preparation_style
+    Table::DataComponent.new(@resource.ingredient_preparation_style&.titleize)
   end
 
   def notes

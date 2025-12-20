@@ -2,7 +2,7 @@
   <%= render 'components/errors', model: @facade.recipe_ingredient %>
   <%= form.input :quantity %>
   <%= form.searchable_collection_select_input(:measurement_unit_id, @facade.measurement_units, :id, :name, include_blank: true) %>
-  <%= form.searchable_collection_select_input(:ingredient_id, @facade.ingredients, :id, :name) %>
+  <%= form.searchable_collection_select_input(:ingredient_id, @facade.ingredients, :id, :display_name) %>
   <%= form.input :notes %>
   <%= form.actions cancel_path: @facade.cancel_path %>
 <% end %>

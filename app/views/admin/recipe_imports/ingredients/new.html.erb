@@ -8,24 +8,30 @@
       <% @facade.ingredients.each_with_index do |ingredient, index| %>
         <% recipe_ingredient = @facade.recipe.recipe_ingredients.build %>
         <%= form.fields_for "recipe_ingredients_attributes[]", recipe_ingredient do |f| %>
-          <%= tag.div(class: "row") do %>
-            <%= tag.div(class: "col-3") do %>
+          <%= tag.div(class: "row mb-3") do %>
+            <%= tag.div(class: "col-2") do %>
               <%= f.input :quantity, value: ingredient[:quantity] %>
             <% end %>
-            <%= tag.div(class: "col-3") do %>
+            <%= tag.div(class: "col-2") do %>
               <%= f.searchable_collection_select_input(
                 :measurement_unit_id,
                 MeasurementUnit.order(:name),
                 :id,
                 :name,
-                {selected: ingredient[:measurement_unit_id], include_blank: true}, 
+                {selected: ingredient[:measurement_unit_id], include_blank: true},
               ) %>
             <% end %>
-            <%= tag.div(class: "col-3") do %>
-              <%= f.input :ingredient_name, value: ingredient[:ingredient_name], class: "col-6", label_text: "Ingredient" %>
+            <%= tag.div(class: "col-2") do %>
+              <%= f.input :ingredient_name, value: ingredient[:ingredient_name], label_text: "Ingredient" %>
             <% end %>
-            <%= tag.div(class: "col-3") do %>
-              <%= f.input :ingredient_notes, value: ingredient[:ingredient_notes], class: "col-6", label_text: "Notes" %>
+            <%= tag.div(class: "col-2") do %>
+              <%= f.select_input(:packaging_form, @facade.packaging_form_options, {selected: ingredient[:packaging_form], include_blank: true, label_text: "Packaging"}) %>
+            <% end %>
+            <%= tag.div(class: "col-2") do %>
+              <%= f.select_input(:preparation_style, @facade.preparation_style_options, {selected: ingredient[:preparation_style], include_blank: true, label_text: "Preparation"}) %>
+            <% end %>
+            <%= tag.div(class: "col-2") do %>
+              <%= f.input :ingredient_notes, value: ingredient[:ingredient_notes], label_text: "Notes" %>
             <% end %>
           <% end %>
         <% end %>

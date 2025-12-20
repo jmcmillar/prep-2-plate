@@ -40,4 +40,12 @@ class Admin::RecipeImports::Ingredients::NewFacade < Base::Admin::IndexFacade
   def parsed_recipe
     @parsed_recipe ||= ParseRecipe.new(import_url).to_h
   end
+
+  def packaging_form_options
+    Ingredient::PACKAGING_FORMS.map { |key, value| [value, key.to_s] }
+  end
+
+  def preparation_style_options
+    Ingredient::PREPARATION_STYLES.map { |key, value| [value, key.to_s] }
+  end
 end

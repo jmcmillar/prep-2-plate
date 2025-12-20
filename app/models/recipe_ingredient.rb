@@ -6,7 +6,9 @@ class RecipeIngredient < ApplicationRecord
   attr_writer :ingredient_name, :packaging_form, :preparation_style
 
   delegate :name, to: :measurement_unit, prefix: true, allow_nil: true
-  delegate :name, :display_name, :packaging_form, :preparation_style, to: :ingredient, prefix: true, allow_nil: true
+  delegate :name, :display_name, to: :ingredient, prefix: true, allow_nil: true
+  delegate :packaging_form, :preparation_style, to: :ingredient, prefix: true, allow_nil: true
+  delegate :packaging_form, :preparation_style, to: :ingredient, allow_nil: true
   
   before_validation :find_or_create_ingredient
   validates :ingredient, presence: true, unless: -> { marked_for_destruction? }

@@ -21,7 +21,9 @@ class Admin::RecipeImports::IngredientsController < AuthenticatedController
         :quantity,
         :measurement_unit_id,
         :ingredient_name,
-        :ingredient_notes
+        :ingredient_notes,
+        :packaging_form,
+        :preparation_style
       ]
       )
   end

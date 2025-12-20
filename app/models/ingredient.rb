@@ -16,15 +16,16 @@ class Ingredient < ApplicationRecord
     ground: 'Ground',
     shredded: 'Shredded',
     grated: 'Grated',
-    cubed: 'Cubed'
+    cubed: 'Cubed',
+    cooked: 'Cooked'
   }.freeze
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: [:packaging_form, :preparation_style], case_sensitive: false }
   validates :packaging_form,
-            inclusion: { in: PACKAGING_FORMS.keys.map(&:to_s), allow_nil: true }
+            inclusion: { in: PACKAGING_FORMS.keys.map(&:to_s), allow_nil: true, allow_blank: true }
   validates :preparation_style,
-            inclusion: { in: PREPARATION_STYLES.keys.map(&:to_s), allow_nil: true }
+            inclusion: { in: PREPARATION_STYLES.keys.map(&:to_s), allow_nil: true, allow_blank: true }
 
   belongs_to :ingredient_category, optional: true
   has_many :recipe_ingredients, dependent: :restrict_with_error, inverse_of: :ingredient
@@ -33,6 +34,8 @@ class Ingredient < ApplicationRecord
 
   def downcase_fields
     self.name.downcase!
+    self.packaging_form = nil if packaging_form.blank?
+    self.preparation_style = nil if preparation_style.blank?
   end
 
   # Display name combines packaging + preparation + name

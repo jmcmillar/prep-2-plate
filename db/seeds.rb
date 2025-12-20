@@ -116,35 +116,48 @@ end
 # Create ingredients
 puts "  Creating ingredients..."
 ingredients_data = [
-  { name: "Chicken Breast", category: "Proteins" },
-  { name: "Ground Beef", category: "Proteins" },
-  { name: "Salmon Fillet", category: "Proteins" },
-  { name: "Tomatoes", category: "Produce" },
-  { name: "Onions", category: "Produce" },
-  { name: "Garlic", category: "Produce" },
-  { name: "Bell Peppers", category: "Produce" },
-  { name: "Carrots", category: "Produce" },
-  { name: "Potatoes", category: "Produce" },
-  { name: "Lettuce", category: "Produce" },
-  { name: "Milk", category: "Dairy" },
-  { name: "Cheddar Cheese", category: "Dairy" },
-  { name: "Parmesan Cheese", category: "Dairy" },
-  { name: "Butter", category: "Dairy" },
-  { name: "Rice", category: "Pantry" },
-  { name: "Pasta", category: "Pantry" },
-  { name: "Olive Oil", category: "Pantry" },
-  { name: "Salt", category: "Pantry" },
-  { name: "Black Pepper", category: "Pantry" },
-  { name: "Cumin", category: "Pantry" }
+  { name: "chicken breast", category: "Proteins", packaging_form: "fresh" },
+  { name: "ground beef", category: "Proteins", packaging_form: "fresh" },
+  { name: "salmon fillet", category: "Proteins", packaging_form: "fresh" },
+  { name: "tomatoes", category: "Produce", packaging_form: "fresh", preparation_style: "diced" },
+  { name: "tomatoes", category: "Produce", packaging_form: "canned", preparation_style: "diced" },
+  { name: "tomatoes", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "onions", category: "Produce", packaging_form: "fresh", preparation_style: "diced" },
+  { name: "onions", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "garlic", category: "Produce", packaging_form: "fresh", preparation_style: "minced" },
+  { name: "garlic", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "bell peppers", category: "Produce", packaging_form: "fresh", preparation_style: "diced" },
+  { name: "bell peppers", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "carrots", category: "Produce", packaging_form: "fresh", preparation_style: "chopped" },
+  { name: "carrots", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "potatoes", category: "Produce", packaging_form: "fresh", preparation_style: "cubed" },
+  { name: "potatoes", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "lettuce", category: "Produce", packaging_form: "fresh", preparation_style: "whole" },
+  { name: "milk", category: "Dairy", packaging_form: "fresh" },
+  { name: "cheddar cheese", category: "Dairy", packaging_form: "fresh", preparation_style: "shredded" },
+  { name: "parmesan cheese", category: "Dairy", packaging_form: "fresh", preparation_style: "grated" },
+  { name: "butter", category: "Dairy", packaging_form: "fresh" },
+  { name: "rice", category: "Pantry", packaging_form: "dried" },
+  { name: "pasta", category: "Pantry", packaging_form: "dried" },
+  { name: "olive oil", category: "Pantry" },
+  { name: "salt", category: "Pantry" },
+  { name: "black pepper", category: "Pantry", preparation_style: "ground" },
+  { name: "cumin", category: "Pantry", preparation_style: "ground" }
 ]
 
 ingredients = {}
 ingredients_data.each do |ing_data|
   category = ingredient_categories[ing_data[:category]]
-  ingredients[ing_data[:name]] = Ingredient.find_or_create_by!(
+  # Create unique key that includes packaging and preparation for lookups
+  key = [ing_data[:name], ing_data[:packaging_form], ing_data[:preparation_style]].compact.join("_")
+
+  ingredients[key] = Ingredient.find_or_create_by!(
     name: ing_data[:name],
-    ingredient_category: category
-  )
+    packaging_form: ing_data[:packaging_form],
+    preparation_style: ing_data[:preparation_style]
+  ) do |ingredient|
+    ingredient.ingredient_category = category
+  end
 end
 
 # Create test user
@@ -168,11 +181,11 @@ recipes_data = [
     cook_time: 30,
     servings: 4,
     ingredients: [
-      { name: "Chicken Breast", quantity: "4", unit: "piece" },
-      { name: "Parmesan Cheese", quantity: "1", unit: "cup" },
-      { name: "Tomatoes", quantity: "2", unit: "cup" },
-      { name: "Garlic", quantity: "3", unit: "clove" },
-      { name: "Olive Oil", quantity: "2", unit: "tablespoon" }
+      { key: "chicken breast_fresh", quantity: "4", unit: "piece" },
+      { key: "parmesan cheese_fresh_grated", quantity: "1", unit: "cup" },
+      { key: "tomatoes_canned_diced", quantity: "2", unit: "cup" },
+      { key: "garlic_fresh_minced", quantity: "3", unit: "clove" },
+      { key: "olive oil", quantity: "2", unit: "tablespoon" }
     ]
   },
   {
@@ -182,12 +195,12 @@ recipes_data = [
     cook_time: 15,
     servings: 6,
     ingredients: [
-      { name: "Ground Beef", quantity: "1", unit: "pound" },
-      { name: "Onions", quantity: "1", unit: "medium" },
-      { name: "Tomatoes", quantity: "2", unit: "medium" },
-      { name: "Cheddar Cheese", quantity: "1", unit: "cup" },
-      { name: "Lettuce", quantity: "1", unit: "head" },
-      { name: "Cumin", quantity: "1", unit: "tablespoon" }
+      { key: "ground beef_fresh", quantity: "1", unit: "pound" },
+      { key: "onions_fresh_diced", quantity: "1", unit: "medium" },
+      { key: "tomatoes_fresh_diced", quantity: "2", unit: "medium" },
+      { key: "cheddar cheese_fresh_shredded", quantity: "1", unit: "cup" },
+      { key: "lettuce_fresh_whole", quantity: "1", unit: "head" },
+      { key: "cumin_ground", quantity: "1", unit: "tablespoon" }
     ]
   },
   {
@@ -197,11 +210,11 @@ recipes_data = [
     cook_time: 12,
     servings: 2,
     ingredients: [
-      { name: "Salmon Fillet", quantity: "2", unit: "piece" },
-      { name: "Butter", quantity: "3", unit: "tablespoon" },
-      { name: "Garlic", quantity: "4", unit: "clove" },
-      { name: "Salt", quantity: "1", unit: "teaspoon" },
-      { name: "Black Pepper", quantity: "1/2", unit: "teaspoon" }
+      { key: "salmon fillet_fresh", quantity: "2", unit: "piece" },
+      { key: "butter_fresh", quantity: "3", unit: "tablespoon" },
+      { key: "garlic_fresh_minced", quantity: "4", unit: "clove" },
+      { key: "salt", quantity: "1", unit: "teaspoon" },
+      { key: "black pepper_ground", quantity: "1/2", unit: "teaspoon" }
     ]
   },
   {
@@ -211,12 +224,12 @@ recipes_data = [
     cook_time: 10,
     servings: 4,
     ingredients: [
-      { name: "Bell Peppers", quantity: "2", unit: "medium" },
-      { name: "Carrots", quantity: "2", unit: "medium" },
-      { name: "Onions", quantity: "1", unit: "medium" },
-      { name: "Garlic", quantity: "3", unit: "clove" },
-      { name: "Rice", quantity: "2", unit: "cup" },
-      { name: "Olive Oil", quantity: "2", unit: "tablespoon" }
+      { key: "bell peppers_fresh_whole", quantity: "2", unit: "medium" },
+      { key: "carrots_fresh_whole", quantity: "2", unit: "medium" },
+      { key: "onions_fresh_whole", quantity: "1", unit: "medium" },
+      { key: "garlic_fresh_whole", quantity: "3", unit: "clove" },
+      { key: "rice_dried", quantity: "2", unit: "cup" },
+      { key: "olive oil", quantity: "2", unit: "tablespoon" }
     ]
   },
   {
@@ -226,13 +239,13 @@ recipes_data = [
     cook_time: 20,
     servings: 6,
     ingredients: [
-      { name: "Pasta", quantity: "1", unit: "pound" },
-      { name: "Bell Peppers", quantity: "1", unit: "medium" },
-      { name: "Tomatoes", quantity: "2", unit: "medium" },
-      { name: "Garlic", quantity: "3", unit: "clove" },
-      { name: "Milk", quantity: "1", unit: "cup" },
-      { name: "Parmesan Cheese", quantity: "1/2", unit: "cup" },
-      { name: "Butter", quantity: "2", unit: "tablespoon" }
+      { key: "pasta_dried", quantity: "1", unit: "pound" },
+      { key: "bell peppers_fresh_diced", quantity: "1", unit: "medium" },
+      { key: "tomatoes_fresh_whole", quantity: "2", unit: "medium" },
+      { key: "garlic_fresh_whole", quantity: "3", unit: "clove" },
+      { key: "milk_fresh", quantity: "1", unit: "cup" },
+      { key: "parmesan cheese_fresh_grated", quantity: "1/2", unit: "cup" },
+      { key: "butter_fresh", quantity: "2", unit: "tablespoon" }
     ]
   }
 ]
@@ -248,7 +261,7 @@ recipes_data.each do |recipe_data|
 
   # Add ingredients to recipe
   recipe_data[:ingredients].each do |ing_data|
-    ingredient = ingredients[ing_data[:name]]
+    ingredient = ingredients[ing_data[:key]]
     measurement_unit = measurement_units[ing_data[:unit]]
 
     # Parse quantity string to numerator/denominator
