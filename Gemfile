@@ -79,6 +79,8 @@ group :development do
   gem "web-console"
   gem "bullet"
   gem 'letter_opener_web'
+  gem 'solargraph'
+  gem 'solargraph-rails'
 
   # Performance improvements
   gem 'spring'           # Application preloader
