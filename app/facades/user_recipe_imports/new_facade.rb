@@ -39,15 +39,23 @@ class UserRecipeImports::NewFacade < BaseFacade
 
   def build_ingredients(recipe)
     parsed_recipe[:ingredients]&.each do |ingredient|
-      parsed_recipe = ParseIngredient.new(ingredient).to_h
-      quantity = QuantityFactory.new(parsed_recipe[:quantity]).create
+      parsed_ingredient = ParseIngredient.new(ingredient).to_h
+      quantity = QuantityFactory.new(parsed_ingredient[:quantity]).create
+
+      # Skip if ingredient name is blank
+      next if parsed_ingredient[:ingredient_name].blank?
+
       recipe.recipe_ingredients.new(
-        ingredient: Ingredient.find_or_initialize_by(name: parsed_recipe[:ingredient_name]),
-        quantity: parsed_recipe[:quantity],
-        measurement_unit_id: parsed_recipe[:measurement_unit_id],
+        ingredient: Ingredient.find_or_create_by(
+          name: parsed_ingredient[:ingredient_name].strip.downcase,
+          packaging_form: parsed_ingredient[:packaging_form],
+          preparation_style: parsed_ingredient[:preparation_style]
+        ),
+        quantity: parsed_ingredient[:quantity],
+        measurement_unit_id: parsed_ingredient[:measurement_unit_id],
         numerator: quantity.numerator,
         denominator: quantity.denominator,
-        notes: parsed_recipe[:ingredient_notes]
+        notes: parsed_ingredient[:ingredient_notes]
       )
     end
   end

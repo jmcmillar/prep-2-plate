@@ -50,8 +50,8 @@ class UserRecipesController < AuthenticatedController
         recipe_category_ids: [], 
         meal_type_ids: [],
         recipe_ingredients_attributes: [
-          :id, :ingredient_id, :ingredient_name, :measurement_unit_id, 
-          :quantity, :notes, :_destroy
+          :id, :ingredient_id, :ingredient_name, :measurement_unit_id,
+          :quantity, :notes, :packaging_form, :preparation_style, :_destroy
         ],
         recipe_instructions_attributes: [:id, :step_number, :instruction, :_destroy]
       ]
