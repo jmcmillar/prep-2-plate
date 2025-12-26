@@ -68,8 +68,13 @@
                 class="text-gray-800 text-sm font-medium cursor-pointer"
                 data-action="click->ingredient-item#edit"
               >
-                <%= "#{ingredient.name} (#{MealPlanIngredient::NameDecorator.new(ingredient).formatted_quantity})" %>
+                <%= MealPlanIngredient::DisplayDecorator.new(ingredient).full_name %>
               </span>
+
+              <!-- Hidden fields to preserve ingredient metadata -->
+              <input type="hidden" value="<%= ingredient.ingredient_id %>" data-ingredient-item-target="ingredientId" />
+              <input type="hidden" value="<%= ingredient.packaging_form %>" data-ingredient-item-target="packagingForm" />
+              <input type="hidden" value="<%= ingredient.preparation_style %>" data-ingredient-item-target="preparationStyle" />
 
               <input
                 type="text"

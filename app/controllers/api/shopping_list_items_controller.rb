@@ -1,7 +1,9 @@
 class Api::ShoppingListItemsController < Api::BaseController
   def index
     @shopping_list = Current.user.shopping_lists.find(params[:shopping_list_id])
-    @shopping_list_items = @shopping_list.shopping_list_items.order(created_at: :desc)
+    @shopping_list_items = @shopping_list.shopping_list_items
+      .includes(:ingredient)  # Prevent N+1 queries
+      .order(created_at: :desc)
   end
 
   def create
@@ -9,7 +11,7 @@ class Api::ShoppingListItemsController < Api::BaseController
     @shopping_list_item = @shopping_list.shopping_list_items.new(shopping_list_item_params)
 
     if @shopping_list_item.save
-      render json: @shopping_list_item, status: :created
+      render :show, status: :created
     else
       render json: @shopping_list_item.errors, status: :unprocessable_entity
     end
@@ -19,7 +21,7 @@ class Api::ShoppingListItemsController < Api::BaseController
     @shopping_list_item = Current.user.shopping_list_items.find(params[:id])
 
     if @shopping_list_item.update(shopping_list_item_params)
-      render json: @shopping_list_item
+      render :show
     else
       render json: @shopping_list_item.errors, status: :unprocessable_entity
     end
@@ -38,6 +40,6 @@ class Api::ShoppingListItemsController < Api::BaseController
   private
 
   def shopping_list_item_params
-    params.require(:shopping_list_item).permit(:name)
+    params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style)
   end
 end

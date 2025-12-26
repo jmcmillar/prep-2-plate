@@ -24,7 +24,7 @@ class ShoppingListItems::ResourceFacade
   end
 
   def name
-    Table::DataComponent.new(@resource.name)
+    Table::DataComponent.new(@resource.display_name)
   end
 
 

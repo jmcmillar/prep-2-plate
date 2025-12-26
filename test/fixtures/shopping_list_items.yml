@@ -1,7 +1,27 @@
 one:
-  name: Item 1
+  name: Carrots
   shopping_list: one
+  ingredient: one
+  packaging_form: fresh
+  preparation_style: diced
 
 two:
-  name: Item 2
+  name: Brocoli
   shopping_list: two
+  ingredient: two
+  packaging_form: frozen
+  preparation_style: chopped
+
+canned_tomatoes:
+  name: tomatoes
+  shopping_list: one
+  ingredient: canned_tomatoes
+  packaging_form: canned
+  preparation_style: diced
+
+custom_item:
+  name: "Custom item without ingredient"
+  shopping_list: one
+  ingredient_id: null
+  packaging_form: null
+  preparation_style: null

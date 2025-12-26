@@ -2,8 +2,14 @@ class MealPlans::ExportToShoppingLists::NewFacade < BaseFacade
   def shopping_list
     (ShoppingList.find_by(id: shopping_list_id) || @user.shopping_lists.new(name: "Main Shopping List")).tap do |list|
       return if @strong_params.empty?
-      @strong_params[:shopping_list_items_attributes].each do |key, value|
-        list.shopping_list_items.new(name: value["name"]) if key.present?
+      @strong_params[:shopping_list_items_attributes]&.each do |key, value|
+        next unless key.present?
+        list.shopping_list_items.new(
+          name: value[:name] || value["name"],
+          ingredient_id: value[:ingredient_id] || value["ingredient_id"],
+          packaging_form: value[:packaging_form] || value["packaging_form"],
+          preparation_style: value[:preparation_style] || value["preparation_style"]
+        )
       end
     end
   end

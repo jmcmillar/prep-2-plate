@@ -2,9 +2,23 @@
 
 one:
   name: Carrots
+  packaging_form: fresh
+  preparation_style: diced
 
 two:
   name: Brocoli
+  packaging_form: frozen
+  preparation_style: chopped
+
+canned_tomatoes:
+  name: tomatoes
+  packaging_form: canned
+  preparation_style: diced
+
+fresh_tomatoes:
+  name: tomatoes
+  packaging_form: fresh
+  preparation_style: whole
 
 destroyable:
   name: Licorice

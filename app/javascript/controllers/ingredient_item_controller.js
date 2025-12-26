@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["label", "input", "newItemInput"]
+  static targets = ["label", "input", "newItemInput", "ingredientId", "packagingForm", "preparationStyle"]
   static values = {
     removeDelay: { type: Number, default: 3000 } // 3 seconds default
   }
@@ -12,14 +12,21 @@ export default class extends Controller {
 
     if (!checkbox.checked || name === "") return
 
-    this.addToShoppingList(name)
+    const itemData = {
+      name: name,
+      ingredient_id: this.hasIngredientIdTarget ? this.ingredientIdTarget.value : null,
+      packaging_form: this.hasPackagingFormTarget ? this.packagingFormTarget.value : null,
+      preparation_style: this.hasPreparationStyleTarget ? this.preparationStyleTarget.value : null
+    }
+
+    this.addToShoppingList(itemData)
       .then(() => {
         checkbox.disabled = true
         this.inputTarget.disabled = true
         this.labelTarget.classList.add("line-through", "text-gray-400")
-        
+
         this.showFlashNotice(`"${name}" added to shopping list`)
-        
+
         setTimeout(() => {
           this.removeItem()
         }, this.removeDelayValue)
@@ -33,13 +40,20 @@ export default class extends Controller {
 
   addItem(event) {
     event.preventDefault()
-    
+
     if (!this.hasNewItemInputTarget) return
-    
+
     const itemName = this.newItemInputTarget.value.trim()
     if (!itemName) return
 
-    this.addToShoppingList(itemName)
+    const itemData = {
+      name: itemName,
+      ingredient_id: null,
+      packaging_form: null,
+      preparation_style: null
+    }
+
+    this.addToShoppingList(itemData)
       .then(() => {
         this.showFlashNotice(`"${itemName}" added to shopping list`)
         this.newItemInputTarget.value = ""
@@ -51,7 +65,7 @@ export default class extends Controller {
       })
   }
 
-  addToShoppingList(itemName) {
+  addToShoppingList(itemData) {
     const listId = document.querySelector("#shopping_list_id")?.value
 
     if (!listId) {
@@ -64,7 +78,14 @@ export default class extends Controller {
         "Content-Type": "application/json",
         "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
       },
-      body: JSON.stringify({ name: itemName })
+      body: JSON.stringify({
+        shopping_list_item: {
+          name: itemData.name,
+          ingredient_id: itemData.ingredient_id,
+          packaging_form: itemData.packaging_form,
+          preparation_style: itemData.preparation_style
+        }
+      })
     })
     .then(resp => {
       if (!resp.ok) throw new Error("Failed to save")

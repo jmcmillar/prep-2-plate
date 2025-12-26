@@ -15,7 +15,7 @@ class ShoppingListItemsController < AuthenticatedController
     
     if item.save
       respond_to do |format|
-        format.json { render json: { id: item.id, name: item.name }, status: :created }
+        format.json { render json: { id: item.id, name: item.name, display_name: item.display_name }, status: :created }
         format.html do
           redirect_to shopping_list_items_url(@shopping_list), notice: "Item was successfully created."
         end
@@ -57,7 +57,7 @@ class ShoppingListItemsController < AuthenticatedController
   private
 
   def shopping_list_item_params
-    params.require(:shopping_list_item).permit(:name)
+    params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style)
   end
 
   def set_shopping_list

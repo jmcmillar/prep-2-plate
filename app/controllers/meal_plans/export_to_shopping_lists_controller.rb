@@ -15,6 +15,9 @@ class MealPlans::ExportToShoppingListsController < AuthenticatedController
   private
 
   def export_to_shopping_list_params
-    params.require(:shopping_list).permit(:shopping_list_id, shopping_list_items_attributes: [:name])
+    params.require(:shopping_list).permit(
+      :shopping_list_id,
+      shopping_list_items_attributes: [:name, :ingredient_id, :packaging_form, :preparation_style]
+    )
   end
 end

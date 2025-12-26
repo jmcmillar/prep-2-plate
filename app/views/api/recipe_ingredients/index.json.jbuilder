@@ -6,8 +6,11 @@ json.ingredientsByCategory do
     json.ingredients do
       json.array! ingredients do |ingredient|
         json.id ingredient.id
+        json.ingredientId ingredient.ingredient_id
         json.name ingredient.ingredient_name
         json.fullName ingredient.full_name
+        json.packagingForm ingredient.packaging_form
+        json.preparationStyle ingredient.preparation_style
         json.quantity ingredient.quantity
         json.recipeId ingredient.recipe_id
       end

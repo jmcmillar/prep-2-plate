@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_25_221854) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -214,6 +214,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
     t.bigint "shopping_list_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "ingredient_id"
+    t.string "packaging_form"
+    t.string "preparation_style"
+    t.index ["ingredient_id"], name: "index_shopping_list_items_on_ingredient_id"
+    t.index ["shopping_list_id", "ingredient_id", "packaging_form", "preparation_style"], name: "idx_shopping_list_items_unique_ingredient"
     t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"
   end
 
@@ -295,6 +300,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
   add_foreign_key "recipe_meal_types", "recipes"
   add_foreign_key "recipes", "recipe_imports"
   add_foreign_key "sessions", "users"
+  add_foreign_key "shopping_list_items", "ingredients"
   add_foreign_key "shopping_list_items", "shopping_lists"
   add_foreign_key "shopping_lists", "users"
   add_foreign_key "user_meal_plans", "meal_plans"
@@ -306,6 +312,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
       WITH ingredient_unit_totals AS (
            SELECT meal_plans.id AS meal_plan_id,
               ingredients.name,
+              ingredients.packaging_form,
+              ingredients.preparation_style,
               recipe_ingredients.ingredient_id,
               measurement_units.name AS unit_name,
               sum((recipe_ingredients.quantity)::double precision) AS quantity,
@@ -319,10 +327,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
                LEFT JOIN recipe_ingredients ON ((meal_plan_recipes.recipe_id = recipe_ingredients.recipe_id)))
                JOIN ingredients ON ((recipe_ingredients.ingredient_id = ingredients.id)))
                LEFT JOIN measurement_units ON ((recipe_ingredients.measurement_unit_id = measurement_units.id)))
-            GROUP BY meal_plans.id, recipe_ingredients.ingredient_id, measurement_units.name, ingredients.name
+            GROUP BY meal_plans.id, recipe_ingredients.ingredient_id, ingredients.name, ingredients.packaging_form, ingredients.preparation_style, measurement_units.name
           )
    SELECT ingredient_unit_totals.meal_plan_id,
       ingredient_unit_totals.ingredient_id,
+      ingredient_unit_totals.packaging_form,
+      ingredient_unit_totals.preparation_style,
       ingredient_unit_totals.unit_name,
       ingredient_unit_totals.name,
       ingredient_unit_totals.quantity,
@@ -354,6 +364,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_18_003715) do
               END
           END AS formatted_amount
      FROM ingredient_unit_totals
-    ORDER BY ingredient_unit_totals.meal_plan_id, ingredient_unit_totals.name;
+    ORDER BY ingredient_unit_totals.meal_plan_id, ingredient_unit_totals.name, ingredient_unit_totals.packaging_form, ingredient_unit_totals.preparation_style;
   SQL
 end

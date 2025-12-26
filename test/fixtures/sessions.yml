@@ -3,10 +3,16 @@
 
 one:
   user: one
+  token: "test_token_user_one_12345678"
   ip_address: "192.168.1.1"
   user_agent: "Mozilla/5.0 Test Browser"
+  expires_at: <%= 2.weeks.from_now %>
+  last_used_at: <%= Time.current %>
 
 two:
   user: two
+  token: "test_token_user_two_12345678"
   ip_address: "192.168.1.2"
   user_agent: "Mozilla/5.0 Test Browser 2"
+  expires_at: <%= 2.weeks.from_now %>
+  last_used_at: <%= Time.current %>
