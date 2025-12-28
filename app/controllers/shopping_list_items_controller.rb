@@ -48,10 +48,24 @@ class ShoppingListItemsController < AuthenticatedController
 
   def destroy
     @facade = ShoppingListItems::DestroyFacade.new(Current.user, params)
-    if @facade.shopping_list_item.destroy
-      redirect_to shopping_list_items_url(@facade.shopping_list), notice: "Item was successfully deleted."
+
+    if @facade.archive
+      respond_to do |format|
+        format.json { render json: { archived: true }, status: :ok }
+        format.html do
+          redirect_to shopping_list_items_url(@facade.shopping_list),
+                      notice: "Item was successfully completed."
+        end
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { error: "Failed to archive item" }, status: :unprocessable_entity }
+        format.html do
+          redirect_to shopping_list_items_url(@facade.shopping_list),
+                      alert: "Failed to complete item."
+        end
+      end
     end
-    set_destroy_flash_for(@facade.shopping_list_item)
   end
 
   private

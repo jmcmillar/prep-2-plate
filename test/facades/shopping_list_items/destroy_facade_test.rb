@@ -20,9 +20,16 @@ class ShoppingListItems::DestroyFacadeTest < ActiveSupport::TestCase
     other_user = users(:two)
     other_shopping_list = other_user.shopping_lists.create!(name: "Other List")
     other_item = other_shopping_list.shopping_list_items.create!(name: "Eggs")
-    
+
     assert_raises(ActiveRecord::RecordNotFound) do
       ShoppingListItems::DestroyFacade.new(@user, { id: other_item.id }).shopping_list_item
     end
+  end
+
+  def test_archive_method_archives_item
+    result = @facade.archive
+
+    assert result
+    assert @shopping_list_item.reload.archived?
   end
 end

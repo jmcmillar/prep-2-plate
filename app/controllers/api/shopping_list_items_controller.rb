@@ -1,7 +1,15 @@
 class Api::ShoppingListItemsController < Api::BaseController
   def index
     @shopping_list = Current.user.shopping_lists.find(params[:shopping_list_id])
-    @shopping_list_items = @shopping_list.shopping_list_items
+
+    # Allow optional inclusion of archived items
+    @shopping_list_items = if ActiveModel::Type::Boolean.new.cast(params[:include_archived])
+      @shopping_list.all_shopping_list_items
+    else
+      @shopping_list.shopping_list_items
+    end
+
+    @shopping_list_items = @shopping_list_items
       .includes(:ingredient)  # Prevent N+1 queries
       .order(created_at: :desc)
   end
@@ -28,12 +36,20 @@ class Api::ShoppingListItemsController < Api::BaseController
   end
 
   def destroy
-    shopping_list_item = Current.user.shopping_list_items.find(params[:id])
+    shopping_list_item = ShoppingListItem.unscoped
+      .joins(:shopping_list)
+      .where(shopping_lists: { user_id: Current.user.id })
+      .find(params[:id])
 
-    if shopping_list_item.destroy
-      head :no_content
+    if ShoppingListItems::Archive.call(shopping_list_item)
+      render json: {
+        archived: true,
+        archived_at: shopping_list_item.archived_at,
+        name: shopping_list_item.name,
+        ingredient_id: shopping_list_item.ingredient_id
+      }, status: :ok
     else
-      render json: shopping_list_item.errors, status: :unprocessable_entity
+      render json: { error: "Failed to archive item" }, status: :unprocessable_entity
     end
   end
 

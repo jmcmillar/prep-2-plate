@@ -85,4 +85,49 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_nil item.packaging_form
     assert_nil item.preparation_style
   end
+
+  # Archive/Destroy tests
+  def test_destroy_archives_item_instead_of_deleting
+    item = shopping_list_items(:one)
+
+    assert_no_difference("ShoppingListItem.unscoped.count") do
+      assert_difference("ShoppingListItem.count", -1) do
+        delete item_path(item)
+      end
+    end
+
+    assert_redirected_to shopping_list_items_path(item.shopping_list)
+
+    # Item should be archived, not deleted
+    archived_item = ShoppingListItem.unscoped.find(item.id)
+    assert archived_item.archived?
+  end
+
+  def test_destroy_decrements_counter_cache
+    shopping_list = shopping_lists(:one)
+    item = shopping_list.shopping_list_items.create!(name: "Test")
+    initial_count = shopping_list.reload.shopping_list_items_count
+
+    delete item_path(item)
+
+    assert_equal initial_count - 1, shopping_list.reload.shopping_list_items_count
+  end
+
+  def test_destroy_shows_success_message
+    item = shopping_list_items(:one)
+
+    delete item_path(item)
+
+    assert_equal "Item was successfully completed.", flash[:notice]
+  end
+
+  def test_destroy_json_returns_success
+    item = shopping_list_items(:one)
+
+    delete item_path(item), as: :json
+
+    assert_response :success
+    json = JSON.parse(response.body)
+    assert_equal true, json["archived"]
+  end
 end

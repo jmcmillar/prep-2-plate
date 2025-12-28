@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_25_221854) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_28_205404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -217,6 +217,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_25_221854) do
     t.bigint "ingredient_id"
     t.string "packaging_form"
     t.string "preparation_style"
+    t.datetime "archived_at"
+    t.index ["archived_at"], name: "index_shopping_list_items_on_archived_at"
     t.index ["ingredient_id"], name: "index_shopping_list_items_on_ingredient_id"
     t.index ["shopping_list_id", "ingredient_id", "packaging_form", "preparation_style"], name: "idx_shopping_list_items_unique_ingredient"
     t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"

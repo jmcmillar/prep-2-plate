@@ -159,4 +159,94 @@ class ShoppingListItemTest < ActiveSupport::TestCase
     shopping_list.reload
     assert_equal initial_count, shopping_list.shopping_list_items_count
   end
+
+  # Archive functionality tests
+  def test_archive_sets_archived_at
+    item = shopping_list_items(:one)
+    assert_nil item.archived_at
+
+    item.archive!
+
+    assert_not_nil item.archived_at
+    assert item.archived?
+  end
+
+  def test_archived_scope_returns_only_archived_items
+    active_item = shopping_list_items(:one)
+    archived_item = shopping_list_items(:two)
+    archived_item.update!(archived_at: 1.hour.ago)
+
+    assert_includes ShoppingListItem.active, active_item
+    assert_not_includes ShoppingListItem.active, archived_item
+
+    assert_includes ShoppingListItem.archived, archived_item
+    assert_not_includes ShoppingListItem.archived, active_item
+  end
+
+  def test_default_scope_excludes_archived_items
+    active_item = shopping_list_items(:one)
+    archived_item = shopping_list_items(:two)
+    archived_item.update!(archived_at: 1.hour.ago)
+
+    # Default queries should only return active items
+    assert_includes ShoppingListItem.all, active_item
+    assert_not_includes ShoppingListItem.all, archived_item
+  end
+
+  def test_unscoped_returns_all_items_including_archived
+    active_item = shopping_list_items(:one)
+    archived_item = shopping_list_items(:two)
+    archived_item.update!(archived_at: 1.hour.ago)
+
+    all_items = ShoppingListItem.unscoped.all
+    assert_includes all_items, active_item
+    assert_includes all_items, archived_item
+  end
+
+  def test_archiving_updates_counter_cache
+    shopping_list = shopping_lists(:one)
+    item = shopping_list.shopping_list_items.create!(name: "Test item")
+
+    initial_count = shopping_list.reload.shopping_list_items_count
+
+    item.archive!
+
+    shopping_list.reload
+    assert_equal initial_count - 1, shopping_list.shopping_list_items_count
+  end
+
+  def test_archived_items_preserve_all_data
+    item = ShoppingListItem.create!(
+      name: "tomatoes",
+      shopping_list: shopping_lists(:one),
+      ingredient_id: ingredients(:one).id,
+      packaging_form: "canned",
+      preparation_style: "diced"
+    )
+
+    item.archive!
+
+    # Reload from database (unscoped to get archived items)
+    archived_item = ShoppingListItem.unscoped.find(item.id)
+
+    assert_equal "tomatoes", archived_item.name
+    assert_equal ingredients(:one).id, archived_item.ingredient_id
+    assert_equal "canned", archived_item.packaging_form
+    assert_equal "diced", archived_item.preparation_style
+    assert archived_item.archived?
+  end
+
+  def test_cannot_archive_already_archived_item
+    item = shopping_list_items(:one)
+    item.archive!
+    first_archived_at = item.archived_at
+
+    # Wait a moment to ensure time difference
+    sleep 0.01
+
+    item.archive!
+
+    # archived_at should not change
+    assert_equal first_archived_at.to_i, item.archived_at.to_i
+  end
 end
