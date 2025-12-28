@@ -1,0 +1,37 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  ingredient: one
+  packaging_form: fresh
+  preparation_style: diced
+  preferred_brand: "Organic Valley"
+  usage_count: 5
+  last_used_at: <%= 1.day.ago %>
+
+two:
+  user: two
+  ingredient: two
+  packaging_form: frozen
+  preparation_style: chopped
+  preferred_brand: "Birds Eye"
+  usage_count: 3
+  last_used_at: <%= 2.days.ago %>
+
+generic:
+  user: one
+  ingredient: two
+  packaging_form: null
+  preparation_style: null
+  preferred_brand: "Generic Brand"
+  usage_count: 1
+  last_used_at: <%= 3.days.ago %>
+
+canned_diced:
+  user: one
+  ingredient: canned_tomatoes
+  packaging_form: canned
+  preparation_style: diced
+  preferred_brand: "Hunt's"
+  usage_count: 10
+  last_used_at: <%= 6.hours.ago %>

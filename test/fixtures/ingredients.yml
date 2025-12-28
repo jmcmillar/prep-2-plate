@@ -20,5 +20,10 @@ fresh_tomatoes:
   packaging_form: fresh
   preparation_style: whole
 
+three:
+  name: onions
+  packaging_form: fresh
+  preparation_style: diced
+
 destroyable:
   name: Licorice

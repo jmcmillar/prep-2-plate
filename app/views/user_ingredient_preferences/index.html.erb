@@ -1,0 +1,42 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Brand Preferences</h1>
+    <%= link_to "New Preference", new_user_ingredient_preference_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @facade.collection.any? %>
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <% @facade.headers.each do |header| %>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= header.content %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @facade.rows.each do |row| %>
+            <tr id="<%= row.id %>">
+              <% row.data.each do |cell| %>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= cell.content %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-4">
+      <%== pagy_nav(@facade.pagy) if @facade.pagy %>
+    </div>
+  <% else %>
+    <div class="bg-white shadow-md rounded-lg p-6 text-center">
+      <p class="text-gray-500">No brand preferences yet. Add one to get started!</p>
+      <%= link_to "Add Your First Preference", new_user_ingredient_preference_path, class: "btn btn-primary mt-4" %>
+    </div>
+  <% end %>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_28_205404) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_28_214046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -218,7 +218,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_205404) do
     t.string "packaging_form"
     t.string "preparation_style"
     t.datetime "archived_at"
+    t.string "brand"
     t.index ["archived_at"], name: "index_shopping_list_items_on_archived_at"
+    t.index ["brand"], name: "index_shopping_list_items_on_brand"
     t.index ["ingredient_id"], name: "index_shopping_list_items_on_ingredient_id"
     t.index ["shopping_list_id", "ingredient_id", "packaging_form", "preparation_style"], name: "idx_shopping_list_items_unique_ingredient"
     t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"
@@ -234,6 +236,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_205404) do
     t.index ["current"], name: "index_shopping_lists_on_current"
     t.index ["user_id", "current"], name: "index_shopping_lists_on_user_id_and_current"
     t.index ["user_id"], name: "index_shopping_lists_on_user_id"
+  end
+
+  create_table "user_ingredient_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "ingredient_id", null: false
+    t.string "packaging_form"
+    t.string "preparation_style"
+    t.string "preferred_brand", null: false
+    t.integer "usage_count", default: 1, null: false
+    t.datetime "last_used_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ingredient_id"], name: "index_user_ingredient_preferences_on_ingredient_id"
+    t.index ["user_id", "ingredient_id", "packaging_form", "preparation_style"], name: "index_user_ingredient_prefs_on_user_ingredient_packaging_prep", unique: true
+    t.index ["user_id"], name: "index_user_ingredient_preferences_on_user_id"
   end
 
   create_table "user_meal_plans", force: :cascade do |t|
@@ -305,6 +322,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_205404) do
   add_foreign_key "shopping_list_items", "ingredients"
   add_foreign_key "shopping_list_items", "shopping_lists"
   add_foreign_key "shopping_lists", "users"
+  add_foreign_key "user_ingredient_preferences", "ingredients"
+  add_foreign_key "user_ingredient_preferences", "users"
   add_foreign_key "user_meal_plans", "meal_plans"
   add_foreign_key "user_meal_plans", "users"
   add_foreign_key "user_recipes", "recipes"

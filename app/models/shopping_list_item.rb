@@ -10,6 +10,7 @@ class ShoppingListItem < ApplicationRecord
   belongs_to :ingredient, optional: true
 
   validates :name, presence: true
+  validates :brand, length: { maximum: 255 }, allow_blank: true
   validates :packaging_form,
             inclusion: { in: Ingredient::PACKAGING_FORMS.keys.map(&:to_s), allow_nil: true, allow_blank: true }
   validates :preparation_style,
@@ -27,6 +28,14 @@ class ShoppingListItem < ApplicationRecord
     parts << Ingredient::PREPARATION_STYLES[preparation_style.to_sym] if preparation_style.present?
     parts << name
     parts.join(" ")
+  end
+
+  # Display name with brand appended in parentheses
+  # Examples:
+  #   "tomatoes" (no brand)
+  #   "Canned Diced tomatoes (Hunts)" (with brand)
+  def display_name_with_brand
+    brand.present? ? "#{display_name} (#{brand})" : display_name
   end
 
   # Archive functionality

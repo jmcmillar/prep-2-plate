@@ -136,6 +136,83 @@ class ShoppingListItemTest < ActiveSupport::TestCase
     assert_equal "tomatoes", item.display_name
   end
 
+  # Brand validation tests
+  def test_brand_allows_nil
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      shopping_list: shopping_lists(:one),
+      brand: nil
+    )
+    assert item.valid?, "brand should allow nil"
+  end
+
+  def test_brand_allows_blank
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      shopping_list: shopping_lists(:one),
+      brand: ""
+    )
+    assert item.valid?, "brand should allow blank"
+  end
+
+  def test_brand_allows_valid_string
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      shopping_list: shopping_lists(:one),
+      brand: "Hunt's"
+    )
+    assert item.valid?, "brand should allow valid string"
+  end
+
+  def test_brand_length_validation
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      shopping_list: shopping_lists(:one),
+      brand: "a" * 256
+    )
+    assert_not item.valid?, "brand should not allow strings longer than 255 characters"
+    assert_includes item.errors[:brand], "is too long (maximum is 255 characters)"
+  end
+
+  # display_name_with_brand tests
+  def test_display_name_with_brand_when_brand_present
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      packaging_form: "canned",
+      preparation_style: "diced",
+      brand: "Hunt's"
+    )
+    assert_equal "Canned Diced tomatoes (Hunt's)", item.display_name_with_brand
+  end
+
+  def test_display_name_with_brand_when_brand_nil
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      packaging_form: "canned",
+      preparation_style: "diced",
+      brand: nil
+    )
+    assert_equal "Canned Diced tomatoes", item.display_name_with_brand
+  end
+
+  def test_display_name_with_brand_when_brand_blank
+    item = ShoppingListItem.new(
+      name: "tomatoes",
+      packaging_form: "canned",
+      preparation_style: "diced",
+      brand: ""
+    )
+    assert_equal "Canned Diced tomatoes", item.display_name_with_brand
+  end
+
+  def test_display_name_with_brand_simple_item
+    item = ShoppingListItem.new(
+      name: "milk",
+      brand: "Organic Valley"
+    )
+    assert_equal "milk (Organic Valley)", item.display_name_with_brand
+  end
+
   # Backward compatibility test
   def test_backward_compatibility_with_name_only_items
     item = ShoppingListItem.new(

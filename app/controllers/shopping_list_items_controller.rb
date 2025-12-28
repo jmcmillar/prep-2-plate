@@ -12,8 +12,14 @@ class ShoppingListItemsController < AuthenticatedController
 
   def create
     item = @shopping_list.shopping_list_items.new(shopping_list_item_params)
-    
+
+    # Apply brand preference if brand is blank
+    UserIngredientPreferences::ApplyToItem.call(item) if item.brand.blank?
+
     if item.save
+      # Learn from brand after successful save
+      UserIngredientPreferences::Learn.call(item)
+
       respond_to do |format|
         format.json { render json: { id: item.id, name: item.name, display_name: item.display_name }, status: :created }
         format.html do
@@ -40,6 +46,9 @@ class ShoppingListItemsController < AuthenticatedController
     @facade = ShoppingListItems::EditFacade.new(Current.user, params)
 
     if @facade.shopping_list_item.update(shopping_list_item_params)
+      # Learn from brand after successful update
+      UserIngredientPreferences::Learn.call(@facade.shopping_list_item)
+
       redirect_to shopping_list_items_url(@facade.shopping_list), notice: "Item was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -71,7 +80,7 @@ class ShoppingListItemsController < AuthenticatedController
   private
 
   def shopping_list_item_params
-    params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style)
+    params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style, :brand)
   end
 
   def set_shopping_list

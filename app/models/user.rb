@@ -25,6 +25,7 @@ class User < ApplicationRecord
   has_many :meal_plans, through: :user_meal_plans
   has_many :shopping_lists, dependent: :destroy
   has_many :shopping_list_items, through: :shopping_lists
+  has_many :user_ingredient_preferences, dependent: :destroy
 
   # Override Devise method to ensure account isn't locked
   def active_for_authentication?

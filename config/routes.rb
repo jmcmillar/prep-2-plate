@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   resources :shopping_lists, only: [:index, :new, :create, :update, :show, :destroy] do
     resources :items, except: [:show], controller: "shopping_list_items", shallow: true
   end
+  resources :user_ingredient_preferences, except: [:show]
   resource :meal_planner, only: [:show]
 
   namespace :meal_planner do
