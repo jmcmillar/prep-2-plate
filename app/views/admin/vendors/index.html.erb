@@ -1,0 +1,21 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
+<% end %>
+
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new do %>
+    <%= tag.div(class: "mb-6") do %>
+      <%= tag.div(class: "col-4 mb-4") do %>
+        <%= render SearchFormComponent.new(@facade.search_data) %>
+      <% end %>
+      <%= tag.div(class: "flex flex-wrap gap-2") do %>
+        <%= render FilterComponent.new(@facade.status_filter_data) %>
+      <% end %>
+    <% end %>
+
+    <%= tag.div(id: "table") do %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,20 @@
+# Offering Meal Types fixture - join table
+grilled_chicken_lunch:
+  offering: grilled_chicken_veggies
+  meal_type: two
+
+power_bowl_lunch:
+  offering: protein_power_bowl
+  meal_type: two
+
+taco_kit_breakfast:
+  offering: taco_night_kit
+  meal_type: one
+
+salmon_lunch:
+  offering: salmon_asparagus
+  meal_type: two
+
+buddha_bowl_lunch:
+  offering: vegan_buddha_bowl
+  meal_type: two

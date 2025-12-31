@@ -9,6 +9,7 @@ class MenuData
       MenuItemData[:admin_meal_plans, "Meal Plans", :admin_meal_plans, true],
       MenuItemData[:admin_meal_types, "Meal Types", :admin_meal_types, true],
       MenuItemData[:admin_measurement_units, "Measurement Units", :admin_measurement_units, true],
+      MenuItemData[:admin_vendors, "Vendors", :admin_vendors, true],
       MenuItemData[:admin_resources, "Resources", :admin_resources, true],
       MenuItemData[:admin_users, "Users", :admin_users, true]
     ]
@@ -35,6 +36,7 @@ class MenuData
     [
       MenuItemData[:recipes, "Recipes", :recipes, true],
       MenuItemData[:meal_plans, "Free Meal Plans", :meal_plans, true],
+      MenuItemData[:meal_prep, "Meal Prep", :offerings, true],
       MenuItemData[:resources, "Resources", :resources, true],
       MenuItemData[:meal_planner, "Build Your Own", :meal_planner, true],
     ]
@@ -50,10 +52,14 @@ class MenuData
         admin_ingredient_categories: :tags,
         admin_measurement_units: :balance_scale,
         admin_meal_plans: :calendar,
+        admin_vendors: :store,
+        admin_offerings: :utensils,
         admin_users: :users,
         admin_shopping_lists: :shopping_cart,
         admin_user_recipes: :book,
         admin_resources: :file,
+        meal_prep: :utensils,
+        vendors: :store,
         back: :chevron_left
       }
     end

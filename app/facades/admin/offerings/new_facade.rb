@@ -1,0 +1,57 @@
+class Admin::Offerings::NewFacade < Base::Admin::NewFacade
+  def offering
+    @offering ||= Offering.new(vendor_id: vendor.id)
+  end
+
+  def active_key
+    :admin_offerings
+  end
+
+  def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Admin", [:admin, :vendors]),
+      BreadcrumbComponent::Data.new("Vendors", [:admin, :vendors]),
+      BreadcrumbComponent::Data.new(vendor.business_name, [:admin, vendor]),
+      BreadcrumbComponent::Data.new("Offerings", [:admin, vendor, :offerings]),
+      BreadcrumbComponent::Data.new("New")
+    ]
+  end
+
+  def form_url
+    [:admin, vendor, :offerings]
+  end
+
+  def vendor
+    @vendor ||= Vendor.find(@params[:vendor_id])
+  end
+
+  def meal_types
+    @meal_types ||= Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+      MealType.order(:name).to_a
+    end
+  end
+
+  def ingredients
+    @ingredients ||= Rails.cache.fetch("ingredients_ordered", expires_in: 12.hours) do
+      Ingredient.order(:name).to_a
+    end
+  end
+
+  def measurement_units
+    @measurement_units ||= Rails.cache.fetch("measurement_units_ordered", expires_in: 12.hours) do
+      MeasurementUnit.order(:name).to_a
+    end
+  end
+
+  def packaging_form_options
+    Ingredient::PACKAGING_FORMS.keys.map { |form| [form.to_s.titleize, form] }
+  end
+
+  def preparation_style_options
+    Ingredient::PREPARATION_STYLES.keys.map { |style| [style.to_s.titleize, style] }
+  end
+
+  def default_serving_sizes
+    [2, 4, 6, 8, 10]
+  end
+end

@@ -36,4 +36,9 @@ namespace :admin do
       resources :shopping_list_items, except: :show, shallow: true
     end
   end
+  resources :vendors do
+    resources :offerings, shallow: true do
+      resources :offering_ingredients, except: :show, shallow: true
+    end
+  end
 end

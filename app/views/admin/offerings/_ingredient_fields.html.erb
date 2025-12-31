@@ -1,0 +1,36 @@
+<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4">
+  <%= f.hidden_field :_destroy %>
+  <%= f.hidden_field :id %>
+
+  <!-- First row: Quantity, Unit, Ingredient, Remove button -->
+  <div class="lg:grid lg:grid-cols-12 gap-4 items-start mb-4">
+    <%= f.input :quantity, class: 'lg:col-span-2' %>
+    <div class="lg:col-span-2">
+      <%= f.searchable_collection_select_input :measurement_unit_id, facade.measurement_units, :id, :name, label_text: "Unit", include_blank: true %>
+    </div>
+    <div class="lg:col-span-7">
+      <%= f.searchable_or_custom_input :ingredient_id, :ingredient_name, facade.ingredients, :id, :display_name, label_text: "Ingredient", include_blank: "Search ingredients..." %>
+    </div>
+    <div class="lg:col-span-1 flex items-end justify-center">
+      <button type="button"
+              data-action="nested-fields#remove"
+              class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              title="Remove ingredient">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Second row: Packaging, Preparation, Notes -->
+  <div class="lg:grid lg:grid-cols-12 gap-4 items-start">
+    <div class="lg:col-span-3">
+      <%= f.select_input :packaging_form, facade.packaging_form_options, include_blank: true, label_text: "Packaging" %>
+    </div>
+    <div class="lg:col-span-3">
+      <%= f.select_input :preparation_style, facade.preparation_style_options, include_blank: true, label_text: "Preparation" %>
+    </div>
+    <div class="lg:col-span-6">
+      <%= f.input :notes %>
+    </div>
+  </div>
+</div>

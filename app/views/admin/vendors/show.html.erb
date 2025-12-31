@@ -1,0 +1,80 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+  <% c.with_icon_link_collection(@facade.header_actions) %>
+<% end %>
+
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: @facade.vendor.business_name) do %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Contact Information</h3>
+        <dl class="space-y-2">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Contact Name</dt>
+            <dd class="text-sm text-gray-900"><%= @facade.vendor.contact_name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Email</dt>
+            <dd class="text-sm text-gray-900"><%= @facade.vendor.contact_email %></dd>
+          </div>
+          <% if @facade.vendor.phone_number.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Phone</dt>
+              <dd class="text-sm text-gray-900"><%= @facade.vendor.phone_number %></dd>
+            </div>
+          <% end %>
+          <% if @facade.vendor.website_url.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Website</dt>
+              <dd class="text-sm text-gray-900"><%= link_to @facade.vendor.website_url, @facade.vendor.website_url, target: "_blank", class: "text-primary hover:underline" %></dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Business Details</h3>
+        <dl class="space-y-2">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Status</dt>
+            <dd class="text-sm text-gray-900">
+              <%= render BadgeComponent.new(badge_data: @facade.status_badge) %>
+            </dd>
+          </div>
+          <% if @facade.vendor.street_address.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Address</dt>
+              <dd class="text-sm text-gray-900">
+                <%= @facade.vendor.street_address %><br>
+                <%= [@facade.vendor.city, @facade.vendor.state, @facade.vendor.zip_code].compact.join(", ") %>
+              </dd>
+            </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+
+    <% if @facade.vendor.description.present? %>
+      <div class="mt-6">
+        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Description</h3>
+        <p class="text-sm text-gray-900"><%= @facade.vendor.description %></p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if @facade.offerings.any? %>
+    <%= render SectionCardComponent.new(title: "Recent Offerings") do %>
+      <div class="space-y-2">
+        <% @facade.offerings.each do |offering| %>
+          <div class="flex justify-between items-center py-2 border-b">
+            <%= link_to offering.name, [:admin, offering], class: "font-medium text-primary hover:underline" %>
+            <span class="text-sm text-gray-500"><%= offering.offering_price_points.count %> price points</span>
+          </div>
+        <% end %>
+      </div>
+      <div class="mt-4 pt-4 border-t">
+        <%= link_to "View All Offerings", [:admin, @facade.vendor, :offerings], class: "text-sm font-medium text-primary hover:underline" %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

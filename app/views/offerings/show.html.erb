@@ -1,0 +1,98 @@
+<%= render BackgroundImageContainerComponent.new(image: "public-hero.jpg", title: @facade.offering.name, description: "by #{@facade.offering.vendor.business_name}") %>
+
+<%= render ContainerComponent.new do %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Content -->
+    <div class="lg:col-span-2">
+      <% if @facade.offering.image.attached? %>
+        <%= render SectionCardComponent.new do %>
+          <%= image_tag @facade.offering.image, class: "w-full h-auto rounded-lg shadow-lg" %>
+        <% end %>
+      <% end %>
+
+      <% if @facade.offering.description.present? %>
+        <%= render SectionCardComponent.new(title: "Description") do %>
+          <div class="prose max-w-none">
+            <%= @facade.offering.description %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if @facade.ingredients.any? %>
+        <%= render SectionCardComponent.new(title: "Ingredients") do %>
+          <ul class="space-y-2">
+            <% @facade.ingredients.each do |ingredient| %>
+              <li class="flex items-start">
+                <span class="text-primary mr-2 mt-1">•</span>
+                <span class="text-gray-700">
+                  <% if ingredient.quantity_value.present? %>
+                    <strong class="font-semibold"><%= ingredient.quantity_value %></strong>
+                    <span class="text-gray-600"><%= ingredient.measurement_unit&.name %></span>
+                  <% end %>
+                  <%= ingredient.ingredient&.display_name || ingredient.ingredient&.name %>
+                  <% if ingredient.notes.present? %>
+                    <span class="text-gray-500 text-sm italic">(<%= ingredient.notes %>)</span>
+                  <% end %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+      <%= render SectionCardComponent.new(title: "Pricing") do %>
+        <% if @facade.price_points.any? %>
+          <%= render Offering::PricingTierComponent.new(
+            price_points: @facade.price_points,
+            selected_size: @facade.selected_serving_size
+          ) %>
+
+          <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h4 class="font-semibold text-gray-900 mb-2">Details</h4>
+            <dl class="space-y-2 text-sm">
+              <div>
+                <dt class="text-gray-500">Base Serving Size</dt>
+                <dd class="font-medium text-gray-900"><%= @facade.offering.base_serving_size %> servings</dd>
+              </div>
+              <% if @facade.offering.meal_types.any? %>
+                <div>
+                  <dt class="text-gray-500">Meal Types</dt>
+                  <dd class="font-medium text-gray-900">
+                    <%= @facade.offering.meal_types.pluck(:name).join(", ") %>
+                  </dd>
+                </div>
+              <% end %>
+            </dl>
+          </div>
+        <% else %>
+          <p class="text-gray-500 text-sm">Pricing information not available.</p>
+        <% end %>
+      <% end %>
+
+      <%= render SectionCardComponent.new(title: "Vendor") do %>
+        <div class="text-center">
+          <h3 class="font-bold text-lg text-gray-900 mb-2">
+            <%= @facade.offering.vendor.business_name %>
+          </h3>
+
+          <% if @facade.offering.vendor.logo.attached? %>
+            <div class="my-4">
+              <%= image_tag @facade.offering.vendor.logo, class: "w-32 h-32 mx-auto object-contain" %>
+            </div>
+          <% end %>
+
+          <% if @facade.offering.vendor.description.present? %>
+            <p class="text-gray-600 text-sm mb-4">
+              <%= truncate(@facade.offering.vendor.description, length: 150) %>
+            </p>
+          <% end %>
+
+          <%= link_to "View All Offerings", vendor_path(@facade.offering.vendor), class: "inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

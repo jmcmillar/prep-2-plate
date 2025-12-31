@@ -1,0 +1,111 @@
+# Offering Ingredients fixture with fractional quantities
+# Using numerator/denominator for precise fractional representation
+
+# Grilled Chicken & Roasted Vegetables ingredients
+grilled_chicken_ingredient_1:
+  offering: grilled_chicken_veggies
+  ingredient: chicken_breast
+  measurement_unit: pound
+  numerator: 1
+  denominator: 1
+  notes: boneless, skinless
+
+grilled_chicken_ingredient_2:
+  offering: grilled_chicken_veggies
+  ingredient: broccoli
+  measurement_unit: two
+  numerator: 2
+  denominator: 1
+  notes: ~
+
+grilled_chicken_ingredient_3:
+  offering: grilled_chicken_veggies
+  ingredient: quinoa
+  measurement_unit: two
+  numerator: 1
+  denominator: 1
+  notes: uncooked
+
+# High-Protein Power Bowl ingredients
+power_bowl_ingredient_1:
+  offering: protein_power_bowl
+  ingredient: beef_steak
+  measurement_unit: pound
+  numerator: 1
+  denominator: 1
+  notes: sirloin
+
+power_bowl_ingredient_2:
+  offering: protein_power_bowl
+  ingredient: sweet_potato
+  measurement_unit: two
+  numerator: 2
+  denominator: 1
+  notes: cubed
+
+power_bowl_ingredient_3:
+  offering: protein_power_bowl
+  ingredient: broccoli
+  measurement_unit: two
+  numerator: 3
+  denominator: 2
+  notes: ~
+
+# Family Taco Night Kit ingredients
+taco_kit_ingredient_1:
+  offering: taco_night_kit
+  ingredient: ground_beef
+  measurement_unit: pound
+  numerator: 2
+  denominator: 1
+  notes: ~
+
+taco_kit_ingredient_2:
+  offering: taco_night_kit
+  ingredient: three
+  measurement_unit: two
+  numerator: 1
+  denominator: 2
+  notes: diced
+
+# Salmon with Asparagus ingredients
+salmon_ingredient_1:
+  offering: salmon_asparagus
+  ingredient: salmon
+  measurement_unit: pound
+  numerator: 1
+  denominator: 1
+  notes: wild-caught
+
+salmon_ingredient_2:
+  offering: salmon_asparagus
+  ingredient: asparagus
+  measurement_unit: pound
+  numerator: 1
+  denominator: 2
+  notes: ~
+
+# Vegan Buddha Bowl ingredients
+buddha_bowl_ingredient_1:
+  offering: vegan_buddha_bowl
+  ingredient: quinoa
+  measurement_unit: two
+  numerator: 1
+  denominator: 1
+  notes: uncooked
+
+buddha_bowl_ingredient_2:
+  offering: vegan_buddha_bowl
+  ingredient: chickpeas
+  measurement_unit: three
+  numerator: 1
+  denominator: 1
+  notes: drained
+
+buddha_bowl_ingredient_3:
+  offering: vegan_buddha_bowl
+  ingredient: mixed_greens
+  measurement_unit: two
+  numerator: 3
+  denominator: 1
+  notes: ~

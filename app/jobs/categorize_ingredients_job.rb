@@ -1,14 +1,8 @@
 # app/jobs/categorize_ingredients_job.rb
-require 'net/http'
-require 'json'
-require 'uri'
-
 class CategorizeIngredientsJob < ApplicationJob
   queue_as :default
   
   BATCH_SIZE = 75
-  API_ENDPOINT = "https://api.anthropic.com/v1/messages"
-  MODEL = "claude-sonnet-4-20250514"
 
   def perform
     Rails.logger.info "Starting ingredient categorization..."
@@ -35,17 +29,24 @@ class CategorizeIngredientsJob < ApplicationJob
   end
 
   def fetch_uncategorized_ingredients
-    Ingredient.where(ingredient_category_id: nil).pluck(:id, :name)
+    Ingredient.where(ingredient_category_id: nil)
+              .pluck(:id, :name, :packaging_form, :preparation_style)
   end
 
   def process_batches(uncategorized, category_map)
     uncategorized.each_slice(BATCH_SIZE).with_index do |batch, index|
-      ingredient_names = batch.map { |_, name| name }
+      ingredient_data = batch.map { |id, name, packaging, preparation| 
+        { 
+          name: name, 
+          packaging: packaging, 
+          preparation: preparation 
+        } 
+      }
       
-      Rails.logger.info "Processing batch #{index + 1} (#{ingredient_names.length} ingredients)..."
+      Rails.logger.info "Processing batch #{index + 1} (#{ingredient_data.length} ingredients)..."
       
       begin
-        categorizations = call_claude_api(ingredient_names)
+        categorizations = call_claude_api(ingredient_data)
         update_database(categorizations, category_map)
         Rails.logger.info "✓ Categorized #{categorizations.length} ingredients"
       rescue StandardError => e
@@ -55,33 +56,10 @@ class CategorizeIngredientsJob < ApplicationJob
     end
   end
 
-  def call_claude_api(ingredient_names)
-    prompt = build_prompt(ingredient_names)
-    
-    uri = URI.parse(API_ENDPOINT)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.read_timeout = 30
-
-    request = Net::HTTP::Post.new(uri.path)
-    request["Content-Type"] = "application/json"
-    request["x-api-key"] = ENV['ANTHROPIC_API_KEY']
-    request["anthropic-version"] = "2023-06-01"
-    
-    request.body = JSON.generate({
-      model: MODEL,
-      max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }]
-    })
-
-    response = http.request(request)
-    
-    unless response.is_a?(Net::HTTPSuccess)
-      raise "API request failed: #{response.code} #{response.message}"
-    end
-    
-    data = JSON.parse(response.body)
-    response_text = data['content'][0]['text']
+  def call_claude_api(ingredient_data)
+    prompt = build_prompt(ingredient_data)
+    client = ClaudeApiClient.new
+    response_text = client.send_message(prompt)
     
     # Strip markdown formatting if present
     response_text = response_text.gsub(/```json\n?/, '').gsub(/```/, '').strip
@@ -89,21 +67,30 @@ class CategorizeIngredientsJob < ApplicationJob
     JSON.parse(response_text)
   end
 
-  def build_prompt(ingredient_names)
+  def build_prompt(ingredient_data)
     <<~PROMPT
       Categorize these ingredients into grocery store sections. Return ONLY valid JSON.
 
       Categories: Fresh Produce, Proteins, Dairy & Eggs, Pantry Staples, Spices & Herbs, Baking Supplies, Condiments & Sauces, Frozen, Beverages, Specialty
 
+      IMPORTANT CATEGORIZATION NOTES:
+      - Consider packaging form (fresh, canned, frozen, dried) when categorizing
+      - Consider preparation style (whole, diced, crushed, chopped, sliced, minced, ground, shredded, grated, cubed, cooked) when categorizing
+      - "frozen" packaging should typically go in Frozen category
+      - "canned" packaging should typically go in Pantry Staples unless it's a protein
+      - "fresh" packaging should typically go in Fresh Produce or Proteins depending on the ingredient
+      - Base category should match the ingredient's form and typical storage location
+
       Format: {"ingredient_name": "category"}
 
-      Ingredients:
-      #{JSON.pretty_generate(ingredient_names)}
+      Ingredients (with packaging and preparation details):
+      #{JSON.pretty_generate(ingredient_data)}
 
       IMPORTANT:
-      - Return ONLY the JSON object
+      - Return ONLY the JSON object with ingredient names as keys (not the full object)
       - Use exact category names from the list above
       - No markdown, no explanation, just JSON
+      - Key should be just the ingredient name (e.g., "tomatoes" not the full object)
     PROMPT
   end
 

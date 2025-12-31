@@ -1,0 +1,87 @@
+<%= render BackgroundImageContainerComponent.new(image: "public-hero.jpg", title: @facade.page_title, description: @facade.page_description) %>
+
+<%= render ContainerComponent.new do %>
+  <% if @facade.featured_offerings.any? %>
+    <%= render SectionCardComponent.new(title: "Featured Offerings") do %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <% @facade.featured_offerings.each do |offering| %>
+          <%= link_to offering_path(offering), class: "block group" do %>
+            <div class="border-2 border-yellow-400 rounded-lg p-4 hover:shadow-xl transition-shadow h-full relative">
+              <div class="absolute top-2 right-2">
+                <span class="px-2 py-1 bg-yellow-400 text-yellow-900 text-xs font-bold rounded">
+                  Featured
+                </span>
+              </div>
+
+              <% if offering.image.attached? %>
+                <div class="w-full h-48 mb-3 overflow-hidden rounded-lg">
+                  <%= image_tag offering.image, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" %>
+                </div>
+              <% end %>
+
+              <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary mb-2">
+                <%= offering.name %>
+              </h3>
+
+              <p class="text-sm text-gray-600 mb-2">
+                by <%= offering.vendor.business_name %>
+              </p>
+
+              <% if offering.offering_price_points.any? %>
+                <div class="text-primary font-bold mb-2">
+                  From <%= number_to_currency(offering.offering_price_points.minimum(:price)) %>
+                </div>
+              <% end %>
+
+              <% if offering.meal_types.any? %>
+                <div class="flex flex-wrap gap-1">
+                  <% offering.meal_types.each do |meal_type| %>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                      <%= meal_type.name %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render SectionCardComponent.new(title: "All Offerings") do %>
+    <% if @facade.offerings.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% @facade.offerings.each do |offering| %>
+          <%= link_to offering_path(offering), class: "block group" do %>
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow h-full">
+              <% if offering.image.attached? %>
+                <div class="w-full h-40 mb-3 overflow-hidden rounded-lg">
+                  <%= image_tag offering.image, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" %>
+                </div>
+              <% end %>
+
+              <h3 class="text-base font-bold text-gray-900 group-hover:text-primary mb-1">
+                <%= offering.name %>
+              </h3>
+
+              <p class="text-xs text-gray-500 mb-2">
+                <%= offering.vendor.business_name %>
+              </p>
+
+              <% if offering.offering_price_points.any? %>
+                <div class="text-sm text-primary font-semibold">
+                  From <%= number_to_currency(offering.offering_price_points.minimum(:price)) %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <p class="text-gray-500">No offerings available at this time.</p>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

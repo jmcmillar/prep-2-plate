@@ -1,0 +1,105 @@
+# Offering Price Points fixture
+# Grilled Chicken & Roasted Vegetables price points
+grilled_chicken_2_servings:
+  offering: grilled_chicken_veggies
+  serving_size: 2
+  price: 24.99
+
+grilled_chicken_4_servings:
+  offering: grilled_chicken_veggies
+  serving_size: 4
+  price: 44.99
+
+grilled_chicken_6_servings:
+  offering: grilled_chicken_veggies
+  serving_size: 6
+  price: 64.99
+
+grilled_chicken_8_servings:
+  offering: grilled_chicken_veggies
+  serving_size: 8
+  price: 84.99
+
+grilled_chicken_10_servings:
+  offering: grilled_chicken_veggies
+  serving_size: 10
+  price: 99.99
+
+# High-Protein Power Bowl price points
+power_bowl_2_servings:
+  offering: protein_power_bowl
+  serving_size: 2
+  price: 29.99
+
+power_bowl_4_servings:
+  offering: protein_power_bowl
+  serving_size: 4
+  price: 54.99
+
+power_bowl_6_servings:
+  offering: protein_power_bowl
+  serving_size: 6
+  price: 79.99
+
+power_bowl_8_servings:
+  offering: protein_power_bowl
+  serving_size: 8
+  price: 99.99
+
+# Family Taco Night Kit price points
+taco_kit_4_servings:
+  offering: taco_night_kit
+  serving_size: 4
+  price: 39.99
+
+taco_kit_6_servings:
+  offering: taco_night_kit
+  serving_size: 6
+  price: 54.99
+
+taco_kit_8_servings:
+  offering: taco_night_kit
+  serving_size: 8
+  price: 69.99
+
+# Salmon with Asparagus price points
+salmon_2_servings:
+  offering: salmon_asparagus
+  serving_size: 2
+  price: 34.99
+
+salmon_4_servings:
+  offering: salmon_asparagus
+  serving_size: 4
+  price: 64.99
+
+salmon_6_servings:
+  offering: salmon_asparagus
+  serving_size: 6
+  price: 94.99
+
+# Vegan Buddha Bowl price points
+buddha_bowl_2_servings:
+  offering: vegan_buddha_bowl
+  serving_size: 2
+  price: 19.99
+
+buddha_bowl_4_servings:
+  offering: vegan_buddha_bowl
+  serving_size: 4
+  price: 36.99
+
+buddha_bowl_6_servings:
+  offering: vegan_buddha_bowl
+  serving_size: 6
+  price: 52.99
+
+buddha_bowl_8_servings:
+  offering: vegan_buddha_bowl
+  serving_size: 8
+  price: 68.99
+
+buddha_bowl_10_servings:
+  offering: vegan_buddha_bowl
+  serving_size: 10
+  price: 82.99

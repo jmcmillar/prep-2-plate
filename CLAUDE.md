@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Prep-2-Plate is a Rails 8 meal planning and recipe management application with:
+
 - Recipe browsing and favorites
 - Meal planning with calendar integration
 - Shopping list generation from meal plans
@@ -15,7 +16,7 @@ Prep-2-Plate is a Rails 8 meal planning and recipe management application with:
 ## Technology Stack
 
 - **Rails**: 8.0.3 (Ruby 3.2.3)
-- **Database**: PostgreSQL with multiple databases (primary, cache, queue, cable via Solid* adapters)
+- **Database**: PostgreSQL with multiple databases (primary, cache, queue, cable via Solid\* adapters)
 - **Frontend**: Hotwire (Turbo + Stimulus), Tailwind CSS, ViewComponent
 - **Background Jobs**: Solid Queue with Mission Control monitoring
 - **Authentication**: Dual system - Devise (web) + Custom Session model (API)
@@ -25,6 +26,7 @@ Prep-2-Plate is a Rails 8 meal planning and recipe management application with:
 ## Directory Structure
 
 ### Standard Rails Directories
+
 - `app/controllers/` - HTTP request handlers (keep extremely thin: 3-10 lines per action)
 - `app/models/` - Data persistence and validations ONLY (no business logic)
 - `app/views/` - ERB templates (delegate to facades for data)
@@ -32,6 +34,7 @@ Prep-2-Plate is a Rails 8 meal planning and recipe management application with:
 - `config/` - Application configuration
 
 ### Custom Directories (Non-Standard Rails)
+
 - **`app/facades/`** - Presentation layer (replaces "fat models, skinny controllers")
   - Controllers delegate ALL view logic to facades
   - Facades prepare data for templates, configure components, manage layout state
@@ -58,18 +61,32 @@ Prep-2-Plate is a Rails 8 meal planning and recipe management application with:
 
 ## Development Commands
 
+### Docker Environment
+
+**Note:** When running in Docker, prefix all `bin/rails` commands with `docker compose run --rm web`:
+
+```bash
+# Examples:
+docker compose run --rm web bin/rails db:migrate
+docker compose run --rm web bin/rails test
+docker compose run --rm web bin/rails console
+```
+
 ### Setup
+
 ```bash
 bin/setup                          # Initial setup (installs deps, creates db, seeds data)
 ```
 
 ### Server
+
 ```bash
 bin/dev                            # Start development server with Tailwind watch (uses Procfile.dev)
 bin/rails server                   # Start Rails server only
 ```
 
 ### Database
+
 ```bash
 bin/rails db:create                # Create databases
 bin/rails db:migrate               # Run pending migrations
@@ -79,6 +96,7 @@ bin/rails db:rollback STEP=N       # Rollback N migrations
 ```
 
 ### Testing
+
 ```bash
 bin/rails test                     # Run all tests (runs in parallel)
 bin/rails test test/models/user_test.rb              # Run specific test file
@@ -86,6 +104,7 @@ bin/rails test test/models/user_test.rb:15           # Run test at specific line
 ```
 
 ### Code Quality
+
 ```bash
 bin/rubocop                        # Run Ruby linter (Rails Omakase style)
 bin/rubocop -a                     # Auto-fix violations
@@ -93,12 +112,14 @@ bin/brakeman                       # Run security scanner
 ```
 
 ### Background Jobs
+
 ```bash
 bin/jobs                           # Start Solid Queue worker
 # Visit http://localhost:3000/jobs for Mission Control dashboard
 ```
 
 ### Assets
+
 ```bash
 bin/rails tailwindcss:build        # Build Tailwind CSS
 bin/rails tailwindcss:watch        # Watch and rebuild CSS
@@ -106,6 +127,7 @@ bin/importmap                      # Manage JavaScript imports
 ```
 
 ### Session Management
+
 ```bash
 bin/rails sessions:cleanup         # Remove expired sessions
 bin/rails sessions:stats           # Show session statistics
@@ -116,6 +138,7 @@ bin/rails sessions:stats           # Show session statistics
 When writing or modifying code, prioritize clean code conventions and SOLID principles:
 
 ### Clean Code Conventions
+
 - **Meaningful Names**: Use descriptive, intention-revealing names for classes, methods, and variables
 - **Single Responsibility**: Each method should do one thing and do it well
 - **DRY (Don't Repeat Yourself)**: Extract repeated code into reusable methods or classes
@@ -124,6 +147,7 @@ When writing or modifying code, prioritize clean code conventions and SOLID prin
 - **Comments**: Write self-documenting code; use comments only when necessary to explain "why", not "what"
 
 ### SOLID Principles
+
 - **Single Responsibility Principle**: A class should have only one reason to change
   - Controllers handle HTTP requests/responses ONLY
   - Facades handle presentation logic
@@ -143,6 +167,7 @@ When writing or modifying code, prioritize clean code conventions and SOLID prin
   - Use dependency injection in service objects and jobs
 
 ### Practical Application
+
 - **Keep models lean**: Use service objects, jobs, or concerns for complex business logic
 - **Fat models, skinny controllers** is outdated: Extract business logic to service objects
 - **Controllers are extremely thin**: 3-10 lines per action (instantiate facade, render/redirect)
@@ -153,6 +178,7 @@ When writing or modifying code, prioritize clean code conventions and SOLID prin
 ## Critical Architectural Rules
 
 **NEVER:**
+
 - Add business logic methods to models (use services or jobs)
 - Add presentation logic to models (use facades or decorators)
 - Make controllers "smart" (delegate to facades)
@@ -160,6 +186,7 @@ When writing or modifying code, prioritize clean code conventions and SOLID prin
 - Modify existing base classes without understanding impact
 
 **ALWAYS:**
+
 - Delegate view logic from controllers to facades
 - Use service objects for complex business operations
 - Use decorators for presentation enhancements
@@ -174,7 +201,9 @@ When writing or modifying code, prioritize clean code conventions and SOLID prin
 **Core Concept**: Controllers delegate to Facades for ALL view-related logic.
 
 #### BaseFacade (`app/facades/base_facade.rb`)
+
 Base class for all facades:
+
 - **Attributes**: `@user`, `@params`, `@strong_params`, `@session`
 - **Layout methods**: `layout`, `menu`, `active_key`, `nav_resource`
 - **Component helpers**: `sign_in_link`, `sign_out_link`, `shopping_list_link`
@@ -183,27 +212,33 @@ Base class for all facades:
 #### Facade Hierarchy
 
 **Base::Admin::IndexFacade** - Admin index pages
+
 - Authorization check in initialize: `raise Pundit::NotAuthorizedError unless authorized?`
 - Uses `CollectionBuilder` for pagination/search
 - Methods: `headers`, `rows`, `pagy`, `header_actions`, `new_action_data`
 - Default pagination: 25 items per page
 
 **Base::Admin::ShowFacade** - Admin show pages
+
 - Authorization check in initialize
 - Methods: `header_actions`, `edit_action_data`
 
 **Base::Authenticated::IndexFacade** - User index pages
+
 - Similar to Admin::IndexFacade but for authenticated users
 - Uses `Base::AuthenticatedPolicy` for authorization
 
 #### ResourceFacade Pattern
+
 Separate facade for individual records:
+
 - Wraps single record for presentation
 - Class methods: `self.headers`, `self.to_row(facade)` for table rendering
 - Instance methods: presentation-specific data formatting
 - Example: `app/facades/admin/recipes/resource_facade.rb`
 
 #### Facade Naming Convention
+
 - Pattern: `[Namespace]::[Resource]::[Action]Facade`
 - Examples:
   - `Recipes::IndexFacade` - Public recipe listing
@@ -211,12 +246,14 @@ Separate facade for individual records:
   - `Api::Recipes::ShowFacade` - API recipe detail
 
 #### Facade Organization
+
 - `/app/facades/` - Public/authenticated facades
 - `/app/facades/admin/` - Admin facades
 - `/app/facades/api/` - API facades (return data for JSON)
 - `/app/facades/base/` - Base classes for inheritance
 
 #### Controller-Facade Contract
+
 Controllers are EXTREMELY thin (3-10 lines):
 
 ```ruby
@@ -231,6 +268,7 @@ end
 ```
 
 Views access data via `@facade`:
+
 ```erb
 <%= @facade.title %>
 <%= render @facade.recipe_component %>
@@ -239,7 +277,9 @@ Views access data via `@facade`:
 ### ViewComponent Architecture
 
 #### ApplicationComponent (`app/components/application_component.rb`)
+
 Base class for all components:
+
 - Inherits from `ViewComponent::Base`
 - Helper: `extract_html_from_options(options, key_list)` for HTML attribute extraction
 - Constant: `HTML_OPTION_KEYS = %i[class data aria style id]`
@@ -247,10 +287,12 @@ Base class for all components:
 #### Component Organization
 
 **Form Components** (`app/components/form/`)
+
 - `Form::LabelComponent` - Form labels
 - `Form::CheckboxGroupTagsComponent` - Checkbox groups
 
 **Table Components** (`app/components/table/`)
+
 - `Table::RowComponent` - Table rows with striping
 - `Table::DataComponent` - Table cells
 - `Table::DefaultHeaderComponent` - Standard headers
@@ -260,6 +302,7 @@ Base class for all components:
 - `Table::HeaderComponent` - Generic header wrapper
 
 **UI Components** (`app/components/`)
+
 - `ButtonLinkComponent` - Links styled as buttons with icons
 - `IconComponent` - Font Awesome icon wrapper
 - `IconLinkComponent` - Icon + text links
@@ -277,6 +320,7 @@ Base class for all components:
 - `BackgroundImageContainerComponent` - Hero sections with background images
 
 #### Typed Props Pattern
+
 Components use inline `Data = Struct.new(...)` for type safety:
 
 ```ruby
@@ -296,6 +340,7 @@ end
 ```
 
 #### Collection Rendering
+
 Use `with_collection_parameter` for rendering collections:
 
 ```ruby
@@ -313,6 +358,7 @@ end
 Located in `app/data_structures/`, these provide type safety without external gems:
 
 **Core Data Objects (using Ruby Struct)**:
+
 - `ColumnData` - Table column configuration
 - `MenuItemData` - Navigation menu items
 - `ButtonLinkSchemeData` - Button styling schemes
@@ -322,9 +368,11 @@ Located in `app/data_structures/`, these provide type safety without external ge
 - `TurboData` - Turbo Frame configuration
 
 **Components subdirectory** (`app/data_structures/components/`):
+
 - `Components::ButtonLinkData` - Button link data with keyword_init
 
 **Pattern**:
+
 - Immutable, typed data objects
 - Used to pass data between layers
 - Instantiated with bracket syntax: `Data[value1, value2]` or `.new`
@@ -333,7 +381,9 @@ Located in `app/data_structures/`, these provide type safety without external ge
 ### Decorator Pattern
 
 #### BaseDecorator (`app/decorators/base_decorator.rb`)
+
 Uses `SimpleDelegator` (NOT Draper gem):
+
 - **Class methods**:
   - `decorate(object)` - Wraps single object
   - `decorate_collection(collection)` - Wraps collection
@@ -344,17 +394,21 @@ Uses `SimpleDelegator` (NOT Draper gem):
 #### Common Decorators
 
 **ImageDecorator** - Handles non-persisted images gracefully
+
 - Prevents errors when image not attached
 
 **RecipeIngredient::FullNameDecorator** - Formats ingredient display
+
 - Methods: `full_name`, `formatted_quantity`, `quantity`, `pluralized_measurement_unit`
 - Handles whole numbers, fractions, and mixed numbers
 - Example output: "2 1/2 cups flour (sifted)"
 
 **MealPlanIngredient::NameDecorator** - Formats aggregated ingredients
+
 - Used for shopping lists
 
 #### Usage Pattern
+
 ```ruby
 decorated_ingredients = RecipeIngredient::FullNameDecorator.decorate_collection(recipe.recipe_ingredients)
 ```
@@ -362,24 +416,30 @@ decorated_ingredients = RecipeIngredient::FullNameDecorator.decorate_collection(
 ### Service Objects
 
 #### Service Module (`app/services/service.rb`)
+
 Concern providing class-level `call(...)` method:
+
 - Pattern: `ServiceName.call(args)` → `new(args).call`
 - Used for single-responsibility business logic
 
 #### Service Objects
 
 **BuildRecipeIngredients** - Parses and creates recipe ingredients
+
 - Uses `AttributeData` struct internally
 - Handles fractional quantities via `RecipeUtils::ParseQuantity`
 
 **FlashService** - Renders flash messages as ViewComponents
+
 - Maps flash types to CSS schemes and icons
 - Returns rendered component HTML
 
 **UserRecipes::ProcessParams** - Processes nested form params
+
 - Converts quantity strings to numerator/denominator using `QuantityFactory`
 
 #### Service Pattern
+
 - Keep models lean - NO complex business logic in models
 - Services are Plain Old Ruby Objects (POROs)
 - Each service does ONE thing
@@ -391,6 +451,7 @@ Concern providing class-level `call(...)` method:
 **IMPORTANT**: Significant business logic lives here. This is NOT a dumping ground - it's organized domain logic.
 
 #### Menu and Navigation
+
 - **`MenuData`** - Static menu definitions
   - Inner classes: `IconMap`, `Format`
   - Methods: `admin_menu`, `admin_user_menu`, `account_setting_menu`, `main_menu`
@@ -400,6 +461,7 @@ Concern providing class-level `call(...)` method:
 - **`BuildNavItemCollectionService`** - Constructs navigation collections
 
 #### Collection Handling
+
 - **`CollectionBuilder`** - Wraps ActiveRecord relations for pagination and search
   - Integrates Ransack for searching
   - Integrates Pagy for pagination
@@ -407,6 +469,7 @@ Concern providing class-level `call(...)` method:
   - Usage: `CollectionBuilder.new(relation, params).build`
 
 #### Recipe Import Parsers (`app/lib/import/parsers/`)
+
 - **`BaseParser`** - Abstract parser with NullObject pattern
   - Methods: `can_parse?`, `parse`
   - Template method pattern for recipe attributes
@@ -421,6 +484,7 @@ Concern providing class-level `call(...)` method:
 - **`CanonicalUrlParser`** - Extracts canonical URLs from HTML
 
 #### Recipe Parsing and Utilities
+
 - **`Parser`** module - Recipe import entry point
   - Defines `RECIPE_ATTRIBUTES` and `NUTRITION_ATTRIBUTES`
   - `RecipeData = Struct.new(*RECIPE_ATTRIBUTES)`
@@ -430,6 +494,7 @@ Concern providing class-level `call(...)` method:
   - Extracts: quantity, measurement_unit_id, ingredient_name, notes
 
 **RecipeUtils** module (`app/lib/recipe_utils/`):
+
 - `ParseQuantity` - Converts strings to Rational numbers
 - `ParseUnit` - Identifies measurement units from strings
 - `ParseIngredientName` - Extracts ingredient name
@@ -438,17 +503,20 @@ Concern providing class-level `call(...)` method:
 - `Calendar` / `CalendarEvent` - iCal generation for meal plans
 
 #### Quantity Conversions (`app/lib/conversions/`)
+
 - `WholeToFraction` - Converts whole numbers to fractions
 - `MixedToImproperFraction` - Converts mixed numbers to improper fractions
 - `DecimalToFraction` - Converts decimals to fractions
 
 #### Link Builders (`app/lib/link/`)
+
 - `Link::Action` - Generates action links
 - `Link::Edit` - Edit action links
 - `Link::Destroy` - Destroy action links with confirmation
 - `Link::RowActions` - Combines multiple actions for table rows
 
 #### Other Utilities
+
 - **`QuantityFactory`** - Creates Rational from string input
 - **`QuantityMultiplierDecorator`** - Scales quantities for serving size adjustments
 - **`UserRecipeImportParser`** - Parses user recipe imports
@@ -471,17 +539,20 @@ ActionController::API (base for API requests)
 ```
 
 #### ApplicationController
+
 - Includes: `DestroyFlash`, `Pagy::Frontend`
 - `before_action :set_current_user` - Sets `Current.user` from Devise
 - Pundit error handling: `rescue_from Pundit::NotAuthorizedError`
 - Devise configuration for permitted params
 
 #### AuthenticatedController
+
 - `before_action :authenticate_user!` (Devise)
 - `allow_browser versions: :modern` (Rails 8 feature)
 - Base for all authenticated web controllers
 
 #### Api::BaseController
+
 - Inherits from `ActionController::API`
 - Includes `Api::TokenAuthentication` concern
 - `before_action :set_default_format` - Forces JSON for `*/*` or HTML requests
@@ -493,16 +564,19 @@ ActionController::API (base for API requests)
 #### Controller Concerns
 
 **DestroyFlash** - Automatic flash messages after destroy actions
+
 - `set_destroy_flash_for(record)` checks if destroyed, sets appropriate flash
 - Included in ApplicationController
 
 **RateLimitable** - Rate limiting for authentication endpoints
+
 - `check_rate_limit(key:, limit:, period:)` uses Rails.cache
 - Raises `RateLimitExceeded` if limit exceeded
 - Logs warnings with IP address
 - Returns 429 Too Many Requests status code
 
 **Api::TokenAuthentication** - Bearer token authentication
+
 - `authenticate_with_bearer_token` - Parses `Authorization: Bearer <token>` header
 - `start_new_session_for(user)` - Creates API session
 - `terminate_session` - Destroys API session
@@ -510,12 +584,15 @@ ActionController::API (base for API requests)
 - Suspicious activity detection (IP address or user agent changes)
 
 #### Current Model (Request-Scoped Data)
+
 `Current` model extends `ActiveSupport::CurrentAttributes`:
+
 - **Attributes**: `:session` (API auth), `:user` (web auth via Devise)
 - Usage: `Current.user` to access current user anywhere in request cycle
 - Automatically reset between requests
 
 #### Controller Pattern (Critical)
+
 Controllers must be EXTREMELY thin (3-10 lines per action):
 
 ```ruby
@@ -544,7 +621,9 @@ end
 ### Authorization (Pundit)
 
 #### ApplicationPolicy (`app/policies/application_policy.rb`)
+
 Base policy with deny-by-default approach:
+
 - Requires authenticated user: `raise Pundit::NotAuthorizedError unless user`
 - All methods return `false` by default (must explicitly allow)
 - Methods: `index?`, `show?`, `create?`, `new?`, `update?`, `edit?`, `destroy?`
@@ -554,20 +633,24 @@ Base policy with deny-by-default approach:
 #### Base Policies
 
 **Base::AdminPolicy** - Admin-only access
+
 - All methods check `user.admin?`
 - Scope returns `scope.all` if admin, else `scope.none`
 - Used for admin namespace controllers
 
 **Base::AuthenticatedPolicy** - Authenticated user access
+
 - All methods check `user.persisted?`
 - Scope returns `scope.all` if persisted, else `scope.none`
 - Used for user-facing authenticated controllers
 
 **Base::UnauthenticatedPolicy** - Public access (allow all)
+
 - All methods return `true`
 - Used for public-facing controllers
 
 #### Authorization Pattern
+
 **Critical**: Authorization is checked in **facade initializers**, NOT controllers!
 
 ```ruby
@@ -587,6 +670,7 @@ end
 ```
 
 ApplicationController rescues:
+
 ```ruby
 rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 ```
@@ -596,6 +680,7 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 #### Core Domain Models
 
 **User Model**
+
 - **Authentication**: Uses Devise for web authentication
   - Modules: `:database_authenticatable`, `:registerable`, `:recoverable`, `:rememberable`, `:validatable`, `:confirmable`, `:lockable`, `:timeoutable`, `:trackable`
 - **Separate API Authentication**: Custom `Session` model for Bearer tokens (see below)
@@ -604,6 +689,7 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 - **Normalization**: Email stripped and lowercased
 
 **Session Model** - Custom API Authentication (NOT Devise sessions!)
+
 - **Purpose**: Bearer token authentication for API clients
 - **Constants**:
   - `SESSION_LIFETIME = 2.weeks`
@@ -619,6 +705,7 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   - `find_by_token(token)` - Finds session and touches last_used
 
 **Recipe Model**
+
 - Central model supporting both admin-curated and user-generated recipes
 - **Rich Text**: `has_rich_text :description` (Action Text)
 - **Attachments**: `has_one_attached :image` (Active Storage)
@@ -629,6 +716,7 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 - **Class Methods**: `difficulty_levels` returns hash of levels
 
 **RecipeIngredient Model** - IMPORTANT: Uses Fractional Quantities!
+
 - **Fractional Storage**: Uses `numerator` and `denominator` fields (NOT decimals!)
   - Reason: Precise representation of recipe quantities (1/3, 1/2, etc.)
 - **Virtual Attribute**: `ingredient_name=` for form handling
@@ -639,28 +727,33 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 - **Associations**: `belongs_to :recipe`, `belongs_to :ingredient`, `belongs_to :measurement_unit`
 
 **Ingredient Model**
+
 - **Validation**: `uniqueness: { case_sensitive: false }`
 - **Normalization**: `before_save :downcase_fields` - Normalizes names
 - **Associations**: `belongs_to :ingredient_category, optional: true`
 - **Deletion Protection**: `has_many :recipe_ingredients, dependent: :restrict_with_error`
 
 **UserRecipe Model**
+
 - **Purpose**: Join model linking users to their created recipes
 - **Associations**: `belongs_to :user`, `belongs_to :recipe`
 - **Nested Attributes**: `accepts_nested_attributes_for :recipe`
 - **Heavy Delegation**: Delegates `name`, `image`, `description`, `serving_size`, `duration_minutes`, `difficulty_level`, `recipe_ingredients`, `recipe_instructions` to `:recipe`
 
 **RecipeImport Model**
+
 - Tracks imported recipes from external URLs
 - **Custom Validator**: `:https_url` (in `app/validators/https_url_validator.rb`)
 - **Associations**: `has_many :recipes`
 
 **MealPlan Model**
+
 - Admin-curated meal plans
 - **Associations**: `has_many :meal_plan_recipes, :recipes, :ingredients, :recipe_ingredients`
 - **Scopes**: `featured`
 
 **MealPlanIngredient Model** - DATABASE VIEW (Not a table!)
+
 - **Type**: Database view (extends `DatabaseView` base class)
 - **SQL**: Defined in `db/views/meal_plan_ingredients_v01.sql`
 - **Purpose**: Aggregates ingredients across all recipes in meal plan with formatted quantities
@@ -668,11 +761,13 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 - **Read-Only**: `readonly? → true`
 
 **ShoppingList Model**
+
 - User-specific shopping lists generated from meal plans
 - **Associations**: `belongs_to :user`, `has_many :shopping_list_items, dependent: :destroy`
 - **Scopes**: `for_user(user)`, `current`, `recent`
 
 #### Key Model Conventions
+
 - All models inherit from `ApplicationRecord`
 - **Ransack integration**: Most models define `ransackable_attributes` and `ransackable_associations`
 - **Nested attributes**: Extensive use of `accepts_nested_attributes_for` for complex forms
@@ -681,7 +776,9 @@ rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 - **NO business logic in models** - Use services, jobs, or lib classes
 
 #### DatabaseView Base Class
+
 For Scenic gem database views:
+
 - `self.abstract_class = true`
 - `def readonly?; true; end`
 - Subclasses represent SQL views (not tables)
@@ -690,7 +787,9 @@ For Scenic gem database views:
 ### Database Architecture
 
 #### Multi-Database Setup (Solid Stack)
+
 Four separate PostgreSQL databases in production:
+
 - **primary** (`db/schema.rb`) - Application data (users, recipes, etc.)
 - **cache** (`db/cache_schema.rb`) - Solid Cache
 - **queue** (`db/queue_schema.rb`) - Solid Queue (background jobs)
@@ -699,12 +798,15 @@ Four separate PostgreSQL databases in production:
 In development: Single database with environment variable configuration.
 
 #### Database Views (Scenic Gem)
+
 SQL views in `db/views/`:
+
 - `meal_plan_ingredients_v01.sql` - Aggregates ingredients across meal plan recipes
 - Complex SQL with CTEs for fraction formatting using GCD calculations
 - Versioned via migrations (e.g., `_v01`, `_v02`)
 
 #### Migrations
+
 - Standard Rails migrations in `db/migrate/`
 - Follow Rails naming conventions
 - Scenic views have separate migration files
@@ -712,17 +814,20 @@ SQL views in `db/views/`:
 ### Background Jobs & Scheduling
 
 #### ApplicationJob (`app/jobs/application_job.rb`)
+
 - Base class: `< ActiveJob::Base`
 - No custom retry/discard configuration (uses Rails defaults)
 
 #### Job Classes
 
 **SessionCleanupJob** - Removes expired API sessions
+
 - Queue: `:default`
 - Calls `Session.cleanup_expired`
 - Scheduled: Every 3 days at 2am (prod), daily (dev)
 
 **CategorizeIngredientsJob** - AI-powered ingredient categorization
+
 - **AI Integration**: Uses Claude API (Anthropic) via direct HTTP calls
 - **Model**: `claude-sonnet-4-20250514`
 - **Batch size**: 75 ingredients at a time
@@ -731,15 +836,19 @@ SQL views in `db/views/`:
 - **Scheduled**: Daily at 1am
 
 **OrphanedIngredientCleanupJob** - Removes unused ingredients
+
 - Finds ingredients with no associated recipe_ingredients
 - Uses `left_joins` and `where(recipe_ingredients: { id: nil })`
 - Scheduled: Daily at 3am
 
 **OrphanedRecipeImportCleanupJob** - Removes unused recipe imports
+
 - Scheduled: Daily at 4am
 
 #### Recurring Jobs
+
 Configured in `config/recurring.yml`:
+
 - Solid Queue built-in cleanup: Every hour at minute 12
 - Session cleanup: Every 3 days at 2am (prod), daily (dev)
 - Orphaned ingredient cleanup: Daily at 3am
@@ -747,6 +856,7 @@ Configured in `config/recurring.yml`:
 - Categorize ingredients: Daily at 1am
 
 #### Job Infrastructure
+
 - **Queue**: Solid Queue (database-backed)
 - **Monitoring**: Mission Control Jobs at http://localhost:3000/jobs
 - **Authentication**: `MissionControl::Jobs.base_controller_class = "AuthenticatedController"`
@@ -754,14 +864,18 @@ Configured in `config/recurring.yml`:
 ### API Structure
 
 #### API Controllers
+
 Located in `app/controllers/api/`:
+
 - Inherit from `Api::BaseController` (ActionController::API)
 - Bearer token authentication required (via `Api::TokenAuthentication` concern)
 - Return JSON responses
 - Separate facades in `app/facades/api/`
 
 #### API Routes
+
 Configured in `config/routes/api.rb`:
+
 - Namespace: `api`
 - Authentication endpoints:
   - `POST /api/auth/sign_in` - Login, returns Bearer token
@@ -770,6 +884,7 @@ Configured in `config/routes/api.rb`:
 - Resource endpoints: recipes, shopping_lists, meal_plans, recipe_categories, etc.
 
 #### API Authentication Flow
+
 1. Client sends credentials to `/api/auth/sign_in`
 2. Server validates, creates Session record, returns token
 3. Client includes token in subsequent requests: `Authorization: Bearer <token>`
@@ -782,6 +897,7 @@ Configured in `config/routes/api.rb`:
 Located in `app/javascript/controllers/`:
 
 **Core Controllers**:
+
 - `application_controller.js` - Base controller
 - `modal_controller.js` - Modal dialogs
 - `dropdown_controller.js` - Dropdown menus
@@ -789,6 +905,7 @@ Located in `app/javascript/controllers/`:
 - `tabs_controller.js` - Tab navigation
 
 **Form Controllers**:
+
 - `nested_fields_controller.js` - Dynamic nested forms (add/remove fields)
 - `checkbox_group_controller.js` - Checkbox group interactions
 - `toggle_controller.js` - Toggle switches
@@ -798,6 +915,7 @@ Located in `app/javascript/controllers/`:
 - `notes_controller.js` - Note fields
 
 **Interaction Controllers**:
+
 - `drag_drop_controller.js` - Drag and drop functionality
 - `calendar_controller.js` - Calendar interactions
 - `search_controller.js` - Search functionality
@@ -807,6 +925,7 @@ Located in `app/javascript/controllers/`:
 - `frame_source_controller.js` - Turbo Frame source manipulation
 
 **Pattern**:
+
 - Hotwire (Turbo + Stimulus) for progressive enhancement
 - Data attributes for controller attachment (e.g., `data-controller="modal"`)
 - Server-rendered HTML with sprinkles of interactivity
@@ -814,34 +933,41 @@ Located in `app/javascript/controllers/`:
 ### Naming Conventions
 
 **Facades**:
+
 - Pattern: `[Namespace]::[Resource]::[Action]Facade`
 - Examples: `Recipes::IndexFacade`, `Admin::Recipes::EditFacade`
 - Resource facades: `Admin::Recipes::ResourceFacade`
 
 **Components**:
+
 - Pattern: `[Name]Component` with optional namespace
 - Examples: `ButtonLinkComponent`, `Table::RowComponent`
 - Inline data: `Data = Struct.new(...)`
 
 **Services**:
+
 - Pattern: Verb-based naming
 - Examples: `BuildRecipeIngredients`, `FlashService`
 - Namespaced: `UserRecipes::ProcessParams`
 - Include `Service` module for `.call` class method
 
 **Jobs**:
+
 - Pattern: `[Action]Job`
 - Examples: `SessionCleanupJob`, `CategorizeIngredientsJob`
 
 **Policies**:
+
 - Pattern: `[Resource]Policy`
 - Base policies: `Base::AdminPolicy`, `Base::AuthenticatedPolicy`
 
 **Data Structures**:
+
 - Pattern: `[Name]Data`
 - Examples: `MenuItemData`, `ColumnData`, `ButtonLinkData`
 
 **Controllers**:
+
 - Web: `[Resource]Controller` or `[Namespace]::[Resource]Controller`
 - API: `Api::[Resource]Controller`
 
@@ -850,12 +976,14 @@ Located in `app/javascript/controllers/`:
 #### Dual Authentication System
 
 **Web Authentication (Devise)**:
+
 - Used for: Browser-based web interface
 - Session storage: Rails session cookies
 - Controllers: `AuthenticatedController` uses `before_action :authenticate_user!`
 - Current user: Available via Devise's `current_user` and `Current.user`
 
 **API Authentication (Custom Session Model)**:
+
 - Used for: Mobile apps, SPA clients, API consumers
 - Session storage: Database (`sessions` table)
 - Token format: Bearer token in `Authorization` header
@@ -865,6 +993,7 @@ Located in `app/javascript/controllers/`:
 - Current session: Available via `Current.session`
 
 #### Security Features
+
 - **Secure tokens**: Cryptographically secure (32 bytes, 256 bits entropy)
 - **Rate limiting**: 5 attempts per 15 minutes on auth endpoints
 - **Session tracking**: IP address, user agent, last_used_at
@@ -874,12 +1003,14 @@ Located in `app/javascript/controllers/`:
 - **Production security**: `secure: true` cookies (HTTPS only)
 
 #### Authorization (Pundit)
+
 - **Deny by default**: ApplicationPolicy returns `false` for all actions
 - **Base policies**: `Base::AdminPolicy`, `Base::AuthenticatedPolicy`, `Base::UnauthenticatedPolicy`
 - **Authorization location**: Checked in **facade initializers**, NOT controllers
 - **Error handling**: ApplicationController rescues `Pundit::NotAuthorizedError`
 
 Key files:
+
 - `app/models/session.rb` - Custom Session model for API
 - `app/controllers/concerns/api/token_authentication.rb` - Bearer token auth
 - `app/controllers/concerns/rate_limitable.rb` - Rate limiting
@@ -890,12 +1021,14 @@ Key files:
 ## Important Conventions
 
 ### Controller Organization
+
 - **Public controllers**: Recipe browsing, landing pages (no auth)
 - **Authenticated controllers**: Inherit from `AuthenticatedController` (Devise login required)
 - **Admin controllers**: In `app/controllers/admin/` namespace (admin role required)
 - **API controllers**: In `app/controllers/api/` namespace (inherit from `ActionController::API`, Bearer token required)
 
 ### Model Associations (Key Relationships)
+
 - **Recipe**: Can be user-generated (`UserRecipe`) or admin-curated
 - **RecipeIngredient**: Uses fractional quantities (numerator/denominator)
 - **MealPlan**: User's planned meals
@@ -905,23 +1038,28 @@ Key files:
 - **Session**: Custom model for API authentication (NOT Devise sessions)
 
 ### Route Organization
+
 - **Main routes**: `config/routes.rb`
 - **Admin routes**: `config/routes/admin.rb` (drawn via `draw "admin"`)
 - **API routes**: `config/routes/api.rb` (drawn via `draw "api"`)
 
 ## Database Views
+
 Uses `scenic` gem for database views:
+
 - SQL definitions in `db/views/`
 - Models extend `DatabaseView` base class
 - Versioned (e.g., `meal_plan_ingredients_v01.sql`)
 - Read-only (cannot be modified via ActiveRecord)
 
 ## Image Processing
+
 - **Storage**: Active Storage with AWS S3 in production (`aws-sdk-s3` gem)
 - **Transformations**: `image_processing` gem with ImageMagick/libvips
 - **Attachments**: `has_one_attached :image` or `has_many_attached :images`
 
 ## Recipe Import
+
 - **Model**: `RecipeImport` with URL validation
 - **Parser System**: Multiple parsers in `app/lib/import/parsers/`
   - JSON-LD, Schema.org microdata, hRecipe microformat
@@ -930,6 +1068,7 @@ Uses `scenic` gem for database views:
 - **Ingredient Parsing**: `ParseIngredient` extracts structured data from strings
 
 ## AI Integration
+
 - **Gem**: `ruby-openai` (though CategorizeIngredientsJob uses direct HTTP)
 - **Primary Use**: Ingredient categorization via Claude API
 - **Model**: `claude-sonnet-4-20250514`
@@ -937,11 +1076,13 @@ Uses `scenic` gem for database views:
 - **Batch Processing**: 75 ingredients at a time
 
 ## Email
+
 - **Production**: Mailgun (`mailgun-ruby` gem)
 - **Development**: Letter Opener Web at http://localhost:3000/letter_opener
 - **Mailers**: Standard Rails mailers in `app/mailers/`
 
 ## Testing Considerations
+
 - **Framework**: Minitest (Rails default)
 - **Parallel execution**: Enabled by default
 - **Fixtures**: Located in `test/fixtures/`
@@ -952,6 +1093,7 @@ Uses `scenic` gem for database views:
 - **Base classes**: `ActiveSupport::TestCase`, `ApplicationSystemTestCase`
 
 ## Security Notes
+
 - Sessions use cryptographically secure tokens (32 bytes, 256 bits entropy)
 - Rate limiting prevents brute force attacks (5 attempts per 15 minutes)
 - All authentication events logged with `AUTH_EVENT` prefix
@@ -961,6 +1103,7 @@ Uses `scenic` gem for database views:
 - See `SECURITY_IMPROVEMENTS.md` for complete security audit
 
 ## Development Workflow
+
 1. Create feature branch from `master`
 2. Make changes following architectural patterns above
 3. Run tests: `bin/rails test`

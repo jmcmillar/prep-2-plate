@@ -1,0 +1,46 @@
+# Vendors fixture for meal prep feature
+healthy_meal_co:
+  business_name: Healthy Meal Co
+  contact_name: Sarah Johnson
+  contact_email: sarah@healthymealco.com
+  description: We specialize in fresh, nutritious meal prep with locally-sourced ingredients.
+  phone_number: (512) 555-0100
+  website_url: https://healthymealco.com
+  street_address: 123 Main St
+  city: Austin
+  state: TX
+  zip_code: "78701"
+  status: active
+
+fit_kitchen:
+  business_name: Fit Kitchen
+  contact_name: Mike Chen
+  contact_email: mike@fitkitchen.com
+  description: High-protein, low-carb meal prep designed for athletes and fitness enthusiasts.
+  phone_number: (303) 555-0200
+  website_url: https://fitkitchen.com
+  street_address: 456 Mountain Ave
+  city: Denver
+  state: CO
+  zip_code: "80202"
+  status: active
+
+family_feast_prep:
+  business_name: Family Feast Prep
+  contact_name: Emily Rodriguez
+  contact_email: emily@familyfeastprep.com
+  description: Family-friendly meal prep solutions that everyone will love.
+  phone_number: (503) 555-0300
+  website_url: https://familyfeastprep.com
+  street_address: 789 Oak St
+  city: Portland
+  state: OR
+  zip_code: "97201"
+  status: active
+
+inactive_vendor:
+  business_name: Inactive Test Vendor
+  contact_name: Test Person
+  contact_email: test@inactive.com
+  description: This vendor is inactive for testing purposes.
+  status: inactive

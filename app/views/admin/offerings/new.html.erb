@@ -1,0 +1,9 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+
+<%= render ContainerComponent.new do %>
+  <%= render SectionCardComponent.new(title: "New Offering") do %>
+    <%= render "form", facade: @facade %>
+  <% end %>
+<% end %>

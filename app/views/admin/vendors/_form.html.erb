@@ -1,0 +1,29 @@
+<%= meal_planner_form_with(model: facade.vendor, url: facade.form_url) do |form| %>
+  <%= render "components/errors", model: facade.vendor %>
+
+  <div class="lg:grid lg:grid-cols-2 gap-4 mb-6">
+    <%= form.input :business_name, class: "col-span-2", required: true %>
+    <%= form.input :contact_name, required: true %>
+    <%= form.input :contact_email, required: true %>
+    <%= form.input :phone_number %>
+    <%= form.input :website_url %>
+    <%= form.collection_select_input :status, facade.status_options, :id, :name, label_text: "Status" %>
+    <%= form.input :logo, as: :file_field %>
+  </div>
+
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Address</h3>
+    <div class="lg:grid lg:grid-cols-2 gap-4">
+      <%= form.input :street_address, class: "col-span-2" %>
+      <%= form.input :city %>
+      <%= form.input :state %>
+      <%= form.input :zip_code %>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <%= form.input :description, as: :text_area, rows: 4 %>
+  </div>
+
+  <%= form.actions cancel_path: :back %>
+<% end %>

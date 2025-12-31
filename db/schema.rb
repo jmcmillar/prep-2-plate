@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_28_214046) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_30_224221) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -108,6 +108,55 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_214046) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "offering_ingredients", force: :cascade do |t|
+    t.bigint "offering_id", null: false
+    t.bigint "ingredient_id", null: false
+    t.bigint "measurement_unit_id"
+    t.text "notes"
+    t.integer "numerator"
+    t.integer "denominator"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.virtual "quantity", type: :decimal, as: "\nCASE\n    WHEN (denominator <> 0) THEN ((numerator)::numeric / (denominator)::numeric)\n    ELSE NULL::numeric\nEND", stored: true
+    t.index ["ingredient_id"], name: "index_offering_ingredients_on_ingredient_id"
+    t.index ["measurement_unit_id"], name: "index_offering_ingredients_on_measurement_unit_id"
+    t.index ["offering_id", "ingredient_id"], name: "index_offering_ingredients_on_offering_id_and_ingredient_id"
+    t.index ["offering_id"], name: "index_offering_ingredients_on_offering_id"
+  end
+
+  create_table "offering_meal_types", force: :cascade do |t|
+    t.bigint "offering_id", null: false
+    t.bigint "meal_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meal_type_id"], name: "index_offering_meal_types_on_meal_type_id"
+    t.index ["offering_id", "meal_type_id"], name: "index_offering_meal_types_on_offering_id_and_meal_type_id", unique: true
+    t.index ["offering_id"], name: "index_offering_meal_types_on_offering_id"
+  end
+
+  create_table "offering_price_points", force: :cascade do |t|
+    t.bigint "offering_id", null: false
+    t.integer "serving_size", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["offering_id", "serving_size"], name: "index_offering_price_points_on_offering_id_and_serving_size", unique: true
+    t.index ["offering_id"], name: "index_offering_price_points_on_offering_id"
+  end
+
+  create_table "offerings", force: :cascade do |t|
+    t.bigint "vendor_id", null: false
+    t.string "name", null: false
+    t.integer "base_serving_size", default: 2, null: false
+    t.boolean "featured", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_offerings_on_created_at"
+    t.index ["featured"], name: "index_offerings_on_featured"
+    t.index ["vendor_id", "created_at"], name: "index_offerings_on_vendor_id_and_created_at"
+    t.index ["vendor_id"], name: "index_offerings_on_vendor_id"
   end
 
   create_table "recipe_categories", force: :cascade do |t|
@@ -303,10 +352,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_28_214046) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "vendors", force: :cascade do |t|
+    t.string "business_name", null: false
+    t.string "contact_name", null: false
+    t.string "contact_email", null: false
+    t.text "description"
+    t.string "phone_number"
+    t.string "website_url"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_name"], name: "index_vendors_on_business_name", unique: true
+    t.index ["status"], name: "index_vendors_on_status"
+  end
+
   add_foreign_key "ingredients", "ingredient_categories"
   add_foreign_key "meal_plan_recipes", "meal_plans"
   add_foreign_key "meal_plan_recipes", "recipes"
   add_foreign_key "measurement_unit_aliases", "measurement_units"
+  add_foreign_key "offering_ingredients", "ingredients"
+  add_foreign_key "offering_ingredients", "measurement_units"
+  add_foreign_key "offering_ingredients", "offerings"
+  add_foreign_key "offering_meal_types", "meal_types"
+  add_foreign_key "offering_meal_types", "offerings"
+  add_foreign_key "offering_price_points", "offerings"
+  add_foreign_key "offerings", "vendors"
   add_foreign_key "recipe_category_assignments", "recipe_categories"
   add_foreign_key "recipe_category_assignments", "recipes"
   add_foreign_key "recipe_favorites", "recipes"

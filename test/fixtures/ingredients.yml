@@ -27,3 +27,53 @@ three:
 
 destroyable:
   name: Licorice
+
+chicken_breast:
+  name: chicken breast
+  packaging_form: fresh
+  preparation_style: whole
+
+broccoli:
+  name: broccoli
+  packaging_form: fresh
+  preparation_style: florets
+
+quinoa:
+  name: quinoa
+  packaging_form: dried
+  preparation_style: uncooked
+
+beef_steak:
+  name: beef steak
+  packaging_form: fresh
+  preparation_style: whole
+
+sweet_potato:
+  name: sweet potato
+  packaging_form: fresh
+  preparation_style: whole
+
+ground_beef:
+  name: ground beef
+  packaging_form: fresh
+  preparation_style: ground
+
+salmon:
+  name: salmon
+  packaging_form: fresh
+  preparation_style: fillet
+
+asparagus:
+  name: asparagus
+  packaging_form: fresh
+  preparation_style: whole
+
+chickpeas:
+  name: chickpeas
+  packaging_form: canned
+  preparation_style: whole
+
+mixed_greens:
+  name: mixed greens
+  packaging_form: fresh
+  preparation_style: whole

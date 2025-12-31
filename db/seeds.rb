@@ -352,6 +352,212 @@ ingredients.values.sample(8).each do |ingredient|
   )
 end
 
+# Clean up meal prep data in development
+if Rails.env.development?
+  puts "  Cleaning up existing meal prep data..."
+  OfferingIngredient.delete_all
+  OfferingPricePoint.delete_all
+  OfferingMealType.delete_all
+  Offering.delete_all
+  Vendor.delete_all
+end
+
+# Create vendors
+puts "  Creating vendors..."
+vendors = [
+  {
+    business_name: "Healthy Meal Co",
+    contact_name: "Sarah Johnson",
+    contact_email: "sarah@healthymealco.com",
+    phone_number: "5551234567",
+    description: "We prepare fresh, nutritious meals using locally sourced ingredients. Our mission is to make healthy eating convenient and delicious.",
+    city: "Austin",
+    state: "TX",
+    status: "active"
+  },
+  {
+    business_name: "Fit Kitchen",
+    contact_name: "Mike Chen",
+    contact_email: "mike@fitkitchen.com",
+    phone_number: "5559876543",
+    description: "High-protein, low-carb meal prep for fitness enthusiasts. Perfect for athletes and anyone focused on their health goals.",
+    city: "Denver",
+    state: "CO",
+    status: "active"
+  },
+  {
+    business_name: "Family Feast Prep",
+    contact_name: "Maria Rodriguez",
+    contact_email: "maria@familyfeast.com",
+    phone_number: "5555551234",
+    description: "Family-friendly meal prep with kid-approved recipes. Making dinner time easier for busy families.",
+    city: "Portland",
+    state: "OR",
+    status: "active"
+  }
+]
+
+created_vendors = vendors.map do |vendor_data|
+  Vendor.create!(vendor_data)
+end
+
+puts "  Creating offerings with ingredients and price points..."
+
+# Offering 1: Grilled Chicken & Veggies
+offering1 = created_vendors[0].offerings.create!(
+  name: "Grilled Chicken & Roasted Vegetables",
+  description: "Lean grilled chicken breast with seasonal roasted vegetables and quinoa. A perfect balanced meal with protein, complex carbs, and plenty of nutrients.",
+  base_serving_size: 2,
+  featured: true
+)
+
+offering1.offering_meal_types.create!(meal_type: MealType.find_or_create_by!(name: "Dinner"))
+
+# Add ingredients
+chicken = Ingredient.find_or_create_by!(name: "chicken breast")
+broccoli = Ingredient.find_or_create_by!(name: "broccoli")
+carrots = Ingredient.find_or_create_by!(name: "carrots")
+quinoa = Ingredient.find_or_create_by!(name: "quinoa")
+olive_oil = Ingredient.find_or_create_by!(name: "olive oil")
+
+lb = MeasurementUnit.find_by(name: "lb") || MeasurementUnit.find_by(name: "pound")
+cup = MeasurementUnit.find_by(name: "cup")
+tbsp = MeasurementUnit.find_by(name: "tablespoon") || MeasurementUnit.find_by(name: "tbsp")
+
+offering1.offering_ingredients.create!([
+  { ingredient: chicken, numerator: 1, denominator: 1, measurement_unit: lb },
+  { ingredient: broccoli, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: carrots, numerator: 1, denominator: 1, measurement_unit: cup },
+  { ingredient: quinoa, numerator: 1, denominator: 1, measurement_unit: cup },
+  { ingredient: olive_oil, numerator: 2, denominator: 1, measurement_unit: tbsp }
+])
+
+offering1.offering_price_points.create!([
+  { serving_size: 2, price: 24.99 },
+  { serving_size: 4, price: 44.99 },
+  { serving_size: 6, price: 64.99 },
+  { serving_size: 8, price: 84.99 },
+  { serving_size: 10, price: 99.99 }
+])
+
+# Offering 2: High-Protein Bowl
+offering2 = created_vendors[1].offerings.create!(
+  name: "High-Protein Power Bowl",
+  description: "Packed with lean protein, brown rice, and fresh vegetables. Perfect for post-workout nutrition or any time you need sustained energy.",
+  base_serving_size: 2,
+  featured: true
+)
+
+offering2.offering_meal_types.create!(meal_type: MealType.find_or_create_by!(name: "Lunch"))
+
+ground_turkey = Ingredient.find_or_create_by!(name: "ground turkey")
+brown_rice = Ingredient.find_or_create_by!(name: "brown rice")
+spinach = Ingredient.find_or_create_by!(name: "spinach")
+sweet_potato = Ingredient.find_or_create_by!(name: "sweet potato")
+
+offering2.offering_ingredients.create!([
+  { ingredient: ground_turkey, numerator: 1, denominator: 1, measurement_unit: lb },
+  { ingredient: brown_rice, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: spinach, numerator: 3, denominator: 1, measurement_unit: cup },
+  { ingredient: sweet_potato, numerator: 2, denominator: 1, measurement_unit: cup }
+])
+
+offering2.offering_price_points.create!([
+  { serving_size: 2, price: 22.99 },
+  { serving_size: 4, price: 42.99 },
+  { serving_size: 6, price: 59.99 },
+  { serving_size: 8, price: 79.99 }
+])
+
+# Offering 3: Family Taco Night
+offering3 = created_vendors[2].offerings.create!(
+  name: "Family Taco Night Kit",
+  description: "Everything you need for a fun family taco night! Includes seasoned ground beef, fresh toppings, and soft tortillas. Just heat and serve!",
+  base_serving_size: 4,
+  featured: false
+)
+
+offering3.offering_meal_types.create!(meal_type: MealType.find_or_create_by!(name: "Dinner"))
+
+ground_beef = Ingredient.find_or_create_by!(name: "ground beef")
+tortillas = Ingredient.find_or_create_by!(name: "tortillas")
+lettuce = Ingredient.find_or_create_by!(name: "lettuce")
+tomatoes = Ingredient.find_or_create_by!(name: "tomatoes")
+cheese = Ingredient.find_or_create_by!(name: "cheddar cheese")
+
+offering3.offering_ingredients.create!([
+  { ingredient: ground_beef, numerator: 2, denominator: 1, measurement_unit: lb },
+  { ingredient: tortillas, numerator: 12, denominator: 1 },
+  { ingredient: lettuce, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: tomatoes, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: cheese, numerator: 1, denominator: 1, measurement_unit: cup }
+])
+
+offering3.offering_price_points.create!([
+  { serving_size: 4, price: 32.99 },
+  { serving_size: 6, price: 45.99 },
+  { serving_size: 8, price: 58.99 }
+])
+
+# Offering 4: Salmon & Asparagus
+offering4 = created_vendors[0].offerings.create!(
+  name: "Garlic Butter Salmon with Asparagus",
+  description: "Wild-caught salmon with a rich garlic butter sauce, served with fresh asparagus and herb-roasted potatoes.",
+  base_serving_size: 2,
+  featured: false
+)
+
+offering4.offering_meal_types.create!(meal_type: MealType.find_or_create_by!(name: "Dinner"))
+
+salmon = Ingredient.find_or_create_by!(name: "salmon fillet")
+asparagus = Ingredient.find_or_create_by!(name: "asparagus")
+potatoes = Ingredient.find_or_create_by!(name: "potatoes")
+butter = Ingredient.find_or_create_by!(name: "butter")
+garlic = Ingredient.find_or_create_by!(name: "garlic")
+
+offering4.offering_ingredients.create!([
+  { ingredient: salmon, numerator: 1, denominator: 1, measurement_unit: lb },
+  { ingredient: asparagus, numerator: 1, denominator: 1, measurement_unit: lb },
+  { ingredient: potatoes, numerator: 1, denominator: 2, measurement_unit: lb },
+  { ingredient: butter, numerator: 4, denominator: 1, measurement_unit: tbsp },
+  { ingredient: garlic, numerator: 3, denominator: 1 }
+])
+
+offering4.offering_price_points.create!([
+  { serving_size: 2, price: 34.99 },
+  { serving_size: 4, price: 64.99 },
+  { serving_size: 6, price: 92.99 }
+])
+
+# Offering 5: Vegan Buddha Bowl
+offering5 = created_vendors[1].offerings.create!(
+  name: "Vegan Buddha Bowl",
+  description: "A colorful plant-based bowl with chickpeas, quinoa, roasted vegetables, and tahini dressing. Packed with nutrients and flavor!",
+  base_serving_size: 2,
+  featured: true
+)
+
+offering5.offering_meal_types.create!(meal_type: MealType.find_or_create_by!(name: "Lunch"))
+
+chickpeas = Ingredient.find_or_create_by!(name: "chickpeas")
+kale = Ingredient.find_or_create_by!(name: "kale")
+
+offering5.offering_ingredients.create!([
+  { ingredient: chickpeas, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: quinoa, numerator: 1, denominator: 1, measurement_unit: cup },
+  { ingredient: sweet_potato, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: kale, numerator: 2, denominator: 1, measurement_unit: cup },
+  { ingredient: olive_oil, numerator: 3, denominator: 1, measurement_unit: tbsp }
+])
+
+offering5.offering_price_points.create!([
+  { serving_size: 2, price: 19.99 },
+  { serving_size: 4, price: 36.99 },
+  { serving_size: 6, price: 52.99 },
+  { serving_size: 8, price: 68.99 },
+  { serving_size: 10, price: 82.99 }
+])
+
 puts "✅ Seeding complete!"
 puts "\n📊 Database Summary:"
 puts "  User: #{User.count}"
@@ -366,6 +572,10 @@ puts "  Meal Plans: #{MealPlan.count}"
 puts "  Meal Plan Recipes: #{MealPlanRecipe.count}"
 puts "  Shopping Lists: #{ShoppingList.count}"
 puts "  Shopping List Items: #{ShoppingListItem.count}"
+puts "  Vendors: #{Vendor.count}"
+puts "  Offerings: #{Offering.count}"
+puts "  Offering Price Points: #{OfferingPricePoint.count}"
+puts "  Offering Ingredients: #{OfferingIngredient.count}"
 puts "\n🔑 Test Credentials:"
 puts "  Email: joyce.clay@test.com"
 puts "  Password: Test123!"

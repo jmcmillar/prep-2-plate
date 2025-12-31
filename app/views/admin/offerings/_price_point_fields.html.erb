@@ -1,0 +1,22 @@
+<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4">
+  <%= f.hidden_field :_destroy %>
+  <%= f.hidden_field :id %>
+
+  <div class="lg:grid lg:grid-cols-12 gap-4 items-end">
+    <div class="lg:col-span-5">
+      <%= f.input :serving_size, as: :number_field, label_text: "Serving Size", required: true %>
+    </div>
+
+    <div class="lg:col-span-6">
+      <%= f.input :price, as: :number_field, step: "0.01", label_text: "Price ($)", required: true %>
+    </div>
+
+    <div class="lg:col-span-1 flex items-end justify-center">
+      <button type="button"
+              data-action="nested-fields#remove"
+              class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+</div>

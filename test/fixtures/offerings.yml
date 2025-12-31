@@ -1,0 +1,36 @@
+# Offerings fixture for meal prep feature
+grilled_chicken_veggies:
+  vendor: healthy_meal_co
+  name: Grilled Chicken & Roasted Vegetables
+  base_serving_size: 2
+  featured: true
+
+protein_power_bowl:
+  vendor: fit_kitchen
+  name: High-Protein Power Bowl
+  base_serving_size: 2
+  featured: true
+
+taco_night_kit:
+  vendor: family_feast_prep
+  name: Family Taco Night Kit
+  base_serving_size: 4
+  featured: false
+
+salmon_asparagus:
+  vendor: healthy_meal_co
+  name: Garlic Butter Salmon with Asparagus
+  base_serving_size: 2
+  featured: false
+
+vegan_buddha_bowl:
+  vendor: fit_kitchen
+  name: Vegan Buddha Bowl
+  base_serving_size: 2
+  featured: true
+
+inactive_offering:
+  vendor: inactive_vendor
+  name: Inactive Test Offering
+  base_serving_size: 2
+  featured: false

@@ -9,3 +9,9 @@ three:
 
 destroyable:
   name: Teaspoon
+
+pound:
+  name: pound
+
+tablespoon:
+  name: tablespoon

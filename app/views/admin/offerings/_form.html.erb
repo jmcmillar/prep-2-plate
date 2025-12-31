@@ -1,0 +1,72 @@
+<%= meal_planner_form_with(model: facade.offering, url: facade.form_url, data: { turbo: false }) do |form| %>
+  <%= render "components/errors", model: facade.offering %>
+
+  <div class="lg:grid lg:grid-cols-2 gap-4 mb-6">
+    <%= form.input :name, required: true %>
+    <%= form.input :base_serving_size, as: :number_field, required: true %>
+    <%= form.check_box_input(:featured) %>
+    <%= form.input :image, as: :file_field %>
+  </div>
+
+  <div class="mb-6">
+    <%= form.input :description, as: :rich_text_area %>
+  </div>
+
+  <div class="mb-6">
+    <%= form.multiple_searchable_collection_select_input :meal_type_ids, facade.meal_types, :id, :name, label_text: "Meal Types" %>
+  </div>
+
+  <!-- Price Points Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Price Points</h3>
+    <div data-controller="nested-fields">
+      <div data-nested-fields-target="container">
+        <% if facade.offering.persisted? %>
+          <%= form.fields_for :offering_price_points do |price_fields| %>
+            <%= render "price_point_fields", f: price_fields %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <template data-nested-fields-target="template">
+        <%= form.fields_for :offering_price_points, OfferingPricePoint.new, child_index: "NEW_RECORD" do |price_fields| %>
+          <%= render "price_point_fields", f: price_fields %>
+        <% end %>
+      </template>
+
+      <button type="button"
+              data-action="nested-fields#add"
+              class="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">
+        <i class="fas fa-plus mr-2"></i>Add Price Point
+      </button>
+    </div>
+  </div>
+
+  <!-- Ingredients Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Ingredients</h3>
+    <div data-controller="nested-fields">
+      <div data-nested-fields-target="container">
+        <% if facade.offering.persisted? %>
+          <%= form.fields_for :offering_ingredients do |ingredient_fields| %>
+            <%= render "ingredient_fields", f: ingredient_fields, facade: facade %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <template data-nested-fields-target="template">
+        <%= form.fields_for :offering_ingredients, OfferingIngredient.new, child_index: "NEW_RECORD" do |ingredient_fields| %>
+          <%= render "ingredient_fields", f: ingredient_fields, facade: facade %>
+        <% end %>
+      </template>
+
+      <button type="button"
+              data-action="nested-fields#add"
+              class="mt-2 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90">
+        <i class="fas fa-plus mr-2"></i>Add Ingredient
+      </button>
+    </div>
+  </div>
+
+  <%= form.actions cancel_path: :back %>
+<% end %>
