@@ -11,6 +11,7 @@ class Offering < ApplicationRecord
   has_many :offering_meal_types, dependent: :destroy
   has_many :meal_types, through: :offering_meal_types
   has_many :offering_price_points, dependent: :destroy
+  has_many :offering_inquiries, dependent: :restrict_with_error
 
   # Validations
   validates :name, presence: true

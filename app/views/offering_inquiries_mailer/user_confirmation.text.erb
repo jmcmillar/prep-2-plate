@@ -1,0 +1,17 @@
+Hello <%= @user.first_name %>,
+
+Your catering inquiries have been successfully sent to <%= pluralize(@vendor_count, 'vendor') %>.
+
+SUMMARY OF YOUR INQUIRIES
+
+<% @grouped_inquiries.each do |vendor, inquiries| %>
+<%= vendor.business_name %> (<%= vendor.contact_email %>)
+<% inquiries.each do |inquiry| %>
+  - <%= inquiry.offering.name %> - <%= inquiry.serving_size %> servings, quantity: <%= inquiry.quantity %>, delivery: <%= inquiry.delivery_date.strftime("%b %d, %Y") %>
+<% end %>
+
+<% end %>
+
+The vendors will receive your contact information and will respond directly to you via email.
+
+Thank you for using Prep2Plate!

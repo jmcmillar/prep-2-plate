@@ -1,0 +1,42 @@
+<p class="greeting">Hello <%= @vendor.contact_name %>,</p>
+
+<p>
+  You have received a new catering inquiry from <strong><%= @user.first_name %> <%= @user.last_name %></strong>.
+</p>
+
+<h2>Customer Contact Information</h2>
+<ul>
+  <li><strong>Name:</strong> <%= @user.first_name %> <%= @user.last_name %></li>
+  <li><strong>Email:</strong> <%= mail_to @user.email %></li>
+</ul>
+
+<h2>Requested Items (<%= @inquiries.count %>)</h2>
+
+<% @inquiries.each do |inquiry| %>
+  <div style="margin-bottom: 30px; padding: 15px; border: 1px solid #E5E7EB; border-radius: 8px;">
+    <h3 style="margin-top: 0; color: #8CB369;"><%= inquiry.offering.name %></h3>
+
+    <ul style="margin: 10px 0;">
+      <li><strong>Serving Size:</strong> <%= inquiry.serving_size %> servings</li>
+      <li><strong>Quantity:</strong> <%= inquiry.quantity %></li>
+      <li><strong>Requested Delivery Date:</strong> <%= inquiry.delivery_date.strftime("%A, %B %d, %Y") %></li>
+      <% if inquiry.estimated_price.present? %>
+        <li><strong>Listed Price:</strong> <%= number_to_currency(inquiry.estimated_price) %></li>
+      <% end %>
+    </ul>
+
+    <% if inquiry.notes.present? %>
+      <p><strong>Special Notes:</strong></p>
+      <p style="background-color: #F9FAFB; padding: 10px; border-radius: 4px;">
+        <%= simple_format(inquiry.notes) %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
+
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
+  <p>Please respond directly to this email to discuss availability, pricing, and next steps with the customer.</p>
+  <p style="color: #6B7280; font-size: 14px;">
+    This inquiry was sent through Prep2Plate on <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %>.
+  </p>
+</div>

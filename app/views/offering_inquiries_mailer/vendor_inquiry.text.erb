@@ -1,0 +1,27 @@
+Hello <%= @vendor.contact_name %>,
+
+You have received a new catering inquiry from <%= @user.first_name %> <%= @user.last_name %>.
+
+CUSTOMER CONTACT INFORMATION
+Name: <%= @user.first_name %> <%= @user.last_name %>
+Email: <%= @user.email %>
+
+REQUESTED ITEMS (<%= @inquiries.count %>)
+
+<% @inquiries.each_with_index do |inquiry, index| %>
+<%= index + 1 %>. <%= inquiry.offering.name %>
+   - Serving Size: <%= inquiry.serving_size %> servings
+   - Quantity: <%= inquiry.quantity %>
+   - Requested Delivery Date: <%= inquiry.delivery_date.strftime("%A, %B %d, %Y") %>
+   <% if inquiry.estimated_price.present? %>
+   - Listed Price: <%= number_to_currency(inquiry.estimated_price) %>
+   <% end %>
+   <% if inquiry.notes.present? %>
+   - Special Notes: <%= inquiry.notes %>
+   <% end %>
+
+<% end %>
+
+Please respond directly to this email to discuss availability, pricing, and next steps with the customer.
+
+This inquiry was sent through Prep2Plate on <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %>.

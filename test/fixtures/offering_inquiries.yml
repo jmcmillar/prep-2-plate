@@ -1,0 +1,40 @@
+# Test fixtures for OfferingInquiries
+one:
+  user: one
+  offering: grilled_chicken_veggies
+  serving_size: 10
+  quantity: 1
+  delivery_date: <%= 7.days.from_now.to_date %>
+  notes: "Please deliver to the side entrance"
+  status: "pending"
+  sent_at: null
+
+two:
+  user: one
+  offering: protein_power_bowl
+  serving_size: 8
+  quantity: 2
+  delivery_date: <%= 14.days.from_now.to_date %>
+  notes: "Gluten-free option if available"
+  status: "pending"
+  sent_at: null
+
+sent_inquiry:
+  user: two
+  offering: grilled_chicken_veggies
+  serving_size: 6
+  quantity: 1
+  delivery_date: <%= 10.days.from_now.to_date %>
+  notes: null
+  status: "sent"
+  sent_at: <%= 1.day.ago %>
+
+cancelled_inquiry:
+  user: two
+  offering: vegan_buddha_bowl
+  serving_size: 10
+  quantity: 1
+  delivery_date: <%= 5.days.from_now.to_date %>
+  notes: "Cancelled due to date change"
+  status: "cancelled"
+  sent_at: null

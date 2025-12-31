@@ -1,6 +1,7 @@
 class Vendor < ApplicationRecord
   # Associations
   has_many :offerings, dependent: :destroy
+  has_many :offering_inquiries, through: :offerings
 
   # Active Storage
   has_one_attached :logo

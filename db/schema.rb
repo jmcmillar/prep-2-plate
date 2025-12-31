@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_30_224221) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_31_164058) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -124,6 +124,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_224221) do
     t.index ["measurement_unit_id"], name: "index_offering_ingredients_on_measurement_unit_id"
     t.index ["offering_id", "ingredient_id"], name: "index_offering_ingredients_on_offering_id_and_ingredient_id"
     t.index ["offering_id"], name: "index_offering_ingredients_on_offering_id"
+  end
+
+  create_table "offering_inquiries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "offering_id", null: false
+    t.integer "serving_size", null: false
+    t.integer "quantity", default: 1, null: false
+    t.date "delivery_date", null: false
+    t.text "notes"
+    t.string "status", default: "pending", null: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["offering_id"], name: "index_offering_inquiries_on_offering_id"
+    t.index ["status"], name: "index_offering_inquiries_on_status"
+    t.index ["user_id", "created_at"], name: "index_offering_inquiries_on_user_id_and_created_at"
+    t.index ["user_id", "offering_id", "status"], name: "index_offering_inquiries_unique_pending", unique: true, where: "((status)::text = 'pending'::text)"
+    t.index ["user_id", "status"], name: "index_offering_inquiries_on_user_id_and_status"
+    t.index ["user_id"], name: "index_offering_inquiries_on_user_id"
   end
 
   create_table "offering_meal_types", force: :cascade do |t|
@@ -377,6 +396,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_30_224221) do
   add_foreign_key "offering_ingredients", "ingredients"
   add_foreign_key "offering_ingredients", "measurement_units"
   add_foreign_key "offering_ingredients", "offerings"
+  add_foreign_key "offering_inquiries", "offerings"
+  add_foreign_key "offering_inquiries", "users"
   add_foreign_key "offering_meal_types", "meal_types"
   add_foreign_key "offering_meal_types", "offerings"
   add_foreign_key "offering_price_points", "offerings"

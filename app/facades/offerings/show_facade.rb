@@ -32,4 +32,27 @@ class Offerings::ShowFacade < BaseFacade
   def selected_serving_size
     @params[:serving_size]&.to_i || price_points.first&.serving_size
   end
+
+  # Request quote methods
+  def current_inquiry
+    return nil unless user&.persisted?
+    @current_inquiry ||= user.offering_inquiries.pending.find_by(offering: offering)
+  end
+
+  def already_selected?
+    current_inquiry.present?
+  end
+
+  def new_offering_inquiry
+    @new_offering_inquiry ||= OfferingInquiry.new(
+      offering: offering,
+      serving_size: selected_serving_size,
+      delivery_date: 7.days.from_now.to_date,
+      quantity: 1
+    )
+  end
+
+  def show_request_quote?
+    user&.persisted?
+  end
 end

@@ -50,6 +50,9 @@ Rails.application.routes.draw do
   resources :resources, only: %i[index]
   resources :vendors, only: %i[index show]
   resources :offerings, only: %i[index show]
+  resources :offering_inquiries, only: %i[index create update destroy] do
+    post :batch_send, on: :collection
+  end
   resources :table_actions, only: :index
   resource :terms_of_service, only: :show
   resource :about, only: :show

@@ -3,10 +3,14 @@
 one:
   email: one@example.com
   encrypted_password: <%= encrypted_password %>
+  first_name: "Test"
+  last_name: "User"
   admin: true
   confirmed_at: <%= Time.current %>
 
 two:
   email: two@example.com
   encrypted_password: <%= encrypted_password %>
+  first_name: "Another"
+  last_name: "User"
   confirmed_at: <%= Time.current %>

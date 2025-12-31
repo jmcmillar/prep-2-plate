@@ -1,0 +1,111 @@
+<%= render BackgroundImageContainerComponent.new(
+  image: "public-hero.jpg",
+  title: "My Selections",
+  description: "Review and send your catering inquiries"
+) %>
+
+<%= render ContainerComponent.new do %>
+  <% if @facade.has_inquiries? %>
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <p class="text-gray-600">
+        You have <%= pluralize(@facade.total_count, 'selection') %>
+        for <%= pluralize(@facade.grouped_by_vendor.count, 'vendor') %>
+      </p>
+
+      <%= render ButtonLinkComponent.new(button_link_data: @facade.send_button_data) %>
+    </div>
+
+    <% @facade.grouped_by_vendor.each do |vendor, inquiries| %>
+      <%= render SectionCardComponent.new(title: vendor.business_name) do %>
+        <div class="mb-4">
+          <p class="text-sm text-gray-600">
+            <strong>Contact:</strong> <%= vendor.contact_name %>
+            (<%= mail_to vendor.contact_email %>)
+          </p>
+          <% if vendor.phone_number.present? %>
+            <p class="text-sm text-gray-600">
+              <strong>Phone:</strong> <%= vendor.phone_number %>
+            </p>
+          <% end %>
+        </div>
+
+        <div class="space-y-4">
+          <% inquiries.each do |inquiry| %>
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <h4 class="font-semibold text-lg text-gray-900 mb-2">
+                    <%= inquiry.offering.name %>
+                  </h4>
+
+                  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                    <div class="flex">
+                      <dt class="text-gray-500 w-32 flex-shrink-0">Serving Size:</dt>
+                      <dd class="font-medium text-gray-900"><%= inquiry.serving_size %> servings</dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="text-gray-500 w-32 flex-shrink-0">Quantity:</dt>
+                      <dd class="font-medium text-gray-900"><%= inquiry.quantity %></dd>
+                    </div>
+                    <div class="flex">
+                      <dt class="text-gray-500 w-32 flex-shrink-0">Delivery Date:</dt>
+                      <dd class="font-medium text-gray-900">
+                        <%= inquiry.delivery_date.strftime("%A, %B %d, %Y") %>
+                      </dd>
+                    </div>
+                    <% if inquiry.estimated_price.present? %>
+                      <div class="flex">
+                        <dt class="text-gray-500 w-32 flex-shrink-0">Est. Price:</dt>
+                        <dd class="font-medium text-gray-900">
+                          <%= number_to_currency(inquiry.estimated_price * inquiry.quantity) %>
+                        </dd>
+                      </div>
+                    <% end %>
+                  </dl>
+
+                  <% if inquiry.notes.present? %>
+                    <div class="mt-3 pt-3 border-t border-gray-100">
+                      <dt class="text-sm text-gray-500 mb-1">Special Requests:</dt>
+                      <dd class="text-sm text-gray-700 italic bg-gray-50 p-2 rounded">
+                        <%= simple_format(inquiry.notes) %>
+                      </dd>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="ml-4 flex-shrink-0">
+                  <%= button_to offering_inquiry_path(inquiry),
+                                method: :delete,
+                                data: { turbo_confirm: "Remove this selection?" },
+                                class: "text-red-600 hover:text-red-800 p-2" do %>
+                    <i class="far fa-trash-alt text-lg"></i>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="mt-8 flex justify-end">
+      <%= render ButtonLinkComponent.new(button_link_data: @facade.send_button_data) %>
+    </div>
+
+  <% else %>
+    <%= render SectionCardComponent.new do %>
+      <div class="text-center py-12">
+        <i class="far fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          No Selections Yet
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Browse our offerings and add items you're interested in.
+        </p>
+        <%= link_to "Browse Offerings",
+                    offerings_path,
+                    class: "inline-block px-6 py-3 bg-primary text-white rounded hover:bg-primary/90 transition-colors" %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,36 @@
+<p class="greeting">Hello <%= @user.first_name %>,</p>
+
+<p>
+  Your catering inquiries have been successfully sent to <strong><%= pluralize(@vendor_count, 'vendor') %></strong>.
+</p>
+
+<h2>Summary of Your Inquiries</h2>
+
+<% @grouped_inquiries.each do |vendor, inquiries| %>
+  <div style="margin-bottom: 30px;">
+    <h3 style="color: #8CB369;"><%= vendor.business_name %></h3>
+    <p style="color: #6B7280; margin: 5px 0;">
+      <%= vendor.contact_email %>
+    </p>
+
+    <ul style="margin-top: 10px;">
+      <% inquiries.each do |inquiry| %>
+        <li>
+          <strong><%= inquiry.offering.name %></strong> -
+          <%= inquiry.serving_size %> servings,
+          quantity: <%= inquiry.quantity %>,
+          delivery: <%= inquiry.delivery_date.strftime("%b %d, %Y") %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
+  <p>
+    The vendors will receive your contact information and will respond directly to you via email.
+  </p>
+  <p style="color: #6B7280;">
+    Thank you for using Prep2Plate!
+  </p>
+</div>
