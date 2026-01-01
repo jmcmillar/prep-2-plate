@@ -44,7 +44,7 @@ class Admin::Offerings::ResourceFacade
       BadgeComponent::Data.new(text: "—", scheme: :muted)
     end
 
-    Table::DataComponent.new(BadgeComponent.new(badge_data: badge_data))
+    BadgeComponent.new(badge_data: badge_data)
   end
 
   def action

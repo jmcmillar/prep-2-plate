@@ -8,6 +8,7 @@ class SectionCardComponent < ApplicationComponent
   def initialize(title: nil, **options)
     @title = title
     @title_tag = options[:title_tag] || :h2
+    @class = options[:class]
   end
 
   def title_section

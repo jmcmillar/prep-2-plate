@@ -95,7 +95,7 @@ class Recipes::ShowFacade < BaseFacade
 
   def ingredients
     QuantityMultiplierDecorator.decorate_collection(recipe_ingredients, current_size).then { |collection|
-      RecipeIngredient::FullNameDecorator.decorate_collection(collection)
+      IngredientFullNameDecorator.decorate_collection(collection)
     }
   end
 

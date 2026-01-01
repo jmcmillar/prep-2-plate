@@ -1,11 +1,28 @@
-class RecipeIngredient::FullNameDecorator < BaseDecorator
+class IngredientFullNameDecorator < BaseDecorator
 
   def full_name
-    [formatted_quantity, ingredient_name].compact.join(' ')
+    [formatted_quantity, ingredient_name_with_details, notes].compact.join(' ')
   end
 
   def ingredient_name
-    [@object.ingredient_name, notes].compact.join(" ")
+    if @object.respond_to?(:ingredient_name)
+      @object.ingredient_name
+    elsif @object.is_a?(Ingredient)
+      @object.name
+    else
+      @object.ingredient&.name
+    end
+  end
+
+  def ingredient_name_with_details
+    ingredient_obj = @object.is_a?(Ingredient) ? @object : @object.ingredient
+    return ingredient_name unless ingredient_obj
+
+    parts = []
+    parts << ingredient_obj.packaging_form&.downcase if ingredient_obj.packaging_form.present?
+    parts << ingredient_obj.preparation_style&.downcase if ingredient_obj.preparation_style.present?
+    parts << ingredient_name
+    parts.compact.join(" ")
   end
 
   def formatted_quantity
@@ -19,7 +36,7 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
 
   def quantity
     return nil if quantity_value.nil? || quantity_value.zero?
-    
+
     if whole_number?
       whole_number_quantity
     elsif numerator < denominator
@@ -41,10 +58,10 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
     Rational(numerator, denominator).to_s
   end
 
-  def mixed_number_fraction  # Fixed typo: was "faction"
+  def mixed_number_fraction
     whole_part = numerator / denominator
     remainder = numerator % denominator
-    
+
     return whole_part if remainder.zero?
     "#{whole_part} #{remainder}/#{denominator}"
   end
@@ -59,7 +76,7 @@ class RecipeIngredient::FullNameDecorator < BaseDecorator
 
   def pluralized_measurement_unit
     return nil unless measurement_unit_name.present?
-    
+
     if quantity_value > 1
       measurement_unit_name.pluralize
     else

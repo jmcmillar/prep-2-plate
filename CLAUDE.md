@@ -397,7 +397,7 @@ Uses `SimpleDelegator` (NOT Draper gem):
 
 - Prevents errors when image not attached
 
-**RecipeIngredient::FullNameDecorator** - Formats ingredient display
+**IngredientFullNameDecorator** - Formats ingredient display
 
 - Methods: `full_name`, `formatted_quantity`, `quantity`, `pluralized_measurement_unit`
 - Handles whole numbers, fractions, and mixed numbers
@@ -410,7 +410,7 @@ Uses `SimpleDelegator` (NOT Draper gem):
 #### Usage Pattern
 
 ```ruby
-decorated_ingredients = RecipeIngredient::FullNameDecorator.decorate_collection(recipe.recipe_ingredients)
+decorated_ingredients = IngredientFullNameDecorator.decorate_collection(recipe.recipe_ingredients)
 ```
 
 ### Service Objects

@@ -1,10 +1,15 @@
-<%= render BackgroundImageContainerComponent.new(image: "public-hero.jpg", title: @facade.page_title, description: @facade.page_description) %>
-
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <%= tag.div(class: "flex justify-between items-center mb-2") do %>
+      <h1>Vendors</h1>
+    <% end %>
+  <% end %>
+<% end %>
 <%= render ContainerComponent.new do %>
   <% if @facade.vendors.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @facade.vendors.each do |vendor| %>
-        <%= link_to vendor_path(vendor), class: "block group" do %>
+        <%= link_to vendor_offerings_path(vendor), class: "block group" do %>
           <%= render SectionCardComponent.new(class: "h-full hover:shadow-xl transition-shadow") do %>
             <div class="flex flex-col h-full">
               <% if vendor.logo.attached? %>

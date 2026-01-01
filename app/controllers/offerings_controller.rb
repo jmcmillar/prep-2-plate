@@ -1,4 +1,5 @@
-class OfferingsController < PublicController
+class OfferingsController < AuthenticatedController
+  layout "application"
   def index
     @facade = Offerings::IndexFacade.new(Current.user, params)
   end

@@ -4,7 +4,7 @@ class Admin::Recipes::ShowFacade < Base::Admin::ShowFacade
   end
   
   def recipe_ingredients
-    RecipeIngredient::FullNameDecorator.decorate_collection(recipe.recipe_ingredients)
+    IngredientFullNameDecorator.decorate_collection(recipe.recipe_ingredients)
   end
 
   def active_key

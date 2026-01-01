@@ -3,9 +3,18 @@ class Admin::Vendors::ShowFacade < Base::Admin::ShowFacade
     @vendor ||= Vendor.find(@params[:id])
   end
 
-  def active_key
-    :admin_vendors
+  def menu
+    :admin_vendor_menu
   end
+
+  def nav_resource
+    vendor
+  end
+
+  def active_key
+    :admin_vendor
+  end
+
 
   def breadcrumb_trail
     [

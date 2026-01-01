@@ -9,7 +9,7 @@ class Api::RecipeIngredients::IndexFacade
   end
 
   def recipe_ingredients
-    @recipe_ingredients ||= RecipeIngredient::FullNameDecorator.decorate_collection(
+    @recipe_ingredients ||= IngredientFullNameDecorator.decorate_collection(
       RecipeIngredient
         .includes(:recipe, ingredient: :ingredient_category)
         .where(recipe: { id: @params[:recipe_ids] })

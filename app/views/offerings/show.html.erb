@@ -1,5 +1,16 @@
-<%= render BackgroundImageContainerComponent.new(image: "public-hero.jpg", title: @facade.offering.name, description: "by #{@facade.offering.vendor.business_name}") %>
-
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <%= tag.div(class: "flex justify-between items-center mb-2") do %>
+      <h1><%= @facade.offering.name %></h1>
+    <% end %>
+    <div class="mb-6 font-bold">
+      <%= link_to vendor_path(@facade.vendor), class: "inline-flex items-center text-primary hover:text-primary-dark flex gap-2" do %>
+        <%= render IconComponent.new(IconComponent::Data[:arrow_left]) %>
+        Back to Vendor
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
 <%= render ContainerComponent.new do %>
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Main Content -->
@@ -19,30 +30,25 @@
       <% end %>
 
       <% if @facade.ingredients.any? %>
-        <%= render SectionCardComponent.new(title: "Ingredients") do %>
-          <ul class="space-y-2">
-            <% @facade.ingredients.each do |ingredient| %>
-              <li class="flex items-start">
-                <span class="text-primary mr-2 mt-1">•</span>
-                <span class="text-gray-700">
-                  <% if ingredient.quantity_value.present? %>
-                    <strong class="font-semibold"><%= ingredient.quantity_value %></strong>
-                    <span class="text-gray-600"><%= ingredient.measurement_unit&.name %></span>
-                  <% end %>
-                  <%= ingredient.ingredient&.display_name || ingredient.ingredient&.name %>
-                  <% if ingredient.notes.present? %>
-                    <span class="text-gray-500 text-sm italic">(<%= ingredient.notes %>)</span>
-                  <% end %>
-                </span>
-              </li>
-            <% end %>
-          </ul>
+        <%= tag.div(class: "mt-6") do %>
+          <%= render SectionCardComponent.new(title: "Ingredients (per #{@facade.offering.base_serving_size} #{"serving".pluralize(@facade.offering.base_serving_size)})") do %>
+            <ul class="space-y-2">
+              <% @facade.ingredients.each do |ingredient| %>
+                <li class="flex items-start">
+                  <span class="text-primary mr-2 mt-1">•</span>
+                  <span class="text-gray-700">
+                    <%= ingredient.full_name %>
+                  </span>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
         <% end %>
       <% end %>
     </div>
 
     <!-- Sidebar -->
-    <div class="lg:col-span-1">
+    <div class="lg:col-span-1 gap-6 flex flex-col">
       <%= render SectionCardComponent.new(title: "Pricing") do %>
         <% if @facade.price_points.any? %>
           <%= render Offering::PricingTierComponent.new(
@@ -157,7 +163,7 @@
             </p>
           <% end %>
 
-          <%= link_to "View All Offerings", vendor_path(@facade.offering.vendor), class: "inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors" %>
+          <%= link_to "View All Offerings", vendor_offerings_path(@facade.offering.vendor), class: "inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition-colors" %>
         </div>
       <% end %>
     </div>

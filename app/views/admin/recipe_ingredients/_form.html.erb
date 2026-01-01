@@ -1,8 +1,90 @@
-<%= meal_planner_form_with(model: @facade.recipe_ingredient, url: @facade.form_url) do |form| %>
+<%= meal_planner_form_with(
+      model: @facade.recipe_ingredient,
+      url: @facade.form_url,
+      html: {
+        data: {
+          controller: "ingredient-entry",
+          "ingredient-entry-mode-value": "select"
+        }
+      }
+    ) do |form| %>
   <%= render 'components/errors', model: @facade.recipe_ingredient %>
+
   <%= form.input :quantity %>
+
   <%= form.searchable_collection_select_input(:measurement_unit_id, @facade.measurement_units, :id, :name, include_blank: true) %>
-  <%= form.searchable_collection_select_input(:ingredient_id, @facade.ingredients, :id, :display_name) %>
+
+  <div data-controller="searchable-or-custom" class="mb-3">
+    <div class="flex items-center justify-between mb-2">
+      <%= form.label :ingredient_id, "Ingredient" %>
+      <%= button_tag "Add New",
+            type: "button",
+            class: "text-sm px-3 py-1 bg-primary text-white rounded hover:bg-primary/90",
+            data: {
+              action: "searchable-or-custom#toggle",
+              "searchable-or-custom-target": "toggleButton"
+            } %>
+    </div>
+    <%= form.select :ingredient_id,
+          options_for_select(
+            @facade.ingredients.map { |ing|
+              [ing.display_name, ing.id, {
+                'data-packaging-form' => ing.packaging_form,
+                'data-preparation-style' => ing.preparation_style
+              }]
+            },
+            form.object.ingredient_id
+          ),
+          { include_blank: "Search ingredients..." },
+          {
+            class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+            data: {
+              "searchable-or-custom-target": "select",
+              "ingredient-entry-target": "selectField",
+              action: "change->ingredient-entry#ingredientSelected"
+            }
+          } %>
+    <%= form.text_field :ingredient_name,
+          class: "hidden px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+          data: {
+            "searchable-or-custom-target": "customInput"
+          },
+          disabled: true,
+          placeholder: "Enter ingredient name..." %>
+
+    <!-- Decorative display for selected ingredient -->
+    <div data-ingredient-entry-target="ingredientInfo"
+         class="hidden mt-1 text-sm text-gray-600 px-4"
+         role="status"
+         aria-live="polite">
+    </div>
+  </div>
+
+  <!-- Packaging (conditional) -->
+  <div class="hidden mb-3" data-ingredient-entry-target="packagingContainer">
+    <%= form.label :packaging_form, "Packaging" %>
+    <%= form.select :packaging_form,
+          @facade.packaging_form_options,
+          { include_blank: true },
+          {
+            class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+            data: { "ingredient-entry-target": "packagingField" }
+          } %>
+  </div>
+
+  <!-- Preparation (conditional) -->
+  <div class="hidden mb-3" data-ingredient-entry-target="preparationContainer">
+    <%= form.label :preparation_style, "Preparation" %>
+    <%= form.select :preparation_style,
+          @facade.preparation_style_options,
+          { include_blank: true },
+          {
+            class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+            data: { "ingredient-entry-target": "preparationField" }
+          } %>
+  </div>
+
   <%= form.input :notes %>
+
   <%= form.actions cancel_path: @facade.cancel_path %>
 <% end %>

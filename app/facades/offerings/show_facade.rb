@@ -1,8 +1,4 @@
 class Offerings::ShowFacade < BaseFacade
-  def layout
-    Layout.new(menu, active_key, nav_resource)
-  end
-
   def menu
     :main_menu
   end
@@ -15,6 +11,10 @@ class Offerings::ShowFacade < BaseFacade
     nil
   end
 
+  def vendor
+    @vendor ||= offering.vendor
+  end
+
   def offering
     @offering ||= Offering.active_vendor
                           .includes(:vendor, :offering_ingredients, :offering_price_points, :meal_types)
@@ -22,7 +22,9 @@ class Offerings::ShowFacade < BaseFacade
   end
 
   def ingredients
-    @ingredients ||= offering.offering_ingredients.includes(:ingredient, :measurement_unit)
+    @ingredients ||= IngredientFullNameDecorator.decorate_collection(
+      offering.offering_ingredients.includes(:ingredient, :measurement_unit)
+    )
   end
 
   def price_points

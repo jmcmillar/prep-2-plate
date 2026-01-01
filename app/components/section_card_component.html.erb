@@ -1,4 +1,4 @@
-<%= tag.div(class: "rounded shadow-sm border border-gray-200") do %>
+<%= tag.div(class: class_names("rounded shadow-sm border border-gray-200", @class)) do %>
   <% if @title %>
     <%= tag.div(class: "w-full border-b border-gray-200 p-4 flex justify-between items-center") do %>
       <%= title_section %>

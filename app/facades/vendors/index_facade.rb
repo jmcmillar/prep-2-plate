@@ -1,8 +1,4 @@
 class Vendors::IndexFacade < BaseFacade
-  def layout
-    Layout.new(menu, active_key, nav_resource)
-  end
-
   def menu
     :main_menu
   end

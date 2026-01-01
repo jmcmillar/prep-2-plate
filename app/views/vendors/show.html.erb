@@ -1,5 +1,16 @@
-<%= render BackgroundImageContainerComponent.new(image: "public-hero.jpg", title: @facade.vendor.business_name, description: @facade.vendor.description) %>
-
+<%= tag.div(class: "bg-gray-200 gap-2 p-4 mb-6") do %>
+  <%= render ContainerComponent.new do %>
+    <%= tag.div(class: "flex justify-between items-center mb-2") do %>
+      <h1><%= @facade.vendor.business_name %></h1>
+    <% end %>
+    <div class="mb-6 font-bold">
+      <%= link_to vendor_path(@facade.vendor), class: "inline-flex items-center text-primary hover:text-primary-dark flex gap-2" do %>
+        <%= render IconComponent.new(IconComponent::Data[:arrow_left]) %>
+        Back to Vendor
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "About #{@facade.vendor.business_name}") do %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

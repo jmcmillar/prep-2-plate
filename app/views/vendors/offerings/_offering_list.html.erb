@@ -1,0 +1,31 @@
+<%= tag.div(id: "offering_list") do %>
+  <% if facade.collection.to_a.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% facade.collection.to_a.each do |offering| %>
+        <%= link_to offering_path(offering.resource), class: "block group" do %>
+          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow h-full">
+            <% if offering.image.attached? %>
+              <div class="w-full h-40 mb-3 overflow-hidden rounded-lg">
+                <%= image_tag offering.image, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" %>
+              </div>
+            <% end %>
+
+            <h3 class="text-base font-bold text-gray-900 group-hover:text-primary mb-1">
+              <%= offering.name %>
+            </h3>
+
+            <% if offering.offering_price_points.any? %>
+              <div class="text-sm text-primary font-semibold">
+                From <%= number_to_currency(offering.offering_price_points.minimum(:price)) %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-gray-500"><%= facade.vendor_name %> doesn't have any offerings meeting your criteria.</p>
+    </div>
+  <% end %>
+<% end %>

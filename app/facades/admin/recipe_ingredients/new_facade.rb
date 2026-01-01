@@ -44,4 +44,12 @@ class Admin::RecipeIngredients::NewFacade < Base::Admin::NewFacade
   def cancel_path
     [:admin, recipe, :recipe_ingredients]
   end
+
+  def packaging_form_options
+    Ingredient::PACKAGING_FORMS.keys.map { |form| [form.to_s.titleize, form] }
+  end
+
+  def preparation_style_options
+    Ingredient::PREPARATION_STYLES.keys.map { |style| [style.to_s.titleize, style] }
+  end
 end

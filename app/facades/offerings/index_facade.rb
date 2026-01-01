@@ -1,8 +1,4 @@
 class Offerings::IndexFacade < BaseFacade
-  def layout
-    Layout.new(menu, active_key, nav_resource)
-  end
-
   def menu
     :main_menu
   end
@@ -16,9 +12,7 @@ class Offerings::IndexFacade < BaseFacade
   end
 
   def offerings
-    @offerings ||= Offering.active_vendor
-                           .includes(:vendor, :offering_price_points, :meal_types)
-                           .order(featured: :desc, created_at: :desc)
+    @offerings ||= Offering.active_vendor.includes(:vendor, :offering_price_points, :meal_types).order(featured: :desc, created_at: :desc)
   end
 
   def featured_offerings

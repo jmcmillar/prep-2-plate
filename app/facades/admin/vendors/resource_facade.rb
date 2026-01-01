@@ -45,7 +45,7 @@ class Admin::Vendors::ResourceFacade
       scheme: scheme
     )
 
-    Table::DataComponent.new(BadgeComponent.new(badge_data: badge_data))
+    BadgeComponent.new(badge_data: badge_data)
   end
 
   def offerings_count

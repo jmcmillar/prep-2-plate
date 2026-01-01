@@ -37,6 +37,16 @@ class Admin::Offerings::NewFacade < Base::Admin::NewFacade
     end
   end
 
+  def ingredient_options
+    decorated_ingredients.map do |ing|
+      [ing.ingredient_name_with_details, ing.id]
+    end
+  end
+
+  def decorated_ingredients
+    @decorated_ingredients ||= IngredientFullNameDecorator.decorate_collection(ingredients)
+  end
+
   def measurement_units
     @measurement_units ||= Rails.cache.fetch("measurement_units_ordered", expires_in: 12.hours) do
       MeasurementUnit.order(:name).to_a
@@ -53,5 +63,17 @@ class Admin::Offerings::NewFacade < Base::Admin::NewFacade
 
   def default_serving_sizes
     [2, 4, 6, 8, 10]
+  end
+
+  def menu
+    :admin_vendor_menu
+  end
+
+  def nav_resource
+    vendor
+  end
+
+  def active_key
+    :admin_offerings
   end
 end

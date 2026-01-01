@@ -48,7 +48,9 @@ Rails.application.routes.draw do
     resource :password, only: %i[edit update]
   end
   resources :resources, only: %i[index]
-  resources :vendors, only: %i[index show]
+  resources :vendors, only: %i[index show] do
+    resources :offerings, only: %i[index], controller: 'vendors/offerings'
+  end
   resources :offerings, only: %i[index show]
   resources :offering_inquiries, only: %i[index create update destroy] do
     post :batch_send, on: :collection

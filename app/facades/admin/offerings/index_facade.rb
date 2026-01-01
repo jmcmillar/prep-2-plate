@@ -41,4 +41,16 @@ class Admin::Offerings::IndexFacade < Base::Admin::IndexFacade
   def vendor
     @vendor ||= Vendor.find(@params[:vendor_id])
   end
+
+  def menu
+    :admin_vendor_menu
+  end
+
+  def nav_resource
+    vendor
+  end
+
+  def active_key
+    :admin_offerings
+  end
 end

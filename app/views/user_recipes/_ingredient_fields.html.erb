@@ -1,35 +1,108 @@
-<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4">
+<div class="nested-fields p-4 border border-gray-200 rounded-lg my-4"
+     data-controller="ingredient-entry"
+     data-ingredient-entry-mode-value="select">
   <%= f.hidden_field :_destroy %>
   <%= f.hidden_field :id %>
 
-  <!-- First row: Quantity, Unit, Ingredient, Remove button -->
-  <div class="lg:grid lg:grid-cols-12 gap-4 items-start mb-4">
-    <%= f.input :quantity, class: 'lg:col-span-2' %>
-    <div class="lg:col-span-2">
+  <!-- First row: Quantity and Unit -->
+  <div class="lg:grid lg:grid-cols-12 gap-4 mb-4">
+    <div class="lg:col-span-3">
+      <%= f.input :quantity %>
+    </div>
+    <div class="lg:col-span-3">
       <%= f.searchable_collection_select_input :measurement_unit_id, facade.measurement_units, :id, :name, label_text: "Unit", include_blank: true %>
     </div>
-    <div class="lg:col-span-7">
-      <%= f.searchable_or_custom_input :ingredient_id, :ingredient_name, facade.ingredients, :id, :display_name, label_text: "Ingredient", include_blank: "Search ingredients..." %>
-    </div>
-    <div class="lg:col-span-1 flex items-end justify-center">
-      <button type="button"
-              data-action="nested-fields#remove"
-              class="px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
-              title="Remove ingredient">
-        <i class="fas fa-trash"></i>
-      </button>
+  </div>
+
+  <!-- Second row: Ingredient and Remove button -->
+  <div class="mb-4">
+    <div class="lg:grid lg:grid-cols-12 gap-4">
+      <div class="lg:col-span-11">
+        <div data-controller="searchable-or-custom" class="mb-3">
+          <div class="flex items-center justify-between mb-2">
+            <%= f.label :ingredient_id, "Ingredient" %>
+            <%= button_tag "Add New",
+                  type: "button",
+                  class="text-sm px-3 py-1 bg-primary text-white rounded hover:bg-primary/90",
+                  data: {
+                    action: "searchable-or-custom#toggle",
+                    "searchable-or-custom-target": "toggleButton"
+                  } %>
+          </div>
+          <%= f.select :ingredient_id,
+                options_for_select(
+                  facade.ingredients.map { |ing|
+                    [ing.display_name, ing.id, {
+                      'data-packaging-form' => ing.packaging_form,
+                      'data-preparation-style' => ing.preparation_style
+                    }]
+                  },
+                  f.object.ingredient_id
+                ),
+                { include_blank: "Search ingredients..." },
+                {
+                  class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+                  data: {
+                    "searchable-or-custom-target": "select",
+                    "ingredient-entry-target": "selectField",
+                    action: "change->ingredient-entry#ingredientSelected"
+                  }
+                } %>
+          <%= f.text_field :ingredient_name,
+                class: "hidden px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+                data: {
+                  "searchable-or-custom-target": "customInput"
+                },
+                disabled: true,
+                placeholder: "Enter ingredient name..." %>
+
+          <!-- Decorative display for selected ingredient -->
+          <div data-ingredient-entry-target="ingredientInfo"
+               class="hidden mt-1 text-sm text-gray-600"
+               role="status"
+               aria-live="polite">
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-1 flex items-end mb-3">
+        <button type="button"
+                data-action="nested-fields#remove"
+                class="w-full px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
+                title="Remove ingredient">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Second row: Packaging, Preparation, Notes -->
   <div class="lg:grid lg:grid-cols-12 gap-4 items-start">
-    <div class="lg:col-span-3">
-      <%= f.select_input :packaging_form, facade.packaging_form_options, include_blank: true, label_text: "Packaging" %>
+    <!-- Packaging - hidden when selecting existing -->
+    <div class="lg:col-span-3 hidden mb-3" data-ingredient-entry-target="packagingContainer">
+      <%= f.label :packaging_form, "Packaging" %>
+      <%= f.select :packaging_form,
+            facade.packaging_form_options,
+            { include_blank: true },
+            {
+              class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+              data: { "ingredient-entry-target": "packagingField" }
+            } %>
     </div>
-    <div class="lg:col-span-3">
-      <%= f.select_input :preparation_style, facade.preparation_style_options, include_blank: true, label_text: "Preparation" %>
+
+    <!-- Preparation - hidden when selecting existing -->
+    <div class="lg:col-span-3 hidden mb-3" data-ingredient-entry-target="preparationContainer">
+      <%= f.label :preparation_style, "Preparation" %>
+      <%= f.select :preparation_style,
+            facade.preparation_style_options,
+            { include_blank: true },
+            {
+              class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",
+              data: { "ingredient-entry-target": "preparationField" }
+            } %>
     </div>
-    <div class="lg:col-span-6">
+
+    <!-- Notes - spans more when packaging/prep hidden -->
+    <div class="lg:col-span-12" data-ingredient-entry-target="notesContainer">
       <%= f.input :notes %>
     </div>
   </div>

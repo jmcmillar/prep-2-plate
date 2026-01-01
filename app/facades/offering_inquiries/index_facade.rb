@@ -4,10 +4,6 @@ class OfferingInquiries::IndexFacade < BaseFacade
     raise Pundit::NotAuthorizedError unless authorized?
   end
 
-  def layout
-    Layout.new(menu, active_key, nav_resource)
-  end
-
   def menu
     :main_menu
   end
@@ -53,6 +49,20 @@ class OfferingInquiries::IndexFacade < BaseFacade
         }
       }
     ]
+  end
+
+  def status_badge_for(inquiry)
+    scheme = case inquiry.status
+    when "pending" then :default
+    when "sent" then :success
+    when "cancelled" then :muted
+    else :default
+    end
+
+    BadgeComponent::Data.new(
+      text: inquiry.status.titleize,
+      scheme: scheme
+    )
   end
 
   private

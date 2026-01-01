@@ -24,6 +24,14 @@ class MenuData
     ]
   end
 
+  def self.admin_vendor_menu(vendor)
+    [
+      MenuItemData[:back, "Admin", :admin_vendors, true],
+      MenuItemData[:admin_vendor, "Overview", [:admin, vendor], true],
+      MenuItemData[:admin_offerings, "Offerings", [:admin, vendor, :offerings], true]
+    ]
+  end
+
 
   def self.account_setting_menu
     [
@@ -36,7 +44,7 @@ class MenuData
     [
       MenuItemData[:recipes, "Recipes", :recipes, true],
       MenuItemData[:meal_plans, "Free Meal Plans", :meal_plans, true],
-      MenuItemData[:meal_prep, "Meal Prep", :offerings, true],
+      MenuItemData[:meal_prep, "Meal Prep", :vendors, true],
       MenuItemData[:resources, "Resources", :resources, true],
       MenuItemData[:meal_planner, "Build Your Own", :meal_planner, true],
     ]
@@ -58,7 +66,6 @@ class MenuData
         admin_shopping_lists: :shopping_cart,
         admin_user_recipes: :book,
         admin_resources: :file,
-        meal_prep: :utensils,
         vendors: :store,
         back: :chevron_left
       }

@@ -30,7 +30,9 @@ class Admin::Offerings::ShowFacade < Base::Admin::ShowFacade
   end
 
   def ingredients
-    @ingredients ||= offering.offering_ingredients.includes(:ingredient, :measurement_unit)
+    @ingredients ||= IngredientFullNameDecorator.decorate_collection(
+      offering.offering_ingredients.includes(:ingredient, :measurement_unit)
+    )
   end
 
   def price_points
@@ -43,5 +45,17 @@ class Admin::Offerings::ShowFacade < Base::Admin::ShowFacade
     else
       BadgeComponent::Data.new(text: "No", scheme: :muted)
     end
+  end
+
+  def menu
+    :admin_vendor_menu
+  end
+
+  def nav_resource
+    offering.vendor
+  end
+
+  def active_key
+    :admin_offerings
   end
 end

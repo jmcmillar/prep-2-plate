@@ -30,6 +30,10 @@ class Offering < ApplicationRecord
   scope :featured, -> { where(featured: true) }
   scope :for_vendor, ->(vendor) { where(vendor: vendor) }
   scope :active_vendor, -> { joins(:vendor).where(vendors: { status: "active" }) }
+  scope :filtered_by_meal_types, ->(meal_type_ids) {
+    return all if meal_type_ids.blank?
+    includes(:meal_types).where(meal_types: { id: meal_type_ids })
+  }
 
   # Instance methods
   def price_for_servings(servings)

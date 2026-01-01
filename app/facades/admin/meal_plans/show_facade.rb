@@ -9,7 +9,7 @@ class Admin::MealPlans::ShowFacade < Base::Admin::ShowFacade
   end
 
   def recipe_ingredients
-    RecipeIngredient::FullNameDecorator.decorate_collection(meal_plan.recipe_ingredients)
+    IngredientFullNameDecorator.decorate_collection(meal_plan.recipe_ingredients)
   end
 
   def meal_plan

@@ -49,7 +49,7 @@ class Api::Recipes::ShowFacade
   end
 
   def ingredients
-    @decorated_ingredients ||= RecipeIngredient::FullNameDecorator.decorate_collection(recipe.recipe_ingredients)
+    @decorated_ingredients ||= IngredientFullNameDecorator.decorate_collection(recipe.recipe_ingredients)
   end
 
   def grouped_ingredients
