@@ -29,7 +29,9 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
   </head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YGE1YTMB6D"></script>
+  <% if Rails.env.production? %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YGE1YTMB6D"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -37,6 +39,7 @@
 
     gtag('config', 'G-YGE1YTMB6D');
   </script>
+  <% end %>
   <body class="flex min-h-screen modal" data-controller="modal" data-controller="navbar">
     <%= tag.div do %>
       <%= render "application/flash", flash: flash %>
@@ -73,8 +76,8 @@
         <%# render NavItemComponent.with_collection(@active_menu_items) %>
       </nav>
     </header>
-      <div class="w-full overflow-x-hidden border-t border-gray-200 flex flex-col">
-        <main class="w-full flex-1 border-l h-screen overflow-x-hidden">
+      <div class="w-full overflow-x-hidden border-t border-gray-200 flex flex-col h-screen">
+        <main class="w-full flex-1 h-screen overflow-x-hidden border-l border-gray-200">
           <%= yield %>
         </main>
       </div>

@@ -41,6 +41,6 @@ class Admin::RecipeIngredientsController < AuthenticatedController
   private
 
   def ingredient_params
-    params.require(:recipe_ingredient).permit(:ingredient_id, :measurement_unit_id, :numerator, :denominator, :quantity, :notes)
+    params.require(:recipe_ingredient).permit(:ingredient_id, :measurement_unit_id, :numerator, :denominator, :quantity, :notes, :ingredient_name, :packaging_form, :preparation_style)
   end
 end

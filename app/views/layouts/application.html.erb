@@ -40,7 +40,8 @@
     <%= javascript_importmap_tags %>
   </head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YGE1YTMB6D"></script>
+  <% if Rails.env.production? %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YGE1YTMB6D"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -48,7 +49,7 @@
 
     gtag('config', 'G-YGE1YTMB6D');
   </script>
-
+<% end %>
   <body data-controller="navbar modal" class="min-h-screen flex flex-col">
     <%= render "application/flash", flash: flash %>
     <main class="flex-1 overflow-x-hidden">

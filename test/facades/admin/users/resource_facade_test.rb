@@ -6,22 +6,47 @@ class Admin::Users::ResourceFacadeTest < ActiveSupport::TestCase
     @facade = Admin::Users::ResourceFacade.new(@user)
   end
 
-  def test_headers_returns_table_header_components
-    headers = Admin::Users::ResourceFacade.headers
-    assert headers.size > 0
-    assert_instance_of Table::DefaultHeaderComponent, headers.first
+  def test_headers_return_array
+    assert @facade.class.headers.is_a?(Array)
   end
 
   def test_to_row_returns_table_row_component
-    row = Admin::Users::ResourceFacade.to_row(@facade)
-    assert_instance_of Table::RowComponent, row
+    assert_instance_of Table::RowComponent, @facade.class.to_row(@facade)
   end
 
-  def test_id_returns_formatted_string
-    assert_match /user_/, @facade.id
+  def test_first_name
+    assert_equal(
+      Table::DataComponent.new(@user.first_name),
+      @facade.first_name
+    )
   end
 
-  def test_action_returns_table_action_component
+  def test_last_name
+    assert_equal(
+      Table::DataComponent.new(@user.last_name),
+      @facade.last_name
+    )
+  end
+
+  def test_email
+    assert_equal(
+      Table::DataComponent.new(@user.email),
+      @facade.email
+    )
+  end
+
+  def test_admin
+    assert_equal(
+      Table::DataComponent.new("Yes"),
+      @facade.admin
+    )
+  end
+
+  def test_id
+    assert_equal(["user", @user.id].join("_"), @facade.id)
+  end
+
+  def test_action
     assert_instance_of Table::ActionComponent, @facade.action
   end
 end

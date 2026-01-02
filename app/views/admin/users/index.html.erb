@@ -4,6 +4,11 @@
 <% end %>
 <%= render ContainerComponent.new do %>
   <%= render SectionCardComponent.new(title: "Users") do |card| %>
-    <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+    <%= tag.div(class: "col-4 mb-4") do %>
+      <%= render SearchFormComponent.new(@facade.search_data) %>
+    <% end %>
+    <%= tag.div(id: "table") do %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+    <% end %>
   <% end %>
 <% end %>

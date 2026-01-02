@@ -4,13 +4,15 @@ class Admin::RecipeIngredients::NewFacade < Base::Admin::NewFacade
   end
 
   def strong_params
-    rational = QuantityFactory.new(@strong_params.delete(:quantity)).create
-    strong_params = {
+    return @processed_strong_params if @processed_strong_params
+
+    quantity = @strong_params[:quantity]
+    rational = QuantityFactory.new(quantity).create
+    @processed_strong_params = {
       numerator: rational.numerator,
       denominator: rational.denominator,
-      **@strong_params
+      **@strong_params.except(:quantity)
     }
-    strong_params
   end
 
   def recipe
