@@ -28,18 +28,24 @@ class User < ApplicationRecord
   has_many :user_ingredient_preferences, dependent: :destroy
   has_many :offering_inquiries, dependent: :destroy
 
-  # Override Devise method to ensure account isn't locked
+  # Scopes
+  scope :active, -> { where(deactivated: false) }
+  scope :deactivated, -> { where(deactivated: true) }
+
+  # Override Devise method to ensure account isn't locked or deactivated
   def active_for_authentication?
-    super && !locked_at
+    super && !locked_at && !deactivated?
   end
 
-  # Custom message when account is locked
+  # Custom message when account is locked or deactivated
   def inactive_message
-    locked_at ? :locked : super
+    return :locked if locked_at
+    return :deactivated if deactivated?
+    super
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[first_name last_name email]
+    %w[first_name last_name email deactivated]
   end
 
   def self.ransackable_associations(auth_object = nil)

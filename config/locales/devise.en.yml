@@ -11,6 +11,7 @@ en:
       inactive: "Your account is not activated yet."
       invalid: "Invalid %{authentication_keys} or password."
       locked: "Your account is locked."
+      deactivated: "Your account is deactivated."
       last_attempt: "You have one more attempt before your account is locked."
       not_found_in_database: "Invalid %{authentication_keys} or password."
       timeout: "Your session expired. Please sign in again to continue."
@@ -28,7 +29,7 @@ en:
       password_change:
         subject: "Password Changed"
     omniauth_callbacks:
-      failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
+      failure: 'Could not authenticate you from %{kind} because "%{reason}".'
       success: "Successfully authenticated from %{kind} account."
     passwords:
       no_token: "You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."

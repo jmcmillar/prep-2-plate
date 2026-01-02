@@ -8,13 +8,14 @@ class Admin::Users::ResourceFacade
       Table::DefaultHeaderComponent.new("First Name"),
       Table::DefaultHeaderComponent.new("Last Name"),
       Table::DefaultHeaderComponent.new("Email"),
-      Table::DefaultHeaderComponent.new("Admin?")
+      Table::DefaultHeaderComponent.new("Admin?"),
+      Table::DefaultHeaderComponent.new("Deactivated?")
     ]
   end
 
   def self.to_row(facade)
     Table::RowComponent.new(
-      [facade.first_name, facade.last_name, facade.email, facade.admin, facade.action],
+      [facade.first_name, facade.last_name, facade.email, facade.admin, facade.deactivated, facade.action],
       id: facade.id
     )
   end
@@ -33,6 +34,10 @@ class Admin::Users::ResourceFacade
 
   def admin
     Table::DataComponent.new(@resource.admin? ? "Yes" : "No")
+  end
+
+  def deactivated
+    Table::DataComponent.new(@resource.deactivated? ? "Yes" : "No")
   end
 
   def id
