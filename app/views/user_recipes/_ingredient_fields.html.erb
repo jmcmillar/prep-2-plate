@@ -31,12 +31,7 @@
           </div>
           <%= f.select :ingredient_id,
                 options_for_select(
-                  facade.ingredients.map { |ing|
-                    [ing.display_name, ing.id, {
-                      'data-packaging-form' => ing.packaging_form,
-                      'data-preparation-style' => ing.preparation_style
-                    }]
-                  },
+                  facade.ingredient_options,
                   f.object.ingredient_id
                 ),
                 { include_blank: "Search ingredients..." },

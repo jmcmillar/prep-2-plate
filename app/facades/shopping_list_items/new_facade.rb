@@ -1,6 +1,6 @@
 class ShoppingListItems::NewFacade < BaseFacade
   def shopping_list_item
-    @shopping_list_item ||= shopping_list.shopping_list_items.new
+    @shopping_list_item ||= Ingredient::DisplayNameDecorator.decorate(shopping_list.shopping_list_items.new)
   end
 
   def shopping_list

@@ -26,15 +26,7 @@
             } %>
     </div>
     <%= form.select :ingredient_id,
-          options_for_select(
-            @facade.ingredients.map { |ing|
-              [ing.display_name, ing.id, {
-                'data-packaging-form' => ing.packaging_form,
-                'data-preparation-style' => ing.preparation_style
-              }]
-            },
-            form.object.ingredient_id
-          ),
+          options_for_select(@facade.ingredient_options, form.object.ingredient_id),
           { include_blank: "Search ingredients..." },
           {
             class: "px-4 py-3 block w-full rounded-md border border-gray-300 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50",

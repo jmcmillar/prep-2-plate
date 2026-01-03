@@ -3,7 +3,8 @@ class Ingredient < ApplicationRecord
     fresh: 'Fresh',
     canned: 'Canned',
     frozen: 'Frozen',
-    dried: 'Dried'
+    dried: 'Dried',
+    bottled: 'Bottled'
   }.freeze
 
   PREPARATION_STYLES = {
@@ -36,15 +37,6 @@ class Ingredient < ApplicationRecord
     self.name.downcase!
     self.packaging_form = nil if packaging_form.blank?
     self.preparation_style = nil if preparation_style.blank?
-  end
-
-  # Display name combines packaging + preparation + name
-  def display_name
-    parts = []
-    parts << PACKAGING_FORMS[packaging_form.to_sym] if packaging_form.present?
-    parts << PREPARATION_STYLES[preparation_style.to_sym] if preparation_style.present?
-    parts << name
-    parts.join(" ")
   end
 
   # Find all variants of a base ingredient

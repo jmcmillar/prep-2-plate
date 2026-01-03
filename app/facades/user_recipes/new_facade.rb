@@ -30,9 +30,11 @@ class UserRecipes::NewFacade < BaseFacade
   end
 
   def ingredients
-    @ingredients ||= Rails.cache.fetch("ingredients_ordered", expires_in: 12.hours) do
-      Ingredient.order(:name).to_a
-    end
+    @ingredients ||= Ingredient::DisplayNameDecorator.decorate_collection(
+      Rails.cache.fetch("ingredients_ordered", expires_in: 12.hours) do
+        Ingredient.order(:name).to_a
+      end
+    )
   end
 
   def measurement_units
@@ -58,5 +60,14 @@ class UserRecipes::NewFacade < BaseFacade
 
   def preparation_style_options
     Ingredient::PREPARATION_STYLES.map { |key, value| [value, key.to_s] }
+  end
+
+  def ingredient_options
+    ingredients.map do |ing|
+      [ing.display_name, ing.id, {
+        'data-packaging-form' => ing.packaging_form,
+        'data-preparation-style' => ing.preparation_style
+      }]
+    end
   end
 end

@@ -99,7 +99,6 @@ class IngredientTest < ActiveSupport::TestCase
     ingredient = Ingredient.create(name: "tomatoes")
     assert_nil ingredient.packaging_form
     assert_nil ingredient.preparation_style
-    assert_equal "tomatoes", ingredient.display_name
   end
 
   def test_validates_packaging_form_from_allowed_list
@@ -112,25 +111,6 @@ class IngredientTest < ActiveSupport::TestCase
     ingredient = Ingredient.new(name: "tomatoes", preparation_style: "invalid")
     assert_not ingredient.valid?
     assert_includes ingredient.errors[:preparation_style], "is not included in the list"
-  end
-
-  def test_display_name_includes_only_packaging_when_prep_is_nil
-    ingredient = Ingredient.create(name: "tomatoes", packaging_form: "canned")
-    assert_equal "Canned tomatoes", ingredient.display_name
-  end
-
-  def test_display_name_includes_only_preparation_when_packaging_is_nil
-    ingredient = Ingredient.create(name: "tomatoes", preparation_style: "diced")
-    assert_equal "Diced tomatoes", ingredient.display_name
-  end
-
-  def test_display_name_includes_both_packaging_and_preparation
-    ingredient = Ingredient.create(
-      name: "tomatoes",
-      packaging_form: "canned",
-      preparation_style: "diced"
-    )
-    assert_equal "Canned Diced tomatoes", ingredient.display_name
   end
 
   def test_all_forms_of_returns_all_packaging_and_preparation_variants

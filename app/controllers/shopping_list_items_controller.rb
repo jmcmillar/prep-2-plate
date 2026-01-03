@@ -1,6 +1,5 @@
 class ShoppingListItemsController < AuthenticatedController
   layout "application"
-  before_action :set_shopping_list, only: %i[index create]
 
   def index
     @facade = ShoppingListItems::IndexFacade.new(Current.user, params)
@@ -11,29 +10,26 @@ class ShoppingListItemsController < AuthenticatedController
   end
 
   def create
-    item = @shopping_list.shopping_list_items.new(shopping_list_item_params)
+    @facade = ShoppingListItems::NewFacade.new(Current.user, params)
+    @facade.shopping_list_item.assign_attributes(shopping_list_item_params)
 
     # Apply brand preference if brand is blank
-    UserIngredientPreferences::ApplyToItem.call(item) if item.brand.blank?
+    UserIngredientPreferences::ApplyToItem.call(@facade.shopping_list_item) if @facade.shopping_list_item.brand.blank?
 
-    if item.save
+    if @facade.shopping_list_item.save
       # Learn from brand after successful save
-      UserIngredientPreferences::Learn.call(item)
+      UserIngredientPreferences::Learn.call(@facade.shopping_list_item)
 
       respond_to do |format|
-        format.json { render json: { id: item.id, name: item.name, display_name: item.display_name }, status: :created }
+        format.json { render json: { id: @facade.shopping_list_item.id, name: @facade.shopping_list_item.name, display_name: @facade.shopping_list_item.display_name }, status: :created }
         format.html do
-          redirect_to shopping_list_items_url(@shopping_list), notice: "Item was successfully created."
+          redirect_to shopping_list_items_url(@facade.shopping_list), notice: "Item was successfully created."
         end
       end
     else
       respond_to do |format|
-        format.json { render json: { errors: item.errors.full_messages }, status: :unprocessable_entity }
-        format.html do
-          @facade = ShoppingListItems::NewFacade.new(Current.user, params)
-          @facade.shopping_list_item.assign_attributes(shopping_list_item_params)
-          render :new, status: :unprocessable_entity
-        end
+        format.json { render json: { errors: @facade.shopping_list_item.errors.full_messages }, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
@@ -81,9 +77,5 @@ class ShoppingListItemsController < AuthenticatedController
 
   def shopping_list_item_params
     params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style, :brand)
-  end
-
-  def set_shopping_list
-    @shopping_list = Current.user.shopping_lists.find(params[:shopping_list_id])
   end
 end

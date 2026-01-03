@@ -28,7 +28,16 @@ class Admin::RecipeIngredients::NewFacade < Base::Admin::NewFacade
   end
 
   def ingredients
-    @ingredients ||= Ingredient.order(:name)
+    @ingredients ||= Ingredient::DisplayNameDecorator.decorate_collection(Ingredient.order(:name))
+  end
+
+  def ingredient_options
+    ingredients.map do |ing|
+      [ing.display_name, ing.id, {
+        'data-packaging-form' => ing.packaging_form,
+        'data-preparation-style' => ing.preparation_style
+      }]
+    end
   end
 
   def breadcrumb_trail

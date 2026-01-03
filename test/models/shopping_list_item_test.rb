@@ -90,7 +90,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
   # display_name tests
   def test_display_name_with_name_only
     item = ShoppingListItem.new(name: "tomatoes")
-    assert_equal "tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "tomatoes", decorated.display_name
   end
 
   def test_display_name_with_packaging_only
@@ -98,7 +99,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       name: "tomatoes",
       packaging_form: "canned"
     )
-    assert_equal "Canned tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "Canned tomatoes", decorated.display_name
   end
 
   def test_display_name_with_preparation_only
@@ -106,7 +108,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       name: "tomatoes",
       preparation_style: "diced"
     )
-    assert_equal "Diced tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "Diced tomatoes", decorated.display_name
   end
 
   def test_display_name_with_packaging_and_preparation
@@ -115,7 +118,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       packaging_form: "canned",
       preparation_style: "diced"
     )
-    assert_equal "Canned Diced tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "Canned Diced tomatoes", decorated.display_name
   end
 
   def test_display_name_with_blank_packaging_and_preparation
@@ -124,7 +128,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       packaging_form: "",
       preparation_style: ""
     )
-    assert_equal "tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "tomatoes", decorated.display_name
   end
 
   def test_display_name_with_nil_packaging_and_preparation
@@ -133,7 +138,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       packaging_form: nil,
       preparation_style: nil
     )
-    assert_equal "tomatoes", item.display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(item)
+    assert_equal "tomatoes", decorated.display_name
   end
 
   # Brand validation tests
@@ -182,7 +188,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       preparation_style: "diced",
       brand: "Hunt's"
     )
-    assert_equal "Canned Diced tomatoes (Hunt's)", item.display_name_with_brand
+    decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
+    assert_equal "Canned Diced tomatoes (Hunt's)", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_when_brand_nil
@@ -192,7 +199,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       preparation_style: "diced",
       brand: nil
     )
-    assert_equal "Canned Diced tomatoes", item.display_name_with_brand
+    decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
+    assert_equal "Canned Diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_when_brand_blank
@@ -202,7 +210,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       preparation_style: "diced",
       brand: ""
     )
-    assert_equal "Canned Diced tomatoes", item.display_name_with_brand
+    decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
+    assert_equal "Canned Diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_simple_item
@@ -210,7 +219,8 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       name: "milk",
       brand: "Organic Valley"
     )
-    assert_equal "milk (Organic Valley)", item.display_name_with_brand
+    decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
+    assert_equal "milk (Organic Valley)", decorated.display_name_with_brand
   end
 
   # Backward compatibility test

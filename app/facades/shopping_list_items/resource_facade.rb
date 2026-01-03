@@ -2,7 +2,7 @@ class ShoppingListItems::ResourceFacade
   attr_reader :resource
 
   def initialize(resource)
-    @resource = resource
+    @resource = Ingredient::DisplayNameDecorator.decorate(resource)
   end
 
   def self.headers

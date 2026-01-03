@@ -27,7 +27,9 @@ class UserRecipes::EditFacade < BaseFacade
   end
 
   def ingredients
-    @ingredients ||= Ingredient.all.order(:name)
+    @ingredients ||= Ingredient::DisplayNameDecorator.decorate_collection(
+      Ingredient.all.order(:name)
+    )
   end
 
   def measurement_units
@@ -40,5 +42,14 @@ class UserRecipes::EditFacade < BaseFacade
 
   def preparation_style_options
     Ingredient::PREPARATION_STYLES.map { |key, value| [value, key.to_s] }
+  end
+
+  def ingredient_options
+    ingredients.map do |ing|
+      [ing.display_name, ing.id, {
+        'data-packaging-form' => ing.packaging_form,
+        'data-preparation-style' => ing.preparation_style
+      }]
+    end
   end
 end
