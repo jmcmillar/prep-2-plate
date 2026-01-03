@@ -57,4 +57,40 @@ class Offerings::ShowFacade < BaseFacade
   def show_request_quote?
     user&.persisted?
   end
+
+  def offering_image
+    safe_attachment(offering.image, '').url
+  end
+
+  def has_offering_image?
+    offering.image.attached?
+  end
+
+  def has_description?
+    offering.description.present?
+  end
+
+  def has_ingredients?
+    ingredients.any?
+  end
+
+  def has_price_points?
+    price_points.any?
+  end
+
+  def has_meal_types?
+    offering.meal_types.any?
+  end
+
+  def vendor_logo
+    safe_attachment(offering.vendor.logo, '').url
+  end
+
+  def has_vendor_logo?
+    offering.vendor.logo.attached?
+  end
+
+  def has_vendor_description?
+    offering.vendor.description.present?
+  end
 end

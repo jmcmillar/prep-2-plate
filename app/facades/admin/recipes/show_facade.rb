@@ -26,8 +26,12 @@ class Admin::Recipes::ShowFacade < Base::Admin::ShowFacade
   def edit_action_data
     IconLinkComponent::Data[
       [:edit, :admin, recipe],
-      :edit, 
+      :edit,
       "Recipe",
     ]
+  end
+
+  def recipe_image
+    safe_attachment(recipe.image, 'no-recipe-image.png').url
   end
 end

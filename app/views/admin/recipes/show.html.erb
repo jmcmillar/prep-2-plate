@@ -6,7 +6,7 @@
   <%= render SectionCardComponent.new do |card| %>
     <%= tag.div(class: "w-1/3 rounded relative mb-8") do %>
       <%= render BackgroundImageContainerComponent.new(
-        image: (@facade.recipe.image.attached? ? url_for(@facade.recipe.image) :image_url('no-recipe-image.png')),
+        image: @facade.recipe_image,
         settings: BackgroundImageData.new(position: "center center"),
         class: "h-[150px] overflow-hidden relative"
       ) %>

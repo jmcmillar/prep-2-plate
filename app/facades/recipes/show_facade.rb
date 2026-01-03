@@ -110,4 +110,8 @@ class Recipes::ShowFacade < BaseFacade
   def active_key
     :recipes
   end
+
+  def recipe_image
+    safe_attachment(resource.image, 'no-recipe-landscape-image.png').url
+  end
 end

@@ -13,7 +13,7 @@
 
 
   <%= render BackgroundImageContainerComponent.new(
-    image: (@facade.resource.image.attached? ? url_for(@facade.resource.image) : image_url('no-recipe-landscape-image.png')),
+    image: @facade.recipe_image,
     class: "w-full h-64 object-cover rounded-xl mb-10",
     settings: BackgroundImageData.new(position: "center center")
   ) %>

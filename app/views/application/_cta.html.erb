@@ -1,5 +1,5 @@
 <div class="bg-gray-100">
-  <%= render BackgroundImageContainerComponent.new(image: 'public-hero.jpg', settings: BackgroundImageData.new(position: "center center")) do %>
+  <%= render BackgroundImageContainerComponent.new(image: image_url('public-hero.jpg'), settings: BackgroundImageData.new(position: "center center")) do %>
     <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8 bg-black/10">
       <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
         <span class="block">Intentional Prep. Better Plates.</span>
@@ -7,7 +7,7 @@
       </h2>
       <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
         <div class="inline-flex rounded-md shadow">
-          <%# link_to(
+          <%= link_to(
             "Get started",
             new_user_registration_path,
             class: "inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-5 py-3 text-base font-medium text-white hover:bg-indigo-700"

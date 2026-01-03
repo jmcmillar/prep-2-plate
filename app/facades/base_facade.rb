@@ -61,4 +61,10 @@ class BaseFacade
       "Shopping Lists"
     ])
   end
+
+  protected
+
+  def safe_attachment(attachment, fallback = "")
+    SafeAttachment.new(attachment, fallback)
+  end
 end

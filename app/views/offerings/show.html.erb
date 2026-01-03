@@ -15,13 +15,13 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Main Content -->
     <div class="lg:col-span-2">
-      <% if @facade.offering.image.attached? %>
+      <% if @facade.has_offering_image? %>
         <%= render SectionCardComponent.new do %>
-          <%= image_tag @facade.offering.image, class: "w-full h-auto rounded-lg shadow-lg" %>
+          <%= image_tag url_for(@facade.offering_image), class: "w-full h-auto rounded-lg shadow-lg" %>
         <% end %>
       <% end %>
 
-      <% if @facade.offering.description.present? %>
+      <% if @facade.has_description? %>
         <%= render SectionCardComponent.new(title: "Description") do %>
           <div class="prose max-w-none">
             <%= @facade.offering.description %>
@@ -29,7 +29,7 @@
         <% end %>
       <% end %>
 
-      <% if @facade.ingredients.any? %>
+      <% if @facade.has_ingredients? %>
         <%= tag.div(class: "mt-6") do %>
           <%= render SectionCardComponent.new(title: "Ingredients (per #{@facade.offering.base_serving_size} #{"serving".pluralize(@facade.offering.base_serving_size)})") do %>
             <ul class="space-y-2">
@@ -50,7 +50,7 @@
     <!-- Sidebar -->
     <div class="lg:col-span-1 gap-6 flex flex-col">
       <%= render SectionCardComponent.new(title: "Pricing") do %>
-        <% if @facade.price_points.any? %>
+        <% if @facade.has_price_points? %>
           <%= render Offering::PricingTierComponent.new(
             price_points: @facade.price_points,
             selected_size: @facade.selected_serving_size
@@ -63,7 +63,7 @@
                 <dt class="text-gray-500">Base Serving Size</dt>
                 <dd class="font-medium text-gray-900"><%= @facade.offering.base_serving_size %> servings</dd>
               </div>
-              <% if @facade.offering.meal_types.any? %>
+              <% if @facade.has_meal_types? %>
                 <div>
                   <dt class="text-gray-500">Meal Types</dt>
                   <dd class="font-medium text-gray-900">
@@ -151,13 +151,13 @@
             <%= @facade.offering.vendor.business_name %>
           </h3>
 
-          <% if @facade.offering.vendor.logo.attached? %>
+          <% if @facade.has_vendor_logo? %>
             <div class="my-4">
-              <%= image_tag @facade.offering.vendor.logo, class: "w-32 h-32 mx-auto object-contain" %>
+              <%= image_tag url_for(@facade.vendor_logo), class: "w-32 h-32 mx-auto object-contain" %>
             </div>
           <% end %>
 
-          <% if @facade.offering.vendor.description.present? %>
+          <% if @facade.has_vendor_description? %>
             <p class="text-gray-600 text-sm mb-4">
               <%= truncate(@facade.offering.vendor.description, length: 150) %>
             </p>
