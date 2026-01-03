@@ -1,5 +1,8 @@
 get 'admin/recipes_exports', to: 'admin/recipe_exports#export_file',  defaults: { format: :ics }
 
+# Mount Blazer for business intelligence queries
+mount Blazer::Engine, at: "admin/blazer"
+
 namespace :admin do
   resources :resources, except: :show
   resources :recipe_exports, only: :create
