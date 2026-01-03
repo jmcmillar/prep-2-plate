@@ -19,6 +19,9 @@ data_sources:
     # Prevents accidental data modifications
     use_transaction: true
 
+    # read-only mode - prevents all write operations (INSERT, UPDATE, DELETE, etc.)
+    read_only: true
+
     smart_variables:
       # zone_id: "SELECT id, name FROM zones ORDER BY name ASC"
       # period: ["day", "week", "month"]
