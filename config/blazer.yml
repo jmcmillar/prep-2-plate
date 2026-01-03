@@ -2,7 +2,7 @@
 
 data_sources:
   main:
-    url: <%= ENV["BLAZER_DATABASE_URL"] || ActiveRecord::Base.connection_db_config.url %>
+    url: <%= ENV["BLAZER_DATABASE_URL"] || ENV["DATABASE_URL"] || ActiveRecord::Base.connection_db_config.configuration_hash[:url] %>
 
     # statement timeout, in seconds
     # Prevent long-running queries from impacting production
