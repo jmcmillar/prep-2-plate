@@ -53,9 +53,9 @@ class Api::ShoppingListItemsController < Api::BaseController
     if ShoppingListItems::Archive.call(shopping_list_item)
       render json: {
         archived: true,
-        archived_at: shopping_list_item.archived_at,
+        archivedAt: shopping_list_item.archived_at,
         name: shopping_list_item.name,
-        ingredient_id: shopping_list_item.ingredient_id
+        ingredientId: shopping_list_item.ingredient_id
       }, status: :ok
     else
       render json: { error: "Failed to archive item" }, status: :unprocessable_entity

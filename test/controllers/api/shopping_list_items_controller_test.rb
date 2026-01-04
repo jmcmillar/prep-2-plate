@@ -22,10 +22,16 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
       item = json["shopping_list_items"].first
       assert item.key?("id"), "Should include id"
       assert item.key?("name"), "Should include name"
-      assert item.key?("ingredient_id"), "Should include ingredient_id"
-      assert item.key?("packaging_form"), "Should include packaging_form"
-      assert item.key?("preparation_style"), "Should include preparation_style"
-      assert item.key?("display_name"), "Should include display_name"
+      assert item.key?("ingredientId"), "Should include ingredientId (camelCase)"
+      assert item.key?("packagingForm"), "Should include packagingForm (camelCase)"
+      assert item.key?("preparationStyle"), "Should include preparationStyle (camelCase)"
+      assert item.key?("brand"), "Should include brand"
+      assert item.key?("displayName"), "Should include displayName (camelCase)"
+      assert item.key?("displayNameWithBrand"), "Should include displayNameWithBrand"
+      assert item.key?("archivedAt"), "Should include archivedAt (camelCase)"
+      assert item.key?("archived"), "Should include archived"
+      assert item.key?("createdAt"), "Should include createdAt (camelCase)"
+      assert item.key?("updatedAt"), "Should include updatedAt (camelCase)"
     end
   end
 
@@ -48,10 +54,10 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
 
     assert_equal "tomatoes", json["name"]
-    assert_equal ingredients(:canned_tomatoes).id, json["ingredient_id"]
-    assert_equal "canned", json["packaging_form"]
-    assert_equal "diced", json["preparation_style"]
-    assert_equal "Canned Diced tomatoes", json["display_name"]
+    assert_equal ingredients(:canned_tomatoes).id, json["ingredientId"]
+    assert_equal "canned", json["packagingForm"]
+    assert_equal "diced", json["preparationStyle"]
+    assert_equal "canned diced tomatoes", json["displayName"]
   end
 
   def test_create_allows_nil_packaging_and_preparation
@@ -73,10 +79,10 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
 
     assert_equal "Custom item", json["name"]
-    assert_nil json["ingredient_id"]
-    assert_nil json["packaging_form"]
-    assert_nil json["preparation_style"]
-    assert_equal "Custom item", json["display_name"]
+    assert_nil json["ingredientId"]
+    assert_nil json["packagingForm"]
+    assert_nil json["preparationStyle"]
+    assert_equal "custom item", json["displayName"]
   end
 
   def test_update_accepts_packaging_and_preparation
@@ -95,8 +101,8 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     json = JSON.parse(response.body)
 
-    assert_equal "frozen", json["packaging_form"]
-    assert_equal "chopped", json["preparation_style"]
+    assert_equal "frozen", json["packagingForm"]
+    assert_equal "chopped", json["preparationStyle"]
 
     item.reload
     assert_equal "frozen", item.packaging_form
@@ -166,8 +172,8 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal true, json["archived"]
     assert_equal "tomatoes", json["name"]
-    assert_equal ingredients(:one).id, json["ingredient_id"]
-    assert_not_nil json["archived_at"]
+    assert_equal ingredients(:one).id, json["ingredientId"]
+    assert_not_nil json["archivedAt"]
   end
 
   def test_index_excludes_archived_items_by_default
