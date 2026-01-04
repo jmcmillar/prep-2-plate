@@ -1,0 +1,8 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-10") do %>
+  <%= render SectionCardComponent.new(title: @facade.user_meal_plan.meal_plan.name) do |card| %>
+  <% end %>
+<% end %>
+<%= turbo_frame_tag :user_meal_plan_recipes, src: admin_user_meal_plan_user_meal_plan_recipes_path(@facade.user_meal_plan) %>

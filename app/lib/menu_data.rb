@@ -20,6 +20,7 @@ class MenuData
     [
       MenuItemData[:back, "Admin", :admin_users, true],
       MenuItemData[:admin_user, "Overview", [:admin, user], true],
+      MenuItemData[:admin_user_meal_plans, "Meal Plans", [:admin, user, :user_meal_plans], true],
       MenuItemData[:admin_shopping_lists, "Shopping Lists", [:admin, user, :shopping_lists], true],
       MenuItemData[:admin_user_recipes, "Recipes", [:admin, user, :user_recipes], true]
     ]
@@ -61,6 +62,7 @@ class MenuData
         admin_ingredient_categories: :tags,
         admin_measurement_units: :balance_scale,
         admin_meal_plans: :calendar,
+        admin_user_meal_plans: :calendar,
         admin_vendors: :store,
         admin_offerings: :utensils,
         admin_users: :users,

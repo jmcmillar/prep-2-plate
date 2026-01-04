@@ -1,0 +1,17 @@
+<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
+<% end %>
+<%= render ContainerComponent.new(class: "mb-10") do %>
+  <%= render SectionCardComponent.new(title: @facade.meal_plan_recipe.recipe.name) do |card| %>
+    <%= tag.div(class: "row mb-6") do %>
+      <%= tag.div(class: "col-6") do %>
+        <%= tag.p(class: "font-medium mb-2") { "Date"} %>
+        <%= @facade.meal_plan_recipe.date %>
+      <% end %>
+      <%= tag.div(class: "col-6") do %>
+        <%= tag.p(class: "font-medium mb-2") { "Recipe"} %>
+        <%= @facade.meal_plan_recipe.recipe.name %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

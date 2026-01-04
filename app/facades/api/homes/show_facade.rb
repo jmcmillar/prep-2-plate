@@ -39,4 +39,17 @@ class Api::Homes::ShowFacade
       .ransack(@params[:q]).result
       .limit(4)
   end
+
+  def today_recipes
+    today = Date.current
+
+    MealPlanRecipe
+      .joins(meal_plan: :user_meal_plans)
+      .where(user_meal_plans: { user_id: @user.id })
+      .where(date: today)
+      .includes(:recipe)
+      .map(&:recipe)
+      .compact
+      .uniq
+  end
 end

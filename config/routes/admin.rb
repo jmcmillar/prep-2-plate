@@ -38,6 +38,9 @@ namespace :admin do
     resources :shopping_lists, shallow: true do
       resources :shopping_list_items, except: :show, shallow: true
     end
+    resources :user_meal_plans, only: [:index, :show, :destroy], shallow: true do
+      resources :user_meal_plan_recipes, shallow: true, only: [:index, :destroy]
+    end
   end
   resources :vendors do
     resources :offerings, shallow: true do

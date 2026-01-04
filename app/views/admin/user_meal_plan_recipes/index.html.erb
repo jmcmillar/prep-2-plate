@@ -1,0 +1,7 @@
+<%= turbo_frame_tag :user_meal_plan_recipes do %>
+  <%= render ContainerComponent.new do %>
+    <%= render SectionCardComponent.new(title: "Meal Plan Recipes") do |card| %>
+      <%= render TableComponent.new(@facade.headers, @facade.rows, @facade.pagy) %>
+  <% end %>
+<% end %>
+<% end %>

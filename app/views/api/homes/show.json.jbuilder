@@ -22,3 +22,12 @@ json.recipeCategories do
     json.name category.name
   end
 end
+json.todayRecipes do
+  json.array! @facade.today_recipes do |recipe|
+    json.id recipe.id
+    json.name recipe.name
+    json.imageUrl recipe.image.attached? ? rails_blob_url(recipe.image, host: request.host_with_port) : image_url("no-recipe-image.png")
+    json.durationMinutes recipe.duration_minutes
+    json.difficultyLevel recipe.difficulty_level
+  end
+end

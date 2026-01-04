@@ -1,6 +1,6 @@
 class MealPlans::IndexFacade < BaseFacade
   def base_collection
-    MealPlan.order(:name)
+    MealPlan.order(:name).non_user_associated
   end
 
   def collection

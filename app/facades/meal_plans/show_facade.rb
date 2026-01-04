@@ -1,6 +1,6 @@
 class MealPlans::ShowFacade < BaseFacade
   def resource
-    MealPlan.find @params[:id]
+    MealPlan.non_user_associated.find(@params[:id])
   end
 
   def description
