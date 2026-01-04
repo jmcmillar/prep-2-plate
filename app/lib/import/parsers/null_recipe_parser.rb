@@ -7,6 +7,6 @@ class Import::Parsers::NullRecipeParser < Import::Parsers::BaseParser
   end
 
   def parse
-    Parser::NullRecipeData.new
+    RecipeParser::NullRecipeData.new
   end
 end

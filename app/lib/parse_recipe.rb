@@ -1,4 +1,5 @@
 require "open-uri"
+
 class ParseRecipe
   SSRF_PROTECTED_SCHEMES = %w[http https].freeze
   TIMEOUT_SECONDS = 10
@@ -9,7 +10,7 @@ class ParseRecipe
   end
 
   def to_h
-    Parser.parse(@url).to_h
+    RecipeParser.parse(@url).to_h
   end
 
   private

@@ -1,4 +1,4 @@
-module Parser
+module RecipeParser
   RECIPE_ATTRIBUTES = [
     :author,
     :canonical_url,
@@ -38,7 +38,7 @@ module Parser
   end
 
   def self.parse(html)
-    recipe = parser_for(html).parse
+    parser_for(html).parse
   end
 
   def self.parser_for(html)

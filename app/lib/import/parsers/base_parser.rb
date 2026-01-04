@@ -6,7 +6,7 @@ class Import::Parsers::BaseParser
   end
 
   def parse
-    @recipe = Parser::RecipeData.new
+    @recipe = RecipeParser::RecipeData.new
     initialize_nutrition
     set_recipe_attributes
     recipe
@@ -73,13 +73,13 @@ class Import::Parsers::BaseParser
 
   def initialize_nutrition
     recipe.nutrition = {}
-    Parser::NUTRITION_ATTRIBUTES.each do |attribute|
+    RecipeParser::NUTRITION_ATTRIBUTES.each do |attribute|
       recipe.nutrition[attribute] = nil
     end
   end
 
   def set_recipe_attributes
-    Parser::RECIPE_ATTRIBUTES.each do |attribute|
+    RecipeParser::RECIPE_ATTRIBUTES.each do |attribute|
       attr_value = value(send("parse_#{attribute}"))
       recipe.public_send("#{attribute}=", attr_value)
       next unless recipe.public_send(attribute).present?
