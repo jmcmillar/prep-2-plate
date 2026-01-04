@@ -11,7 +11,7 @@ class BackgroundImageContainerComponent < ApplicationComponent
   private
 
   def background_image_attributes
-    "background-image: url(#{image_url(@image)});
+    "background-image: url(#{url_for(@image)});
     background-color: #686A6B;
     background-repeat: #{@settings.repeat};
     background-size: #{@settings.size};
