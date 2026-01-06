@@ -11,7 +11,8 @@ class MenuData
       MenuItemData[:admin_measurement_units, "Measurement Units", :admin_measurement_units, true],
       MenuItemData[:admin_vendors, "Vendors", :admin_vendors, true],
       MenuItemData[:admin_resources, "Resources", :admin_resources, true],
-      MenuItemData[:blazer, "Analytics", "/admin/blazer", true],
+      MenuItemData[:analytics, "Analytics", "/admin/analytics/shopping_lists", true],
+      MenuItemData[:blazer, "Blazer", "/admin/blazer", true],
       MenuItemData[:admin_users, "Users", :admin_users, true]
     ]
   end
@@ -69,6 +70,7 @@ class MenuData
         admin_shopping_lists: :shopping_cart,
         admin_user_recipes: :book,
         admin_resources: :file,
+        analytics: :chart_line,
         blazer: :chart_bar,
         vendors: :store,
         back: :chevron_left

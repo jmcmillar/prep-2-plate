@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_02_235524) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_06_034825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -345,7 +345,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_235524) do
     t.string "brand"
     t.index ["archived_at"], name: "index_shopping_list_items_on_archived_at"
     t.index ["brand"], name: "index_shopping_list_items_on_brand"
+    t.index ["created_at"], name: "index_shopping_list_items_on_created_at"
     t.index ["ingredient_id"], name: "index_shopping_list_items_on_ingredient_id"
+    t.index ["packaging_form"], name: "index_shopping_list_items_on_packaging_form"
+    t.index ["preparation_style"], name: "index_shopping_list_items_on_preparation_style"
     t.index ["shopping_list_id", "ingredient_id", "packaging_form", "preparation_style"], name: "idx_shopping_list_items_unique_ingredient"
     t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"
   end
@@ -357,6 +360,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_235524) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "shopping_list_items_count", default: 0, null: false
+    t.index ["created_at"], name: "index_shopping_lists_on_created_at"
     t.index ["current"], name: "index_shopping_lists_on_current"
     t.index ["user_id", "current"], name: "index_shopping_lists_on_user_id_and_current"
     t.index ["user_id"], name: "index_shopping_lists_on_user_id"
@@ -372,7 +376,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_02_235524) do
     t.datetime "last_used_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_user_ingredient_preferences_on_created_at"
     t.index ["ingredient_id"], name: "index_user_ingredient_preferences_on_ingredient_id"
+    t.index ["last_used_at"], name: "index_user_ingredient_preferences_on_last_used_at"
+    t.index ["packaging_form"], name: "index_user_ingredient_preferences_on_packaging_form"
+    t.index ["preferred_brand"], name: "index_user_ingredient_preferences_on_preferred_brand"
+    t.index ["preparation_style"], name: "index_user_ingredient_preferences_on_preparation_style"
+    t.index ["usage_count"], name: "index_user_ingredient_preferences_on_usage_count"
     t.index ["user_id", "ingredient_id", "packaging_form", "preparation_style"], name: "index_user_ingredient_prefs_on_user_ingredient_packaging_prep", unique: true
     t.index ["user_id"], name: "index_user_ingredient_preferences_on_user_id"
   end

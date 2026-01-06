@@ -1,7 +1,16 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+fresh_produce:
+  name: Fresh Produce
 
-two:
-  name: MyString
+proteins:
+  name: Proteins
+
+canned_goods:
+  name: Canned & Jarred
+
+frozen_foods:
+  name: Frozen Foods
+
+grains:
+  name: Grains & Bread

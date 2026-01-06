@@ -166,6 +166,8 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
+    groupdate (6.7.0)
+      activesupport (>= 7.1)
     httparty (0.23.2)
       csv
       mini_mime (>= 1.0.0)
@@ -553,8 +555,10 @@ DEPENDENCIES
   brakeman
   bullet
   capybara
+  chartkick
   debug
   devise
+  groupdate
   httparty
   icalendar
   image_processing (~> 1.2)

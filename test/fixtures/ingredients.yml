@@ -4,16 +4,19 @@ one:
   name: Carrots
   packaging_form: fresh
   preparation_style: diced
+  ingredient_category: fresh_produce
 
 two:
   name: Brocoli
   packaging_form: frozen
   preparation_style: chopped
+  ingredient_category: frozen_foods
 
 canned_tomatoes:
   name: tomatoes
   packaging_form: canned
   preparation_style: diced
+  ingredient_category: canned_goods
 
 fresh_tomatoes:
   name: tomatoes
@@ -32,21 +35,25 @@ chicken_breast:
   name: chicken breast
   packaging_form: fresh
   preparation_style: whole
+  ingredient_category: proteins
 
 broccoli:
   name: broccoli
   packaging_form: fresh
   preparation_style: florets
+  ingredient_category: fresh_produce
 
 quinoa:
   name: quinoa
   packaging_form: dried
   preparation_style: uncooked
+  ingredient_category: grains
 
 beef_steak:
   name: beef steak
   packaging_form: fresh
   preparation_style: whole
+  ingredient_category: proteins
 
 sweet_potato:
   name: sweet potato

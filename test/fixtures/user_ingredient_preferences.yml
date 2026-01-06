@@ -8,6 +8,7 @@ one:
   preferred_brand: "Organic Valley"
   usage_count: 5
   last_used_at: <%= 1.day.ago %>
+  created_at: <%= 10.days.ago %>
 
 two:
   user: two
@@ -17,6 +18,7 @@ two:
   preferred_brand: "Birds Eye"
   usage_count: 3
   last_used_at: <%= 2.days.ago %>
+  created_at: <%= 15.days.ago %>
 
 generic:
   user: one
@@ -26,6 +28,7 @@ generic:
   preferred_brand: "Generic Brand"
   usage_count: 1
   last_used_at: <%= 3.days.ago %>
+  created_at: <%= 20.days.ago %>
 
 canned_diced:
   user: one
@@ -35,3 +38,44 @@ canned_diced:
   preferred_brand: "Hunt's"
   usage_count: 10
   last_used_at: <%= 6.hours.ago %>
+  created_at: <%= 5.days.ago %>
+
+chicken_pref:
+  user: one
+  ingredient: chicken_breast
+  packaging_form: fresh
+  preparation_style: whole
+  preferred_brand: "Bell & Evans"
+  usage_count: 7
+  last_used_at: <%= 5.days.ago %>
+  created_at: <%= 8.days.ago %>
+
+broccoli_pref:
+  user: two
+  ingredient: broccoli
+  packaging_form: fresh
+  preparation_style: florets
+  preferred_brand: "Organic Valley"
+  usage_count: 12
+  last_used_at: <%= 1.day.ago %>
+  created_at: <%= 12.days.ago %>
+
+old_preference:
+  user: one
+  ingredient: quinoa
+  packaging_form: dried
+  preparation_style: uncooked
+  preferred_brand: "Ancient Harvest"
+  usage_count: 2
+  last_used_at: <%= 95.days.ago %>
+  created_at: <%= 100.days.ago %>
+
+inactive_preference:
+  user: two
+  ingredient: beef_steak
+  packaging_form: fresh
+  preparation_style: whole
+  preferred_brand: null
+  usage_count: 25
+  last_used_at: <%= 45.days.ago %>
+  created_at: <%= 60.days.ago %>

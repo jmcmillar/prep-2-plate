@@ -1,0 +1,113 @@
+<%= render HeaderBarComponent.new(title: "User Preference Analytics") do |c| %>
+  <%# c.with_breadcrumb_collection([
+    { label: "Admin", path: admin_users_path },
+    { label: "Analytics", path: [:admin, :analytics] },
+    { label: "User Preferences", path:  }
+  ]) %>
+  <%# c.with_icon_link_collection([
+    { icon: "shopping-cart", path: admin_analytics_shopping_lists_path, label: "Shopping Lists", scheme: :secondary }
+  ]) %>
+<% end %>
+
+<%= render ContainerComponent.new do %>
+  <%# Brand Loyalty Charts %>
+  <%= render SectionCardComponent.new(title: "Brand Preferences & Loyalty") do %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div>
+        <%= bar_chart @facade.top_brands_by_usage,
+            title: "Top 20 Brands by Usage Count",
+            xtitle: "Total Usage",
+            ytitle: "Brand",
+            height: "400px",
+            colors: ["#3b82f6"] %>
+      </div>
+      <div>
+        <%= area_chart @facade.preferences_learned_over_time,
+            title: "New Preferences Learned Over Time",
+            xtitle: "Date",
+            ytitle: "New Preferences",
+            height: "400px",
+            colors: ["#22c55e"] %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Packaging & Preparation Preferences %>
+  <%= render SectionCardComponent.new(title: "Shopping Style Preferences") do %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div>
+        <%= pie_chart @facade.packaging_preferences_distribution,
+            title: "Packaging Form Preferences",
+            donut: true,
+            height: "300px",
+            colors: ["#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#06b6d4"] %>
+      </div>
+      <div>
+        <%= pie_chart @facade.preparation_preferences_distribution,
+            title: "Preparation Style Preferences",
+            donut: true,
+            height: "300px",
+            colors: ["#f59e0b", "#22c55e", "#3b82f6", "#a855f7"] %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# User Engagement Charts %>
+  <%= render SectionCardComponent.new(title: "User Engagement & Retention") do %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div>
+        <%= column_chart @facade.preference_usage_distribution,
+            title: "Preference Usage Distribution",
+            xtitle: "Usage Range",
+            ytitle: "Number of Preferences",
+            height: "300px",
+            colors: ["#06b6d4"] %>
+      </div>
+      <div>
+        <%= column_chart @facade.preferences_by_user,
+            title: "Preferences Per User Distribution",
+            xtitle: "Number of Preferences",
+            ytitle: "Number of Users",
+            height: "300px",
+            colors: ["#a855f7"] %>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div>
+        <%= bar_chart @facade.most_active_users,
+            title: "Top 10 Most Active Users",
+            xtitle: "Total Usage Count",
+            ytitle: "User Email",
+            height: "300px",
+            colors: ["#22c55e"] %>
+      </div>
+      <div>
+        <%= column_chart @facade.preference_retention,
+            title: "Preference Retention (Last Usage)",
+            xtitle: "Time Period",
+            ytitle: "Number of Preferences",
+            height: "300px",
+            colors: ["#22c55e", "#f59e0b", "#ef4444", "#94a3b8"] %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Brand Preferences by Category %>
+  <%= render SectionCardComponent.new(title: "Brand Preferences by Ingredient Category") do %>
+    <div class="prose max-w-none">
+      <p class="text-sm text-slate-600 mb-4">Top 5 brands per category, weighted by usage count</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <% @facade.brand_preferences_by_category.each do |category, brands| %>
+          <div>
+            <%= bar_chart brands,
+                title: category,
+                xtitle: "Usage Count",
+                ytitle: "Brand",
+                height: "250px",
+                colors: ["#3b82f6"] %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

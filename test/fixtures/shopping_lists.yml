@@ -2,8 +2,22 @@ one:
   name: "Main Shopping List"
   user: one
   current: true
+  created_at: <%= 5.days.ago %>
 
 two:
   name: "Secondary Shopping List"
   user: two
   current: false
+  created_at: <%= 10.days.ago %>
+
+three:
+  name: "Weekly Groceries"
+  user: one
+  current: false
+  created_at: <%= 15.days.ago %>
+
+four:
+  name: "Party Shopping"
+  user: two
+  current: false
+  created_at: <%= 20.days.ago %>

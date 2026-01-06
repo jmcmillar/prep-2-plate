@@ -4,6 +4,8 @@ one:
   ingredient: one
   packaging_form: fresh
   preparation_style: diced
+  created_at: <%= 5.days.ago %>
+  archived_at: <%= 3.days.ago %>
 
 two:
   name: Brocoli
@@ -11,6 +13,8 @@ two:
   ingredient: two
   packaging_form: frozen
   preparation_style: chopped
+  created_at: <%= 10.days.ago %>
+  archived_at: null
 
 canned_tomatoes:
   name: tomatoes
@@ -18,6 +22,8 @@ canned_tomatoes:
   ingredient: canned_tomatoes
   packaging_form: canned
   preparation_style: diced
+  created_at: <%= 5.days.ago %>
+  archived_at: null
 
 custom_item:
   name: "Custom item without ingredient"
@@ -25,3 +31,41 @@ custom_item:
   ingredient_id: null
   packaging_form: null
   preparation_style: null
+  created_at: <%= 5.days.ago %>
+  archived_at: null
+
+chicken_item:
+  name: chicken breast
+  shopping_list: three
+  ingredient: chicken_breast
+  packaging_form: fresh
+  preparation_style: whole
+  created_at: <%= 15.days.ago %>
+  archived_at: <%= 14.days.ago %>
+
+broccoli_item:
+  name: broccoli
+  shopping_list: three
+  ingredient: broccoli
+  packaging_form: fresh
+  preparation_style: florets
+  created_at: <%= 15.days.ago %>
+  archived_at: null
+
+quinoa_item:
+  name: quinoa
+  shopping_list: three
+  ingredient: quinoa
+  packaging_form: dried
+  preparation_style: uncooked
+  created_at: <%= 15.days.ago %>
+  archived_at: null
+
+beef_item:
+  name: beef steak
+  shopping_list: four
+  ingredient: beef_steak
+  packaging_form: fresh
+  preparation_style: whole
+  created_at: <%= 20.days.ago %>
+  archived_at: <%= 18.days.ago %>

@@ -4,6 +4,9 @@ get 'admin/recipes_exports', to: 'admin/recipe_exports#export_file',  defaults: 
 mount Blazer::Engine, at: "admin/blazer"
 
 namespace :admin do
+  get 'analytics/shopping_lists', to: 'analytics#shopping_lists'
+  get 'analytics/user_preferences', to: 'analytics#user_preferences'
+
   resources :resources, except: :show
   resources :recipe_exports, only: :create
   resources :recipes, shallow: true do

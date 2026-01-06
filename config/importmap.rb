@@ -14,4 +14,6 @@ pin "@fullcalendar/daygrid", to: "https://cdn.skypack.dev/@fullcalendar/daygrid@
 pin "@fullcalendar/timegrid", to: "https://cdn.skypack.dev/@fullcalendar/timegrid@6.1.11"
 pin "@fullcalendar/list", to: "https://cdn.skypack.dev/@fullcalendar/list@6.1.11"
 pin "@fullcalendar/interaction", to: "https://cdn.skypack.dev/@fullcalendar/interaction@6.1.11"
+pin "chartkick", to: "chartkick.js"
+pin "Chart.bundle", to: "Chart.bundle.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
