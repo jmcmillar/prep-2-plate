@@ -75,7 +75,7 @@ inactive_preference:
   ingredient: beef_steak
   packaging_form: fresh
   preparation_style: whole
-  preferred_brand: null
+  preferred_brand: "Certified Angus"
   usage_count: 25
   last_used_at: <%= 45.days.ago %>
   created_at: <%= 60.days.ago %>

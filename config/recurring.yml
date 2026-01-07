@@ -17,6 +17,10 @@ production:
     class: SessionCleanupJob
     queue: default
     schedule: every 3 days at 2am
+  duplicate_ingredient_consolidation:
+    class: DuplicateIngredientConsolidationJob
+    queue: default
+    schedule: every day at 2:30am
   orphaned_ingredient_cleanup:
     class: OrphanedIngredientCleanupJob
     queue: default
@@ -35,6 +39,10 @@ development:
     class: SessionCleanupJob
     queue: default
     schedule: every day
+  duplicate_ingredient_consolidation:
+    class: DuplicateIngredientConsolidationJob
+    queue: default
+    schedule: every day at 2:30am
   orphaned_ingredient_cleanup:
     class: OrphanedIngredientCleanupJob
     queue: default
