@@ -45,13 +45,14 @@ class Admin::Users::ResourceFacade
   end
 
   def action
-    Table::ActionComponent.new(action_turbo_data)
+    Table::IconActionsComponent.new(actions)
   end
 
-  def action_turbo_data
-    TurboData[
-      :table_actions,
-      [:table_actions, label: @resource.email, id: @resource.id, controller_path: "admin/users"]
-    ]
+  def actions
+    Link::RowActions.to_data(
+      id: @resource.id,
+      label: @resource.email,
+      controller: "admin/users"
+    )
   end
 end

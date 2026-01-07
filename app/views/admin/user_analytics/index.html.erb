@@ -1,9 +1,37 @@
-<%= render HeaderBarComponent.new(title: "Shopping List Analytics") do |c| %>
+<%= render HeaderBarComponent.new(title: "User Analytics: #{@facade.user_name}") do |c| %>
   <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
 <% end %>
 
 <%= render ContainerComponent.new do %>
-  <%# Timeline Charts %>
+  <%= render SectionCardComponent.new(title: "Overview") do %>
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div class="p-4 bg-blue-50 rounded-lg">
+        <div class="text-2xl font-bold text-blue-600"><%= @facade.total_shopping_lists %></div>
+        <div class="text-sm text-slate-600">Shopping Lists Created</div>
+      </div>
+      <div class="p-4 bg-green-50 rounded-lg">
+        <div class="text-2xl font-bold text-green-600"><%= @facade.total_items_added %></div>
+        <div class="text-sm text-slate-600">Items Added</div>
+      </div>
+      <div class="p-4 bg-purple-50 rounded-lg">
+        <div class="text-2xl font-bold text-purple-600"><%= @facade.total_items_completed %></div>
+        <div class="text-sm text-slate-600">Items Completed</div>
+      </div>
+      <div class="p-4 bg-orange-50 rounded-lg">
+        <div class="text-2xl font-bold text-orange-600"><%= @facade.average_list_size %></div>
+        <div class="text-sm text-slate-600">Avg Items Per List</div>
+      </div>
+      <div class="p-4 bg-cyan-50 rounded-lg">
+        <div class="text-2xl font-bold text-cyan-600"><%= @facade.current_active_lists %></div>
+        <div class="text-sm text-slate-600">Active Lists</div>
+      </div>
+      <div class="p-4 bg-pink-50 rounded-lg">
+        <div class="text-2xl font-bold text-pink-600"><%= @facade.completion_percentage %>%</div>
+        <div class="text-sm text-slate-600">Completion Rate</div>
+      </div>
+    </div>
+  <% end %>
+
   <%= render SectionCardComponent.new(title: "Shopping Activity Over Time") do %>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <div>
@@ -26,37 +54,46 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div>
         <%= area_chart @facade.archived_items_over_time,
-            title: "Items Archived (Completed)",
+            title: "Items Completed",
             xtitle: "Date",
             ytitle: "Number of Items",
             height: "300px",
             colors: ["#a855f7"] %>
       </div>
       <div>
-        <%= column_chart @facade.archive_rate_by_day_of_week,
-            title: "Archive Rate by Day of Week",
-            xtitle: "Day",
-            ytitle: "Items Archived",
+        <%= line_chart @facade.average_list_size_over_time,
+            title: "Average List Size Over Time",
+            xtitle: "Date",
+            ytitle: "Avg Items",
             height: "300px",
             colors: ["#f59e0b"] %>
       </div>
     </div>
   <% end %>
 
-  <%# Distribution Charts %>
-  <%= render SectionCardComponent.new(title: "Shopping List Patterns") do %>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <%= render SectionCardComponent.new(title: "Shopping Patterns") do %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div>
+        <%= column_chart @facade.shopping_activity_by_day_of_week,
+            title: "Shopping by Day of Week",
+            xtitle: "Day",
+            ytitle: "Number of Lists",
+            height: "300px",
+            colors: ["#06b6d4"] %>
+      </div>
       <div>
         <%= column_chart @facade.items_per_list_distribution,
             title: "Items Per List Distribution",
             xtitle: "List Size",
             ytitle: "Number of Lists",
             height: "300px",
-            colors: ["#06b6d4"] %>
+            colors: ["#3b82f6"] %>
       </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div>
-        <%= pie_chart @facade.active_vs_archived_items,
-            title: "Active vs Archived Items",
+        <%= pie_chart @facade.completion_rate,
+            title: "Active vs Completed Items",
             donut: true,
             height: "300px",
             colors: ["#22c55e", "#94a3b8"] %>
@@ -64,8 +101,7 @@
     </div>
   <% end %>
 
-  <%# Ingredient Charts %>
-  <%= render SectionCardComponent.new(title: "Ingredient Insights") do %>
+  <%= render SectionCardComponent.new(title: "Ingredient Preferences") do %>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
       <div>
         <%= bar_chart @facade.top_ingredients,

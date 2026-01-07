@@ -9,11 +9,11 @@ class Admin::Analytics::ShoppingListsFacade < BaseFacade
   end
 
   def menu
-    :admin_menu
+    :admin_analytics_menu
   end
 
   def active_key
-    :analytics
+    :admin_shopping_list_analytics
   end
 
   def nav_resource
@@ -21,6 +21,13 @@ class Admin::Analytics::ShoppingListsFacade < BaseFacade
 
   def authorized?
     Base::AdminPolicy.new(@user, nil).index?
+  end
+
+  def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
+      BreadcrumbComponent::Data.new("Shopping List Analytics"),
+    ]
   end
 
   # Chart data methods

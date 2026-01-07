@@ -9,11 +9,11 @@ class Admin::Analytics::UserPreferencesFacade < BaseFacade
   end
 
   def menu
-    :admin_menu
+    :admin_analytics_menu
   end
 
   def active_key
-    :analytics
+    :admin_user_preference_analytics
   end
 
   def nav_resource
@@ -21,6 +21,13 @@ class Admin::Analytics::UserPreferencesFacade < BaseFacade
 
   def authorized?
     Base::AdminPolicy.new(@user, nil).index?
+  end
+
+  def breadcrumb_trail
+    [
+      BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
+      BreadcrumbComponent::Data.new("User Preference Analytics"),
+    ]
   end
 
   # Chart data methods

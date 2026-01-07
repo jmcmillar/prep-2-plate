@@ -1,12 +1,5 @@
 <%= render HeaderBarComponent.new(title: "User Preference Analytics") do |c| %>
-  <%# c.with_breadcrumb_collection([
-    { label: "Admin", path: admin_users_path },
-    { label: "Analytics", path: [:admin, :analytics] },
-    { label: "User Preferences", path:  }
-  ]) %>
-  <%# c.with_icon_link_collection([
-    { icon: "shopping-cart", path: admin_analytics_shopping_lists_path, label: "Shopping Lists", scheme: :secondary }
-  ]) %>
+  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
 <% end %>
 
 <%= render ContainerComponent.new do %>

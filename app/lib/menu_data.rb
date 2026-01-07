@@ -23,7 +23,8 @@ class MenuData
       MenuItemData[:admin_user, "Overview", [:admin, user], true],
       MenuItemData[:admin_user_meal_plans, "Meal Plans", [:admin, user, :user_meal_plans], true],
       MenuItemData[:admin_shopping_lists, "Shopping Lists", [:admin, user, :shopping_lists], true],
-      MenuItemData[:admin_user_recipes, "Recipes", [:admin, user, :user_recipes], true]
+      MenuItemData[:admin_user_recipes, "Recipes", [:admin, user, :user_recipes], true],
+      MenuItemData[:admin_user_analytics, "Analytics", [:admin, user, :user_analytics], true]
     ]
   end
 
@@ -32,6 +33,14 @@ class MenuData
       MenuItemData[:back, "Admin", :admin_vendors, true],
       MenuItemData[:admin_vendor, "Overview", [:admin, vendor], true],
       MenuItemData[:admin_offerings, "Offerings", [:admin, vendor, :offerings], true]
+    ]
+  end
+
+  def self.admin_analytics_menu
+    [
+      MenuItemData[:back, "Admin", :admin_recipes, true],
+      MenuItemData[:admin_shopping_list_analytics, "Shopping List Analytics", [:admin, :analytics, :shopping_lists], true],
+      MenuItemData[:admin_user_preference_analytics, "User Preference Analytics", [:admin, :analytics, :user_preferences], true]
     ]
   end
 
@@ -70,6 +79,7 @@ class MenuData
         admin_shopping_lists: :shopping_cart,
         admin_user_recipes: :book,
         admin_resources: :file,
+        admin_user_analytics: :chart_line,
         analytics: :chart_line,
         blazer: :chart_bar,
         vendors: :store,
