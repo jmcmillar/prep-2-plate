@@ -65,10 +65,15 @@ class Api::UserIngredientPreferencesController < Api::BaseController
 
     if preference
       render json: {
-        preferred_brand: preference.preferred_brand,
-        packaging_form: preference.packaging_form,
-        preparation_style: preference.preparation_style,
-        usage_count: preference.usage_count
+        suggestions: [
+          {
+            id: preference.id,
+            preferred_brand: preference.preferred_brand,
+            packaging_form: preference.packaging_form,
+            preparation_style: preference.preparation_style,
+            usage_count: preference.usage_count
+          }
+        ]
       }
     else
       head :no_content

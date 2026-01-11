@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :shopping_lists, dependent: :destroy
   has_many :shopping_list_items, through: :shopping_lists
   has_many :user_ingredient_preferences, dependent: :destroy
+  has_many :user_shopping_item_preferences, dependent: :destroy
   has_many :offering_inquiries, dependent: :destroy
 
   # Scopes

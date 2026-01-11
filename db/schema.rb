@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_06_034825) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_09_200710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -406,6 +406,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_034825) do
     t.index ["user_id"], name: "index_user_recipes_on_user_id"
   end
 
+  create_table "user_shopping_item_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "item_name", null: false
+    t.string "preferred_brand", null: false
+    t.integer "usage_count", default: 1, null: false
+    t.datetime "last_used_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_user_shopping_item_preferences_on_created_at"
+    t.index ["last_used_at"], name: "index_user_shopping_item_preferences_on_last_used_at"
+    t.index ["preferred_brand"], name: "index_user_shopping_item_preferences_on_preferred_brand"
+    t.index ["user_id", "item_name"], name: "idx_user_shopping_prefs_unique", unique: true
+    t.index ["user_id"], name: "index_user_shopping_item_preferences_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.datetime "created_at", null: false
@@ -490,6 +505,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_034825) do
   add_foreign_key "user_meal_plans", "users"
   add_foreign_key "user_recipes", "recipes"
   add_foreign_key "user_recipes", "users"
+  add_foreign_key "user_shopping_item_preferences", "users"
 
   create_view "meal_plan_ingredients", sql_definition: <<-SQL
       WITH ingredient_unit_totals AS (

@@ -19,11 +19,20 @@ class Api::ShoppingListItemsController < Api::BaseController
     @shopping_list_item = @shopping_list.shopping_list_items.new(shopping_list_item_params)
 
     # Apply brand preference if brand is blank
-    UserIngredientPreferences::ApplyToItem.call(@shopping_list_item) if @shopping_list_item.brand.blank?
+    if @shopping_list_item.brand.blank?
+      # Try ingredient preference first
+      UserIngredientPreferences::ApplyToItem.call(@shopping_list_item)
+
+      # If still blank and no ingredient, try shopping item preference
+      if @shopping_list_item.brand.blank?
+        UserShoppingItemPreferences::ApplyToItem.call(@shopping_list_item)
+      end
+    end
 
     if @shopping_list_item.save
       # Learn from brand after successful save
       UserIngredientPreferences::Learn.call(@shopping_list_item)
+      UserShoppingItemPreferences::Learn.call(@shopping_list_item)
 
       render :show, status: :created
     else
@@ -37,6 +46,7 @@ class Api::ShoppingListItemsController < Api::BaseController
     if @shopping_list_item.update(shopping_list_item_params)
       # Learn from brand after successful update
       UserIngredientPreferences::Learn.call(@shopping_list_item)
+      UserShoppingItemPreferences::Learn.call(@shopping_list_item)
 
       render :show
     else

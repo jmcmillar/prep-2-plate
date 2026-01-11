@@ -26,4 +26,9 @@ namespace :api do
       get :suggest
     end
   end
+  resources :user_shopping_item_preferences, only: [ :index, :show, :create, :update, :destroy ] do
+    collection do
+      get :suggest
+    end
+  end
 end
