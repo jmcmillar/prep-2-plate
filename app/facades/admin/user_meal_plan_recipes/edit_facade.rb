@@ -1,10 +1,14 @@
-class Admin::UserMealPlanRecipes::ShowFacade < Base::Admin::ShowFacade
+class Admin::UserMealPlanRecipes::EditFacade < Base::Admin::EditFacade
   def meal_plan_recipe
     @meal_plan_recipe ||= MealPlanRecipe.includes(:recipe, meal_plan: { user_meal_plans: :user }).find(@params[:id])
   end
 
   def user_meal_plan
     @user_meal_plan ||= meal_plan_recipe.meal_plan.user_meal_plans.first
+  end
+
+  def meal_plan
+    meal_plan_recipe.meal_plan
   end
 
   def menu
@@ -19,24 +23,19 @@ class Admin::UserMealPlanRecipes::ShowFacade < Base::Admin::ShowFacade
     user_meal_plan&.user
   end
 
-  def header_actions
-    [edit_action_data].compact
+  def form_url
+    [:admin, meal_plan_recipe]
   end
 
-  def edit_action_data
-    IconLinkComponent::Data[
-      [:edit, :admin, meal_plan_recipe],
-      :edit,
-      "Recipe",
-    ]
+  def cancel_path
+    [:admin, user_meal_plan]
   end
 
   def breadcrumb_trail
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :recipes]),
-      BreadcrumbComponent::Data.new("User Meal Plans", [:admin, :user_meal_plans]),
-      BreadcrumbComponent::Data.new(meal_plan_recipe.meal_plan.name, [:admin, user_meal_plan]),
-      BreadcrumbComponent::Data.new(meal_plan_recipe.recipe.name)
+      BreadcrumbComponent::Data.new(meal_plan.name, [:admin, user_meal_plan]),
+      BreadcrumbComponent::Data.new("Edit Recipe")
     ]
   end
 end

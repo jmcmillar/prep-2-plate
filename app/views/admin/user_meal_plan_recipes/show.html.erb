@@ -1,6 +1,8 @@
-<%= render HeaderBarComponent.new(title: "Admin") do |c| %>
-  <% c.with_breadcrumb_collection(@facade.breadcrumb_trail) %>
-<% end %>
+<%= render HeaderBarComponent.new(
+  title: @facade.layout[:title],
+  actions: @facade.header_actions,
+  breadcrumbs: @facade.breadcrumb_trail
+) %>
 <%= render ContainerComponent.new(class: "mb-10") do %>
   <%= render SectionCardComponent.new(title: @facade.meal_plan_recipe.recipe.name) do |card| %>
     <%= tag.div(class: "row mb-6") do %>
