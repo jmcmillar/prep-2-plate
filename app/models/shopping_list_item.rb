@@ -8,6 +8,10 @@ class ShoppingListItem < ApplicationRecord
 
   belongs_to :shopping_list, counter_cache: true, touch: true
   belongs_to :ingredient, optional: true
+  belongs_to :product, optional: true
+
+  # Delegation for convenience
+  delegate :barcode, :quantity, to: :product, prefix: true, allow_nil: true
 
   validates :name, presence: true
   validates :brand, length: { maximum: 255 }, allow_blank: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_09_200710) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_24_154227) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -234,6 +234,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_200710) do
     t.index ["vendor_id"], name: "index_offerings_on_vendor_id"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "barcode", null: false
+    t.string "name", null: false
+    t.string "brand"
+    t.string "quantity"
+    t.string "packaging"
+    t.json "raw_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["barcode"], name: "index_products_on_barcode", unique: true
+    t.index ["brand"], name: "index_products_on_brand"
+    t.index ["name"], name: "index_products_on_name"
+  end
+
   create_table "recipe_categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -343,12 +357,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_200710) do
     t.string "preparation_style"
     t.datetime "archived_at"
     t.string "brand"
+    t.bigint "product_id"
     t.index ["archived_at"], name: "index_shopping_list_items_on_archived_at"
     t.index ["brand"], name: "index_shopping_list_items_on_brand"
     t.index ["created_at"], name: "index_shopping_list_items_on_created_at"
     t.index ["ingredient_id"], name: "index_shopping_list_items_on_ingredient_id"
     t.index ["packaging_form"], name: "index_shopping_list_items_on_packaging_form"
     t.index ["preparation_style"], name: "index_shopping_list_items_on_preparation_style"
+    t.index ["product_id"], name: "index_shopping_list_items_on_product_id"
     t.index ["shopping_list_id", "ingredient_id", "packaging_form", "preparation_style"], name: "idx_shopping_list_items_unique_ingredient"
     t.index ["shopping_list_id"], name: "index_shopping_list_items_on_shopping_list_id"
   end
@@ -497,6 +513,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_200710) do
   add_foreign_key "recipes", "recipe_imports"
   add_foreign_key "sessions", "users"
   add_foreign_key "shopping_list_items", "ingredients"
+  add_foreign_key "shopping_list_items", "products"
   add_foreign_key "shopping_list_items", "shopping_lists"
   add_foreign_key "shopping_lists", "users"
   add_foreign_key "user_ingredient_preferences", "ingredients"

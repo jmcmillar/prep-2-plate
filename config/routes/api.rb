@@ -14,6 +14,9 @@ namespace :api do
   resources :recipe_favorites, only: [ :index, :create ]
   resources :shopping_lists, only: [ :index, :create, :update, :destroy ] do
     resources :shopping_list_items, only: [ :index, :create, :update, :destroy ], shallow: true
+
+    # Barcode lookup endpoint - RESTful show action
+    resources :products, only: [:show], controller: "shopping_lists/products"
   end
   resource :export_meal_plans, only: [:create]
   resources :recipe_categories, only: [ :index, :show ]
