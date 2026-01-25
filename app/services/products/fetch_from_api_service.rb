@@ -1,54 +1,60 @@
-module Products
-  class FetchFromApiService
-    include Service
+# frozen_string_literal: true
 
-    class Result
-      attr_reader :product, :success, :error_message
+class Products::FetchFromApiService
+  include Service
 
-      def initialize(product:, success:, error_message:)
-        @product = product
-        @success = success
-        @error_message = error_message
-        freeze
-      end
+  def initialize(barcode)
+    @barcode = barcode
+  end
 
-      def success?
-        @success
-      end
-    end
+  def call
+    log_api_request
+    api_response = fetch_from_api
 
-    def initialize(barcode)
-      @barcode = barcode
-    end
+    return api_failure_result(api_response) if api_response.failure?
 
-    def call
-      Rails.logger.info("BARCODE_LOOKUP: API request for barcode #{@barcode}")
+    create_product_from_response(api_response)
+  rescue StandardError => e
+    handle_product_creation_error(e)
+  end
 
-      # Call Open Food Facts API
-      api_response = Products::OpenFoodFactsClient.call(@barcode)
+  private
 
-      unless api_response.success?
-        return Result.new(
-          product: nil,
-          success: false,
-          error_message: api_response.error_message
-        )
-      end
+  def log_api_request
+    Rails.logger.info("BARCODE_LOOKUP: API request for barcode #{@barcode}")
+  end
 
-      # Create product from API data
-      product = Products::CreateFromApiDataService.call(
-        barcode: @barcode,
-        api_data: api_response.data
-      )
+  def fetch_from_api
+    Clients::OpenFoodFacts.call(@barcode)
+  end
 
-      Result.new(product: product, success: true, error_message: nil)
-    rescue StandardError => e
-      Rails.logger.error("BARCODE_LOOKUP: Error creating product #{@barcode}: #{e.message}")
-      Result.new(
-        product: nil,
-        success: false,
-        error_message: "Failed to save product data. Please try again."
-      )
-    end
+  def api_failure_result(api_response)
+    failure_result(api_response.error_message)
+  end
+
+  def create_product_from_response(api_response)
+    product = Products::CreateFromApiDataService.call(
+      barcode: @barcode,
+      api_data: api_response.data
+    )
+
+    success_result(product)
+  end
+
+  def handle_product_creation_error(error)
+    log_creation_error(error)
+    failure_result("Failed to save product data. Please try again.")
+  end
+
+  def log_creation_error(error)
+    Rails.logger.error("BARCODE_LOOKUP: Error creating product #{@barcode}: #{error.message}")
+  end
+
+  def success_result(product)
+    Base::Result.new(data: product, success: true, error_message: nil)
+  end
+
+  def failure_result(error_message)
+    Base::Result.new(data: nil, success: false, error_message: error_message)
   end
 end

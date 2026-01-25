@@ -1,43 +1,48 @@
-module Products
-  class ValidateBarcodeService
-    include Service
+# frozen_string_literal: true
 
-    class Result
-      attr_reader :valid, :error_message
+class Products::ValidateBarcodeService
+  include Service
 
-      def initialize(valid:, error_message:)
-        @valid = valid
-        @error_message = error_message
-        freeze
-      end
+  BARCODE_FORMAT = /\A\d{8,14}\z/
 
-      def valid?
-        @valid
-      end
-    end
+  def initialize(barcode)
+    @barcode = barcode.to_s.strip
+  end
 
-    BARCODE_FORMAT = /\A\d{8,14}\z/
+  def call
+    return blank_barcode_error if barcode_blank?
+    return invalid_format_error unless valid_format?
 
-    def initialize(barcode)
-      @barcode = barcode.to_s.strip
-    end
+    success_result
+  end
 
-    def call
-      if @barcode.blank?
-        return Result.new(
-          valid: false,
-          error_message: "Barcode cannot be blank."
-        )
-      end
+  private
 
-      if @barcode.match?(BARCODE_FORMAT)
-        Result.new(valid: true, error_message: nil)
-      else
-        Result.new(
-          valid: false,
-          error_message: "Invalid barcode format. Must be 8-14 digits."
-        )
-      end
-    end
+  def barcode_blank?
+    @barcode.blank?
+  end
+
+  def valid_format?
+    @barcode.match?(BARCODE_FORMAT)
+  end
+
+  def blank_barcode_error
+    failure_result("Barcode cannot be blank.")
+  end
+
+  def invalid_format_error
+    failure_result("Invalid barcode format. Must be 8-14 digits.")
+  end
+
+  def success_result
+    Base::Result.new(data: { valid: true }, success: true, error_message: nil)
+  end
+
+  def failure_result(error_message)
+    Base::Result.new(
+      data: { valid: false },
+      success: false,
+      error_message: error_message
+    )
   end
 end

@@ -12,7 +12,7 @@ class FlashService
   ]
 
   def initialize(flash)
-    @flash = flash.to_h.reduce(:merge)
+    @flash = flash.to_h.first
     @view_context = ApplicationController.new.view_context
   end
 

@@ -450,6 +450,40 @@ Concern providing class-level `call(...)` method:
 
 **IMPORTANT**: Significant business logic lives here. This is NOT a dumping ground - it's organized domain logic.
 
+#### API Clients (`app/lib/clients/`)
+
+- **`Clients::BaseClient`** - Base class for external API integrations
+  - Shared HTTP client configuration (SSL, timeouts)
+  - Shared `Result` class for success/failure states
+    - Attributes: `data`, `success`, `error_message`
+    - Methods: `success?`, `failure?`
+  - Response validation and error handling
+  - Includes Service module for `.call` pattern
+  - Helper methods: `http_client`, `validate_response!`, `success_result`, `error_result`
+
+- **`Clients::ClaudeApi`** - Anthropic Claude API client
+  - Used by: `CategorizeIngredientsJob`
+  - Methods: `.call(prompt)` returns Result with AI-generated response text
+  - Config: Requires `ANTHROPIC_API_KEY` env var
+  - Model: `claude-sonnet-4-20250514`
+  - Timeout: 60 seconds read timeout
+  - Error logging: Prefixed with `CLAUDE_API`
+
+- **`Clients::OpenFoodFacts`** - Open Food Facts API client
+  - Used by: `Products::FetchFromApiService` → `Products::LookupService` → `Api::ShoppingLists::ProductsController`
+  - Methods: `.call(barcode)` returns Result with product data
+  - Config: Uses `SUPPORT_EMAIL` env var (with fallback)
+  - Timeout: 10 seconds read, 5 seconds open
+  - Error logging: Prefixed with `BARCODE_LOOKUP`
+
+**Client Pattern:**
+- All clients inherit from `Clients::BaseClient`
+- All clients return immutable `Result` objects (frozen)
+- Result pattern for predictable error handling (no exception-based control flow)
+- Include Service module for `.call(...)` class method
+- Comprehensive error logging with prefixes for traceability
+- Future API clients should follow this pattern for consistency
+
 #### Menu and Navigation
 
 - **`MenuData`** - Static menu definitions
@@ -1069,11 +1103,13 @@ Uses `scenic` gem for database views:
 
 ## AI Integration
 
-- **Gem**: `ruby-openai` (though CategorizeIngredientsJob uses direct HTTP)
+- **Client**: `Clients::ClaudeApi` (see API Clients section in Library Code Organization)
 - **Primary Use**: Ingredient categorization via Claude API
 - **Model**: `claude-sonnet-4-20250514`
 - **Job**: `CategorizeIngredientsJob` runs daily at 1am
 - **Batch Processing**: 75 ingredients at a time
+- **Pattern**: Uses Result objects for predictable error handling
+- **Configuration**: Requires `ANTHROPIC_API_KEY` environment variable
 
 ## Email
 

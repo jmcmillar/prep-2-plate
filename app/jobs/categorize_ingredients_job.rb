@@ -58,12 +58,15 @@ class CategorizeIngredientsJob < ApplicationJob
 
   def call_claude_api(ingredient_data)
     prompt = build_prompt(ingredient_data)
-    client = ClaudeApiClient.new
-    response_text = client.send_message(prompt)
-    
+    result = Clients::ClaudeApi.call(prompt)
+
+    unless result.success?
+      raise StandardError, result.error_message
+    end
+
     # Strip markdown formatting if present
-    response_text = response_text.gsub(/```json\n?/, '').gsub(/```/, '').strip
-    
+    response_text = result.data.gsub(/```json\n?/, '').gsub(/```/, '').strip
+
     JSON.parse(response_text)
   end
 
