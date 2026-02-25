@@ -22,7 +22,7 @@ namespace :api do
   resources :recipe_categories, only: [ :index, :show ]
   resource :user_details, only: %i[show update]
   resource :user_password, only: %i[update]
-  resources :meal_plans, only: [ :create, :update, :destroy ]
+  resources :meal_plans, only: [ :index, :show, :create, :update, :destroy ]
   resources :user_meal_plans, only: [ :index, :create ]
   resources :user_ingredient_preferences, only: [ :index, :show, :create, :update, :destroy ] do
     collection do

@@ -40,16 +40,21 @@ class Api::Homes::ShowFacade
       .limit(4)
   end
 
-  def today_recipes
-    today = Date.current
+  def current_meal_plan_id
+    today_meal_plan_recipes.first&.meal_plan_id
+  end
 
-    MealPlanRecipe
+  def today_recipes
+    today_meal_plan_recipes.map(&:recipe).compact.uniq
+  end
+
+  private
+
+  def today_meal_plan_recipes
+    @today_meal_plan_recipes ||= MealPlanRecipe
       .joins(meal_plan: :user_meal_plans)
       .where(user_meal_plans: { user_id: @user.id })
-      .where(date: today)
+      .where(date: Date.current)
       .includes(:recipe)
-      .map(&:recipe)
-      .compact
-      .uniq
   end
 end

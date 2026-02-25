@@ -1,4 +1,5 @@
 json.userId @facade.user_id
+json.currentMealPlanId @facade.current_meal_plan_id
 # json.userName @facade.user_name
 json.userName "User"
 json.favorites do

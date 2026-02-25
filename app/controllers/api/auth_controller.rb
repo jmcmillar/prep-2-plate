@@ -1,5 +1,5 @@
 class Api::AuthController < Api::BaseController
-  skip_before_action :require_authentication, only: [:create]
+  skip_before_action :require_authentication, only: [:create, :destroy]
   
   def create
     user = User.find_by(email: params[:user][:email])
@@ -35,17 +35,11 @@ class Api::AuthController < Api::BaseController
   end
   
   def destroy
-    if Current.session
-      Current.session.destroy
-      render json: {
-        status: 200,
-        message: 'Logged out successfully.'
-      }, status: :ok
-    else
-      render json: {
-        status: 401,
-        message: "Couldn't find an active session."
-      }, status: :unauthorized
-    end
+    Session.find_by(token: extract_bearer_token)&.destroy
+
+    render json: {
+      status: 200,
+      message: 'Logged out successfully.'
+    }, status: :ok
   end
 end

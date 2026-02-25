@@ -1,4 +1,14 @@
 class Api::MealPlansController < Api::BaseController
+  def index
+    @meal_plans = Current.user.meal_plans.includes(:meal_plan_recipes)
+  end
+
+  def show
+    @meal_plan = Current.user.meal_plans
+      .includes(meal_plan_recipes: { recipe: { image_attachment: :blob } })
+      .find(params[:id])
+  end
+
   def create
     @meal_plan = Current.user.meal_plans.new(meal_plan_params)
 

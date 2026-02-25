@@ -24,5 +24,6 @@ class Api::ShoppingLists::ProductsController < Api::BaseController
       key: "barcode_lookup:#{Current&.user&.id}",
       limit: 20,
       period: 60
+    )
   end
 end
