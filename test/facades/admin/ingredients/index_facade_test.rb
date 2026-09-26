@@ -26,7 +26,7 @@ class Admin::Ingredients::IndexFacadeTest < ActiveSupport::TestCase
   end
 
   def test_base_collection_filtered_by_category
-    category = ingredient_categories(:one)
+    category = ingredient_categories(:fresh_produce)
     ingredient_with_category = Ingredient.create!(name: "categorized", ingredient_category: category)
     ingredient_without_category = Ingredient.create!(name: "uncategorized")
     

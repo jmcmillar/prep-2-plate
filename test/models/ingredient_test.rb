@@ -35,13 +35,13 @@ class IngredientTest < ActiveSupport::TestCase
   end
 
   def test_ingredient_category_association
-    category = ingredient_categories(:one)
+    category = ingredient_categories(:fresh_produce)
     ingredient = Ingredient.create!(name: "Test Ingredient", ingredient_category: category)
     assert_equal category, ingredient.ingredient_category
   end
 
   def test_ingredient_category_name_delegation
-    category = ingredient_categories(:one)
+    category = ingredient_categories(:fresh_produce)
     ingredient = Ingredient.create!(name: "Test Ingredient", ingredient_category: category)
     assert_equal category.name, ingredient.ingredient_category_name
   end
@@ -68,7 +68,7 @@ class IngredientTest < ActiveSupport::TestCase
   end
 
   def test_filtered_by_ingredient_category_scope
-    category = ingredient_categories(:one)
+    category = ingredient_categories(:fresh_produce)
     ingredient1 = Ingredient.create!(name: "ingredient1", ingredient_category: category)
     ingredient2 = Ingredient.create!(name: "ingredient2", ingredient_category: category)
     ingredient3 = Ingredient.create!(name: "ingredient3")
@@ -114,34 +114,36 @@ class IngredientTest < ActiveSupport::TestCase
   end
 
   def test_all_forms_of_returns_all_packaging_and_preparation_variants
-    # Note: Until MR #5, we still have the old uniqueness constraint on name only
-    # So we can only create one "tomatoes" ingredient for now
-    # This test will be updated in MR #5 to test multiple variants
-    ingredient = Ingredient.create(name: "tomatoes", packaging_form: "canned", preparation_style: "diced")
+    crushed = Ingredient.create!(name: "tomatoes", packaging_form: "canned", preparation_style: "crushed")
 
-    tomato_forms = Ingredient.all_forms_of("tomatoes")
-    assert_equal 1, tomato_forms.count
-    assert_includes tomato_forms, ingredient
+    tomato_forms = Ingredient.all_forms_of("Tomatoes")
+
+    assert_equal [ "tomatoes" ], tomato_forms.map(&:name).uniq
+    assert_includes tomato_forms, crushed
+    assert_includes tomato_forms, ingredients(:canned_tomatoes)
+    assert_includes tomato_forms, ingredients(:fresh_tomatoes)
   end
 
   def test_with_packaging_scope_filters_by_packaging_form
-    Ingredient.create(name: "tomatoes", packaging_form: "canned")
-    Ingredient.create(name: "spinach", packaging_form: "frozen")
-    Ingredient.create(name: "apples", packaging_form: "fresh")
+    canned = Ingredient.create!(name: "hominy", packaging_form: "canned")
+    frozen = Ingredient.create!(name: "spinach", packaging_form: "frozen")
 
-    canned = Ingredient.with_packaging(:canned)
-    assert_equal 1, canned.count
-    assert_equal "tomatoes", canned.first.name
+    results = Ingredient.with_packaging(:canned)
+
+    assert_equal [ "canned" ], results.map(&:packaging_form).uniq
+    assert_includes results, canned
+    assert_not_includes results, frozen
   end
 
   def test_with_preparation_scope_filters_by_preparation_style
-    Ingredient.create(name: "tomatoes", preparation_style: "diced")
-    Ingredient.create(name: "carrots", preparation_style: "sliced")
-    Ingredient.create(name: "cheese", preparation_style: "shredded")
+    diced = Ingredient.create!(name: "celery", preparation_style: "diced")
+    sliced = Ingredient.create!(name: "radish", preparation_style: "sliced")
 
-    diced = Ingredient.with_preparation(:diced)
-    assert_equal 1, diced.count
-    assert_equal "tomatoes", diced.first.name
+    results = Ingredient.with_preparation(:diced)
+
+    assert_equal [ "diced" ], results.map(&:preparation_style).uniq
+    assert_includes results, diced
+    assert_not_includes results, sliced
   end
 
   def test_ransackable_attributes_includes_new_fields

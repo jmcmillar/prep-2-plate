@@ -8,9 +8,8 @@ class Admin::Ingredients::ResourceFacadeTest < ActiveSupport::TestCase
 
   def test_headers_returns_table_header_components
     headers = Admin::Ingredients::ResourceFacade.headers
-    assert_equal 2, headers.size
-    assert_instance_of Table::DefaultHeaderComponent, headers.first
-    assert_instance_of Table::DefaultHeaderComponent, headers.last
+    assert_equal 4, headers.size
+    assert headers.all? { |header| header.is_a?(Table::DefaultHeaderComponent) }
   end
 
   def test_to_row_returns_table_row_component

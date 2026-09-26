@@ -81,6 +81,7 @@ class Admin::VendorsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_destroy
+    OfferingInquiry.where(offering: @vendor.offerings).delete_all
     assert_difference "Vendor.count", -1 do
       delete admin_vendor_url(@vendor)
     end

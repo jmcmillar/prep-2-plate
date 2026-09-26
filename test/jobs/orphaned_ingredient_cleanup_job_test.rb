@@ -20,6 +20,22 @@ class OrphanedIngredientCleanupJobTest < ActiveJob::TestCase
     assert_not_nil Ingredient.find_by(id: ingredient_two.id)
   end
 
+  def test_keeps_ingredients_referenced_outside_recipes
+    on_offering = offering_ingredient_for(Ingredient.create!(name: "offering only ingredient")).ingredient
+    on_archived_list_item = Ingredient.create!(name: "shopping list only ingredient")
+    ShoppingListItem.create!(shopping_list: shopping_lists(:one), name: "list item", ingredient: on_archived_list_item, archived_at: 1.day.ago)
+    on_preference = Ingredient.create!(name: "preference only ingredient")
+    UserIngredientPreference.create!(user: users(:one), ingredient: on_preference, preferred_brand: "Brand")
+    orphan = Ingredient.create!(name: "truly orphaned ingredient")
+
+    OrphanedIngredientCleanupJob.perform_now
+
+    assert Ingredient.exists?(on_offering.id)
+    assert Ingredient.exists?(on_archived_list_item.id)
+    assert Ingredient.exists?(on_preference.id)
+    assert_not Ingredient.exists?(orphan.id)
+  end
+
   def test_logs_the_number_of_orphaned_ingredients_removed
     orphaned = Ingredient.create!(name: "orphaned test ingredient")
 
@@ -29,6 +45,10 @@ class OrphanedIngredientCleanupJobTest < ActiveJob::TestCase
   end
 
   private
+
+  def offering_ingredient_for(ingredient)
+    offerings(:grilled_chicken_veggies).offering_ingredients.create!(ingredient: ingredient, numerator: 1, denominator: 1)
+  end
 
   def assert_logs_match(regex)
     logs = capture_log_output do

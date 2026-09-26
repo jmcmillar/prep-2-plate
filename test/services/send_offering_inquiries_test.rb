@@ -179,10 +179,10 @@ class SendOfferingInquiriesTest < ActiveSupport::TestCase
 
     assert vendor_email.present?, "Vendor email should be sent"
     assert_equal "New Catering Inquiry from Test User", vendor_email.subject
-    assert_match @user_one.email, vendor_email.body.to_s
-    assert_match offering.name, vendor_email.body.to_s
-    assert_match "10 servings", vendor_email.body.to_s
-    assert_match "Special dietary requirements", vendor_email.body.to_s
+    assert_match @user_one.email, mail_text(vendor_email)
+    assert_match offering.name, mail_text(vendor_email)
+    assert_match "10 servings", mail_text(vendor_email)
+    assert_match "Special dietary requirements", mail_text(vendor_email)
   end
 
   def test_sends_user_confirmation_email_with_correct_content
@@ -205,9 +205,9 @@ class SendOfferingInquiriesTest < ActiveSupport::TestCase
 
     assert user_email.present?, "User confirmation email should be sent"
     assert_equal "Your catering inquiries have been sent", user_email.subject
-    assert_match @user_one.email, user_email.body.to_s
-    assert_match vendor.business_name, user_email.body.to_s
-    assert_match offering.name, user_email.body.to_s
+    assert_match "Hello #{@user_one.first_name}", mail_text(user_email)
+    assert_match vendor.business_name, mail_text(user_email)
+    assert_match offering.name, mail_text(user_email)
   end
 
   def test_only_sends_pending_inquiries_not_already_sent
@@ -300,5 +300,12 @@ class SendOfferingInquiriesTest < ActiveSupport::TestCase
     assert_not_nil inquiry2.sent_at
     assert_in_delta Time.current, inquiry1.sent_at, 2.seconds
     assert_in_delta Time.current, inquiry2.sent_at, 2.seconds
+  end
+
+  private
+
+  # Inquiry emails are multipart (HTML + text), so the top-level body is empty.
+  def mail_text(mail)
+    mail.parts.any? ? mail.parts.map { |part| part.body.decoded }.join("\n") : mail.body.decoded
   end
 end

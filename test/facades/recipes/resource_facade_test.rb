@@ -10,8 +10,9 @@ class Recipes::ResourceFacadeTest < ActiveSupport::TestCase
     assert_equal @recipe, @facade.resource
   end
 
-  def test_image_returns_recipe_image
-    assert_equal @recipe.image, @facade.image
+  def test_image_falls_back_to_placeholder_without_attachment
+    assert_not @recipe.image.attached?
+    assert_equal "no-recipe-image.png", @facade.image
   end
 
   def test_description_returns_recipe_description

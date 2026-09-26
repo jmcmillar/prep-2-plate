@@ -35,8 +35,10 @@ class Admin::RecipeIngredients::EditFacadeTest < ActiveSupport::TestCase
 
   def test_ingredients
     ingredients = @facade.ingredients
-    
-    assert_kind_of ActiveRecord::Relation, ingredients
+
+    assert_kind_of Array, ingredients
+    assert ingredients.all? { |ing| ing.is_a?(Ingredient::DisplayNameDecorator) }
+    assert_equal Ingredient.order(:name).map(&:id), ingredients.map(&:id)
   end
 
   def test_breadcrumb_trail

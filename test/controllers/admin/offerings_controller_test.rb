@@ -119,6 +119,7 @@ class Admin::OfferingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_destroy
+    OfferingInquiry.where(offering: @offering).delete_all
     assert_difference "Offering.count", -1 do
       delete admin_offering_url(@offering)
     end

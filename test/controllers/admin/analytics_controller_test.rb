@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Admin::AnalyticsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @admin = users(:one)
     @admin.update!(admin: true)
@@ -14,8 +16,8 @@ class Admin::AnalyticsControllerTest < ActionDispatch::IntegrationTest
 
   test "should assign facade for shopping_lists" do
     get admin_analytics_shopping_lists_url
-    assert_not_nil assigns(:facade)
-    assert_instance_of Admin::Analytics::ShoppingListsFacade, assigns(:facade)
+    assert_not_nil controller.instance_variable_get(:@facade)
+    assert_instance_of Admin::Analytics::ShoppingListsFacade, controller.instance_variable_get(:@facade)
   end
 
   test "should get user_preferences as admin" do
@@ -25,8 +27,8 @@ class Admin::AnalyticsControllerTest < ActionDispatch::IntegrationTest
 
   test "should assign facade for user_preferences" do
     get admin_analytics_user_preferences_url
-    assert_not_nil assigns(:facade)
-    assert_instance_of Admin::Analytics::UserPreferencesFacade, assigns(:facade)
+    assert_not_nil controller.instance_variable_get(:@facade)
+    assert_instance_of Admin::Analytics::UserPreferencesFacade, controller.instance_variable_get(:@facade)
   end
 
   test "non-admin should not access shopping_lists" do
@@ -36,9 +38,8 @@ class Admin::AnalyticsControllerTest < ActionDispatch::IntegrationTest
     non_admin.update!(admin: false)
     sign_in non_admin
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      get admin_analytics_shopping_lists_url
-    end
+    get admin_analytics_shopping_lists_url
+    assert_redirected_to root_path
   end
 
   test "non-admin should not access user_preferences" do
@@ -48,9 +49,8 @@ class Admin::AnalyticsControllerTest < ActionDispatch::IntegrationTest
     non_admin.update!(admin: false)
     sign_in non_admin
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      get admin_analytics_user_preferences_url
-    end
+    get admin_analytics_user_preferences_url
+    assert_redirected_to root_path
   end
 
   test "unauthenticated user should be redirected from shopping_lists" do

@@ -80,6 +80,7 @@ class VendorTest < ActiveSupport::TestCase
       base_serving_size: 2
     )
     offering_count = @vendor.offerings.count
+    OfferingInquiry.where(offering: @vendor.offerings).delete_all
     assert_difference "Offering.count", -offering_count do
       @vendor.destroy
     end

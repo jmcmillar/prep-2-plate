@@ -56,8 +56,17 @@ class OfferingTest < ActiveSupport::TestCase
       denominator: 1
     )
     ingredient_count = @offering.offering_ingredients.count
+    OfferingInquiry.where(offering: @offering).delete_all
     assert_difference "OfferingIngredient.count", -ingredient_count do
       @offering.destroy
+    end
+  end
+
+  def test_cannot_destroy_offering_with_inquiries
+    assert @offering.offering_inquiries.exists?
+
+    assert_no_difference "Offering.count" do
+      assert_not @offering.destroy
     end
   end
 
@@ -72,6 +81,7 @@ class OfferingTest < ActiveSupport::TestCase
       price: 119.99
     )
     price_point_count = @offering.offering_price_points.count
+    OfferingInquiry.where(offering: @offering).delete_all
     assert_difference "OfferingPricePoint.count", -price_point_count do
       @offering.destroy
     end

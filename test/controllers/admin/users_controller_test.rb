@@ -1,11 +1,13 @@
 require "test_helper"
 
 class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @admin = users(:one)
     @admin.update!(admin: true)
-    post session_url, params: { email_address: @admin.email_address, password: "password" }
-    @user = User.create!(email_address: "test@example.com", password: "password", first_name: "John", last_name: "Doe")
+    sign_in @admin
+    @user = User.create!(email: "test@example.com", password: "password", first_name: "John", last_name: "Doe")
   end
 
   test "should get index" do
@@ -27,7 +29,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_difference('User.count', 1) do
       post admin_users_url, params: {
         user: {
-          email_address: "newuser@example.com",
+          email: "newuser@example.com",
           first_name: "Jane",
           last_name: "Smith",
           admin: false
@@ -36,7 +38,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to admin_users_url
-    user = User.find_by(email_address: "newuser@example.com")
+    user = User.find_by(email: "newuser@example.com")
     assert_equal "Jane", user.first_name
     assert_equal "Smith", user.last_name
   end

@@ -1,9 +1,11 @@
 require "test_helper"
 
 class Admin::IngredientCategoriesControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
-    post session_url, params: { email_address: @user.email, password: "password" }
+    sign_in @user
     @ingredient_category = IngredientCategory.create!(name: "Vegetables")
   end
 

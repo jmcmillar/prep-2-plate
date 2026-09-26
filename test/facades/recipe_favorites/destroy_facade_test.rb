@@ -4,7 +4,7 @@ class RecipeFavorites::DestroyFacadeTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
     @recipe = recipes(:one)
-    @recipe_favorite = @user.recipe_favorites.create!(recipe: @recipe)
+    @recipe_favorite = @user.recipe_favorites.find_or_create_by!(recipe: @recipe)
     @facade = RecipeFavorites::DestroyFacade.new(@user, { id: @recipe_favorite.id })
   end
 

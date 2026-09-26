@@ -4,7 +4,7 @@ class Api::Homes::ShowFacadeTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
     @recipe = recipes(:one)
-    @user.recipe_favorites.create!(recipe: @recipe)
+    @user.recipe_favorites.find_or_create_by!(recipe: @recipe)
     @facade = Api::Homes::ShowFacade.new(@user, {})
   end
 

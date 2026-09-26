@@ -4,7 +4,7 @@ class Api::Recipes::EditFacadeTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
     @recipe = recipes(:one)
-    @user.user_recipes.create!(recipe: @recipe)
+    @user.user_recipes.find_or_create_by!(recipe: @recipe)
     @strong_params = {
       title: "Updated Recipe",
       ingredients: ["1 cup flour", "2 eggs"],

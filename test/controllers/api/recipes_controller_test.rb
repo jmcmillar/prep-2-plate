@@ -5,7 +5,7 @@ class Api::RecipesControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     @session = @user.sessions.create!
     @recipe = recipes(:one)
-    @user.user_recipes.create!(recipe: @recipe)
+    @user.user_recipes.find_or_create_by!(recipe: @recipe)
     @headers = { 'Authorization' => "Bearer #{@session.token}" }
   end
 

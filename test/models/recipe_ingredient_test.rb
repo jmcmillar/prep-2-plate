@@ -13,14 +13,14 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       numerator: 1,
       denominator: 1
     )
-    recipe_ingredient.ingredient_name = "tomatoes"
+    recipe_ingredient.ingredient_name = "zucchini"
     recipe_ingredient.packaging_form = "canned"
     recipe_ingredient.preparation_style = "diced"
 
     assert recipe_ingredient.save
 
     ingredient = recipe_ingredient.ingredient
-    assert_equal "tomatoes", ingredient.name
+    assert_equal "zucchini", ingredient.name
     assert_equal "canned", ingredient.packaging_form
     assert_equal "diced", ingredient.preparation_style
   end
@@ -81,7 +81,7 @@ class RecipeIngredientTest < ActiveSupport::TestCase
   def test_finds_existing_ingredient_with_same_packaging_and_preparation
     # Create initial ingredient
     existing = Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       packaging_form: "canned",
       preparation_style: "diced"
     )
@@ -92,7 +92,7 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       numerator: 1,
       denominator: 1
     )
-    recipe_ingredient.ingredient_name = "tomatoes"
+    recipe_ingredient.ingredient_name = "zucchini"
     recipe_ingredient.packaging_form = "canned"
     recipe_ingredient.preparation_style = "diced"
 
@@ -100,13 +100,13 @@ class RecipeIngredientTest < ActiveSupport::TestCase
 
     # Should reuse existing ingredient
     assert_equal existing.id, recipe_ingredient.ingredient_id
-    assert_equal 1, Ingredient.where(name: "tomatoes", packaging_form: "canned", preparation_style: "diced").count
+    assert_equal 1, Ingredient.where(name: "zucchini", packaging_form: "canned", preparation_style: "diced").count
   end
 
   def test_creates_new_ingredient_when_packaging_differs
     # Create initial ingredient
     Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       packaging_form: "canned",
       preparation_style: "diced"
     )
@@ -117,21 +117,21 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       numerator: 1,
       denominator: 1
     )
-    recipe_ingredient.ingredient_name = "tomatoes"
+    recipe_ingredient.ingredient_name = "zucchini"
     recipe_ingredient.packaging_form = "fresh"
     recipe_ingredient.preparation_style = "diced"
 
     assert recipe_ingredient.save
 
     # Should create a new ingredient
-    assert_equal 2, Ingredient.where(name: "tomatoes").count
+    assert_equal 2, Ingredient.where(name: "zucchini").count
     assert_equal "fresh", recipe_ingredient.ingredient.packaging_form
   end
 
   def test_creates_new_ingredient_when_preparation_differs
     # Create initial ingredient
     Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       packaging_form: "canned",
       preparation_style: "diced"
     )
@@ -142,20 +142,20 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       numerator: 1,
       denominator: 1
     )
-    recipe_ingredient.ingredient_name = "tomatoes"
+    recipe_ingredient.ingredient_name = "zucchini"
     recipe_ingredient.packaging_form = "canned"
     recipe_ingredient.preparation_style = "crushed"
 
     assert recipe_ingredient.save
 
     # Should create a new ingredient
-    assert_equal 2, Ingredient.where(name: "tomatoes").count
+    assert_equal 2, Ingredient.where(name: "zucchini").count
     assert_equal "crushed", recipe_ingredient.ingredient.preparation_style
   end
 
   def test_delegates_packaging_form_to_ingredient
     ingredient = Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       packaging_form: "canned"
     )
 
@@ -171,7 +171,7 @@ class RecipeIngredientTest < ActiveSupport::TestCase
 
   def test_delegates_preparation_style_to_ingredient
     ingredient = Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       preparation_style: "diced"
     )
 
@@ -185,9 +185,9 @@ class RecipeIngredientTest < ActiveSupport::TestCase
     assert_equal "diced", recipe_ingredient.ingredient_preparation_style
   end
 
-  def test_delegates_display_name_to_ingredient
+  def test_ingredient_display_name_comes_from_decorator
     ingredient = Ingredient.create!(
-      name: "tomatoes",
+      name: "zucchini",
       packaging_form: "canned",
       preparation_style: "diced"
     )
@@ -199,6 +199,7 @@ class RecipeIngredientTest < ActiveSupport::TestCase
       denominator: 1
     )
 
-    assert_equal "Canned Diced tomatoes", recipe_ingredient.ingredient_display_name
+    decorated = Ingredient::DisplayNameDecorator.decorate(recipe_ingredient.ingredient)
+    assert_equal "canned diced zucchini", decorated.display_name
   end
 end

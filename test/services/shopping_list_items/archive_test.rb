@@ -2,7 +2,7 @@ require "test_helper"
 
 class ShoppingListItems::ArchiveTest < ActiveSupport::TestCase
   def test_archives_item_successfully
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     result = ShoppingListItems::Archive.call(item)
 

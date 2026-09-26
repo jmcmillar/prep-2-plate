@@ -14,9 +14,9 @@ module UserShoppingItemPreferences
       if preference.new_record?
         preference.save
       else
-        # Update brand preference and record usage
+        # Update brand preference and record usage (count and last_used_at)
         preference.save
-        preference.increment!(:usage_count)
+        preference.record_usage!
         true
       end
     rescue ActiveRecord::RecordInvalid => e

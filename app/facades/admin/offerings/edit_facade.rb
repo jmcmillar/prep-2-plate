@@ -11,11 +11,17 @@ class Admin::Offerings::EditFacade < Base::Admin::EditFacade
     [
       BreadcrumbComponent::Data.new("Admin", [:admin, :vendors]),
       BreadcrumbComponent::Data.new("Vendors", [:admin, :vendors]),
-      BreadcrumbComponent::Data.new(offering.vendor.business_name, [:admin, offering.vendor]),
-      BreadcrumbComponent::Data.new("Offerings", [:admin, offering.vendor, :offerings]),
-      BreadcrumbComponent::Data.new(offering.name, [:admin, offering]),
+      BreadcrumbComponent::Data.new(saved_vendor.business_name, [:admin, saved_vendor]),
+      BreadcrumbComponent::Data.new("Offerings", [:admin, saved_vendor, :offerings]),
+      BreadcrumbComponent::Data.new(offering.name_in_database, [:admin, offering]),
       BreadcrumbComponent::Data.new("Edit")
     ]
+  end
+
+  # Breadcrumbs describe the saved record, so a failed update that clears the
+  # vendor or name can still re-render the form.
+  def saved_vendor
+    @saved_vendor ||= Vendor.find(offering.vendor_id_in_database)
   end
 
   def form_url
@@ -67,7 +73,7 @@ class Admin::Offerings::EditFacade < Base::Admin::EditFacade
   end
 
   def nav_resource
-    offering.vendor
+    saved_vendor
   end
 
   def active_key

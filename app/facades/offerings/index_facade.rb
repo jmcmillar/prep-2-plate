@@ -12,7 +12,30 @@ class Offerings::IndexFacade < BaseFacade
   end
 
   def offerings
-    @offerings ||= Offering.active_vendor.includes(:vendor, :offering_price_points, :meal_types).order(featured: :desc, created_at: :desc)
+    @offerings ||= search.result
+      .active_vendor
+      .filtered_by_meal_types(params[:meal_type_ids])
+      .includes(:vendor, :offering_price_points, :meal_types)
+      .order(featured: :desc, created_at: :desc)
+  end
+
+  def search_data
+    SearchFormComponent::Data[
+      form_url: [ :offerings ],
+      query: search,
+      label: "Search Offerings",
+      field: :name_cont
+    ]
+  end
+
+  def meal_type_filter_data
+    FilterComponent::Data.new(
+      "Meal Types",
+      "meal_type_ids[]",
+      Rails.cache.fetch("meal_types_ordered", expires_in: 12.hours) do
+        MealType.order(:name).to_a
+      end
+    )
   end
 
   def featured_offerings
@@ -29,5 +52,11 @@ class Offerings::IndexFacade < BaseFacade
 
   def vendors_for_filter
     @vendors_for_filter ||= Vendor.active.order(:business_name)
+  end
+
+  private
+
+  def search
+    @search ||= Offering.ransack(params[:q])
   end
 end

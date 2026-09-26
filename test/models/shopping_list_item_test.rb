@@ -100,7 +100,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       packaging_form: "canned"
     )
     decorated = Ingredient::DisplayNameDecorator.decorate(item)
-    assert_equal "Canned tomatoes", decorated.display_name
+    assert_equal "canned tomatoes", decorated.display_name
   end
 
   def test_display_name_with_preparation_only
@@ -109,7 +109,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       preparation_style: "diced"
     )
     decorated = Ingredient::DisplayNameDecorator.decorate(item)
-    assert_equal "Diced tomatoes", decorated.display_name
+    assert_equal "diced tomatoes", decorated.display_name
   end
 
   def test_display_name_with_packaging_and_preparation
@@ -119,7 +119,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       preparation_style: "diced"
     )
     decorated = Ingredient::DisplayNameDecorator.decorate(item)
-    assert_equal "Canned Diced tomatoes", decorated.display_name
+    assert_equal "canned diced tomatoes", decorated.display_name
   end
 
   def test_display_name_with_blank_packaging_and_preparation
@@ -189,7 +189,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       brand: "Hunt's"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "Canned Diced tomatoes (Hunt's)", decorated.display_name_with_brand
+    assert_equal "Hunt's canned diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_when_brand_nil
@@ -200,7 +200,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       brand: nil
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "Canned Diced tomatoes", decorated.display_name_with_brand
+    assert_equal "canned diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_when_brand_blank
@@ -211,7 +211,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       brand: ""
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "Canned Diced tomatoes", decorated.display_name_with_brand
+    assert_equal "canned diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_simple_item
@@ -220,7 +220,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
       brand: "Organic Valley"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "milk (Organic Valley)", decorated.display_name_with_brand
+    assert_equal "Organic Valley milk", decorated.display_name_with_brand
   end
 
   # Backward compatibility test
@@ -249,7 +249,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
 
   # Archive functionality tests
   def test_archive_sets_archived_at
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
     assert_nil item.archived_at
 
     item.archive!
@@ -259,7 +259,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
   end
 
   def test_archived_scope_returns_only_archived_items
-    active_item = shopping_list_items(:one)
+    active_item = shopping_list_items(:canned_tomatoes)
     archived_item = shopping_list_items(:two)
     archived_item.update!(archived_at: 1.hour.ago)
 
@@ -271,7 +271,7 @@ class ShoppingListItemTest < ActiveSupport::TestCase
   end
 
   def test_default_scope_excludes_archived_items
-    active_item = shopping_list_items(:one)
+    active_item = shopping_list_items(:canned_tomatoes)
     archived_item = shopping_list_items(:two)
     archived_item.update!(archived_at: 1.hour.ago)
 

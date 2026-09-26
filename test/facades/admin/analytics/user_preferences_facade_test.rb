@@ -23,8 +23,8 @@ class Admin::Analytics::UserPreferencesFacadeTest < ActiveSupport::TestCase
   end
 
   def test_layout_configuration
-    assert_equal :admin_menu, @facade.menu
-    assert_equal :analytics, @facade.active_key
+    assert_equal :admin_analytics_menu, @facade.menu
+    assert_equal :admin_user_preference_analytics, @facade.active_key
     assert_nil @facade.nav_resource
   end
 
@@ -169,6 +169,7 @@ class Admin::Analytics::UserPreferencesFacadeTest < ActiveSupport::TestCase
     pref = UserIngredientPreference.create!(
       user: test_user,
       ingredient: test_ingredient,
+      preferred_brand: "Test Brand",
       usage_count: 15,
       last_used_at: Time.current
     )

@@ -15,31 +15,19 @@ class Admin::Users::ResourceFacadeTest < ActiveSupport::TestCase
   end
 
   def test_first_name
-    assert_equal(
-      Table::DataComponent.new(@user.first_name),
-      @facade.first_name
-    )
+    assert_data_cell @user.first_name, @facade.first_name
   end
 
   def test_last_name
-    assert_equal(
-      Table::DataComponent.new(@user.last_name),
-      @facade.last_name
-    )
+    assert_data_cell @user.last_name, @facade.last_name
   end
 
   def test_email
-    assert_equal(
-      Table::DataComponent.new(@user.email),
-      @facade.email
-    )
+    assert_data_cell @user.email, @facade.email
   end
 
   def test_admin
-    assert_equal(
-      Table::DataComponent.new("Yes"),
-      @facade.admin
-    )
+    assert_data_cell "Yes", @facade.admin
   end
 
   def test_id
@@ -47,6 +35,14 @@ class Admin::Users::ResourceFacadeTest < ActiveSupport::TestCase
   end
 
   def test_action
-    assert_instance_of Table::ActionComponent, @facade.action
+    assert_instance_of Table::IconActionsComponent, @facade.action
+  end
+
+  private
+
+  # ViewComponents do not define ==, so compare the type and the wrapped value.
+  def assert_data_cell(expected, component)
+    assert_instance_of Table::DataComponent, component
+    assert_equal expected, component.instance_variable_get(:@data)
   end
 end

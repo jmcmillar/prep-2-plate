@@ -86,7 +86,7 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_update_accepts_packaging_and_preparation
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     patch api_shopping_list_item_url(item),
           params: {

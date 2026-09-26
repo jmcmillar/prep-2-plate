@@ -3,12 +3,13 @@ require "test_helper"
 class MealPlans::IndexFacadeTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
-    @meal_plan = meal_plans(:one)
+    @meal_plan = meal_plans(:destroyable)
     @facade = MealPlans::IndexFacade.new(@user, {})
   end
 
   def test_base_collection
     assert_includes @facade.base_collection, @meal_plan
+    assert_not_includes @facade.base_collection, meal_plans(:one)
   end
 
   def test_collection

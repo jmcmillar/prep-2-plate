@@ -1,9 +1,11 @@
 require "test_helper"
 
 class Admin::UserRecipesControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @user = users(:one)
-    post session_url, params: { email_address: @user.email, password: "password" }
+    sign_in @user
   end
 
   test "should get index" do

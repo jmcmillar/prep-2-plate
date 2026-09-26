@@ -6,8 +6,9 @@ class ShoppingListItems::ResourceFacadeTest < ActiveSupport::TestCase
     @facade = ShoppingListItems::ResourceFacade.new(@shopping_list_item)
   end
 
-  def test_resource_returns_shopping_list_item
-    assert_equal @shopping_list_item, @facade.resource
+  def test_resource_returns_decorated_shopping_list_item
+    assert_instance_of Ingredient::DisplayNameDecorator, @facade.resource
+    assert_equal @shopping_list_item, @facade.resource.source_object
   end
 
   def test_id_returns_formatted_string

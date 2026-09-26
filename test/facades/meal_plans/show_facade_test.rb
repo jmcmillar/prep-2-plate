@@ -3,7 +3,7 @@ require "test_helper"
 class MealPlans::ShowFacadeTest < ActiveSupport::TestCase
   def setup
     @user = users(:one)
-    @meal_plan = meal_plans(:one)
+    @meal_plan = meal_plans(:destroyable)
     @facade = MealPlans::ShowFacade.new(@user, { id: @meal_plan.id })
   end
 

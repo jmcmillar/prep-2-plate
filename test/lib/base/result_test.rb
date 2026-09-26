@@ -2,7 +2,7 @@ require "test_helper"
 
 class Base::ResultTest < ActiveSupport::TestCase
   def setup
-    @success = Base::Result.new(data: {foo: "bar"}, success: true, error_message: nil)
+    @success = Base::Result.new(data: { foo: "bar" }, success: true, error_message: nil)
 
     @failure = Base::Result.new(data: nil, success: false, error_message: "Something went wrong")
   end

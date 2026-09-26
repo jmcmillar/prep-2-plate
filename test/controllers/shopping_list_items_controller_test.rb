@@ -47,11 +47,11 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal "carrots", json["name"]
     assert json.key?("display_name"), "Should include display_name in JSON response"
-    assert_equal "Fresh Diced carrots", json["display_name"]
+    assert_equal "fresh diced carrots", json["display_name"]
   end
 
   def test_update_with_packaging_and_preparation
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     patch item_path(item), params: {
       shopping_list_item: {
@@ -88,7 +88,7 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
 
   # Archive/Destroy tests
   def test_destroy_archives_item_instead_of_deleting
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     assert_no_difference("ShoppingListItem.unscoped.count") do
       assert_difference("ShoppingListItem.count", -1) do
@@ -114,7 +114,7 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_destroy_shows_success_message
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     delete item_path(item)
 
@@ -122,7 +122,7 @@ class ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_destroy_json_returns_success
-    item = shopping_list_items(:one)
+    item = shopping_list_items(:canned_tomatoes)
 
     delete item_path(item), as: :json
 

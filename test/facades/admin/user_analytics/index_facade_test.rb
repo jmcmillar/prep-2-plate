@@ -28,9 +28,9 @@ class Admin::UserAnalytics::IndexFacadeTest < ActiveSupport::TestCase
   end
 
   def test_layout_configuration
-    assert_equal :admin_menu, @facade.menu
-    assert_equal :analytics, @facade.active_key
-    assert_nil @facade.nav_resource
+    assert_equal :admin_user_menu, @facade.menu
+    assert_equal :admin_user_analytics, @facade.active_key
+    assert_equal @target_user, @facade.nav_resource
   end
 
   def test_base_collection_returns_empty
@@ -244,5 +244,13 @@ class Admin::UserAnalytics::IndexFacadeTest < ActiveSupport::TestCase
     result = facade.completion_percentage
 
     assert_equal 0, result
+  end
+
+  def test_item_counts_include_archived_items_for_this_user_only
+    user_items = ShoppingListItem.unscoped.joins(:shopping_list).where(shopping_lists: { user_id: @target_user.id })
+
+    assert_equal user_items.count, @facade.total_items_added
+    assert_equal user_items.where.not(archived_at: nil).count, @facade.total_items_completed
+    assert_operator @facade.total_items_added, :<, ShoppingListItem.unscoped.count
   end
 end

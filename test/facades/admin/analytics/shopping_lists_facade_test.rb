@@ -23,8 +23,8 @@ class Admin::Analytics::ShoppingListsFacadeTest < ActiveSupport::TestCase
   end
 
   def test_layout_configuration
-    assert_equal :admin_menu, @facade.menu
-    assert_equal :analytics, @facade.active_key
+    assert_equal :admin_analytics_menu, @facade.menu
+    assert_equal :admin_shopping_list_analytics, @facade.active_key
     assert_nil @facade.nav_resource
   end
 

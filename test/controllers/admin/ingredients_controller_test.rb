@@ -7,7 +7,7 @@ class Admin::IngredientsControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     sign_in @user
     @ingredient = Ingredient.create!(name: "test ingredient")
-    @ingredient_category = ingredient_categories(:one)
+    @ingredient_category = ingredient_categories(:fresh_produce)
   end
 
   test "should get index" do

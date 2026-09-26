@@ -36,7 +36,7 @@ class Api::Recipes::ShowFacadeTest < ActiveSupport::TestCase
   end
 
   def test_favorite_when_favorited
-    @user.recipe_favorites.create!(recipe: @recipe)
+    @user.recipe_favorites.find_or_create_by!(recipe: @recipe)
     
     assert @facade.favorite?
   end

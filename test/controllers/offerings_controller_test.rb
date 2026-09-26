@@ -1,9 +1,27 @@
 require "test_helper"
 
 class OfferingsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @offering = offerings(:grilled_chicken_veggies)
     @vendor = vendors(:healthy_meal_co)
+    sign_in users(:two)
+  end
+
+  def test_index_filters_by_search_term
+    get offerings_url, params: { q: { name_cont: @offering.name } }
+
+    assert_response :success
+    assert_select "h3", text: /#{Regexp.escape(@offering.name)}/
+    other = Offering.active_vendor.where.not(name: @offering.name).first
+    assert_select "h3", text: /#{Regexp.escape(other.name)}/, count: 0 if other
+  end
+
+  def test_requires_sign_in
+    sign_out :user
+    get offerings_url
+    assert_redirected_to new_user_session_url
   end
 
   def test_index

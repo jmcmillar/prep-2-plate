@@ -9,7 +9,7 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
       brand: "Hunts"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "canned diced tomatoes (Hunts)", decorated.display_name_with_brand
+    assert_equal "Hunts canned diced tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_when_brand_blank
@@ -43,7 +43,7 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
   def test_display_name_with_brand_simple_name_with_brand
     item = ShoppingListItem.new(name: "tomatoes", brand: "Hunts")
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "tomatoes (Hunts)", decorated.display_name_with_brand
+    assert_equal "Hunts tomatoes", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_with_only_packaging_form
@@ -53,7 +53,7 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
       brand: "Bush's"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "canned beans (Bush's)", decorated.display_name_with_brand
+    assert_equal "Bush's canned beans", decorated.display_name_with_brand
   end
 
   def test_display_name_with_brand_with_only_preparation_style
@@ -63,7 +63,7 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
       brand: "Green Giant"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "diced carrots (Green Giant)", decorated.display_name_with_brand
+    assert_equal "Green Giant diced carrots", decorated.display_name_with_brand
   end
 
   def test_inherits_display_name_from_parent_decorator
@@ -89,8 +89,8 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
     decorated_collection = ShoppingListItem::DisplayNameWithBrandDecorator.decorate_collection(items)
 
     assert_equal 3, decorated_collection.size
-    assert_equal "tomatoes (Hunts)", decorated_collection[0].display_name_with_brand
-    assert_equal "canned beans (Bush's)", decorated_collection[1].display_name_with_brand
+    assert_equal "Hunts tomatoes", decorated_collection[0].display_name_with_brand
+    assert_equal "Bush's canned beans", decorated_collection[1].display_name_with_brand
     assert_equal "diced carrots", decorated_collection[2].display_name_with_brand
   end
 
@@ -121,6 +121,6 @@ class ShoppingListItem::DisplayNameWithBrandDecoratorTest < ActiveSupport::TestC
       brand: "Hunt's®"
     )
     decorated = ShoppingListItem::DisplayNameWithBrandDecorator.decorate(item)
-    assert_equal "tomatoes (Hunt's®)", decorated.display_name_with_brand
+    assert_equal "Hunt's® tomatoes", decorated.display_name_with_brand
   end
 end

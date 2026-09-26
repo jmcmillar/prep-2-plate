@@ -56,17 +56,15 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
   end
 
   def items_added_over_time
-    analytics_user.shopping_list_items
-      .unscoped # Remove default scope that filters archived
-      .group_by_day(:created_at, last: 90)
+    all_user_items
+      .group_by_day("shopping_list_items.created_at", last: 90)
       .count
   end
 
   def archived_items_over_time
-    analytics_user.shopping_list_items
-      .unscoped
+    all_user_items
       .where.not(archived_at: nil)
-      .group_by_day(:archived_at, last: 90)
+      .group_by_day("shopping_list_items.archived_at", last: 90)
       .count
   end
 
@@ -104,8 +102,8 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
   end
 
   def completion_rate
-    total = analytics_user.shopping_list_items.unscoped.count
-    archived = analytics_user.shopping_list_items.unscoped.where.not(archived_at: nil).count
+    total = all_user_items.count
+    archived = all_user_items.where.not(archived_at: nil).count
     active = total - archived
 
     {
@@ -117,8 +115,7 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
   # === INGREDIENT INSIGHTS ===
 
   def top_ingredients
-    analytics_user.shopping_list_items
-      .unscoped
+    all_user_items
       .joins(:ingredient)
       .group("ingredients.name")
       .order("count_all DESC")
@@ -127,24 +124,21 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
   end
 
   def ingredient_category_distribution
-    analytics_user.shopping_list_items
-      .unscoped
+    all_user_items
       .joins(ingredient: :ingredient_category)
       .group("ingredient_categories.name")
       .count
   end
 
   def packaging_form_breakdown
-    analytics_user.shopping_list_items
-      .unscoped
+    all_user_items
       .where.not(packaging_form: nil)
       .group(:packaging_form)
       .count
   end
 
   def preparation_style_breakdown
-    analytics_user.shopping_list_items
-      .unscoped
+    all_user_items
       .where.not(preparation_style: nil)
       .group(:preparation_style)
       .count
@@ -157,11 +151,11 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
   end
 
   def total_items_added
-    analytics_user.shopping_list_items.unscoped.count
+    all_user_items.count
   end
 
   def total_items_completed
-    analytics_user.shopping_list_items.unscoped.where.not(archived_at: nil).count
+    all_user_items.where.not(archived_at: nil).count
   end
 
   def average_list_size
@@ -177,5 +171,13 @@ class Admin::UserAnalytics::IndexFacade < Base::Admin::IndexFacade
     total = total_items_added
     return 0 if total.zero?
     ((total_items_completed.to_f / total) * 100).round(1)
+  end
+
+  private
+
+  # Every item on this user's lists, archived ones included. `.unscoped` would
+  # also drop the user condition and count every user's items.
+  def all_user_items
+    analytics_user.shopping_list_items.unscope(where: :archived_at)
   end
 end
