@@ -29,6 +29,14 @@ class ParseIngredient
     }
   end
 
+  # The partial ingredient name being typed at the end of the line, after the
+  # quantity and unit ("2 cups fl" -> "fl"). Nil once the name is finished and
+  # the line has moved on to notes ("2 cups flour, sifted").
+  def name_fragment
+    fragment = after_unit.sub(/\A,\s*/, "").squish
+    fragment unless fragment.empty? || fragment.include?(",")
+  end
+
   private
 
   def normalized

@@ -3,6 +3,10 @@ class Api::RecipesController < Api::BaseController
     @recipes = Recipe.includes(:recipe_instructions).with_attached_image
   end
 
+  def suggest
+    @facade = Api::Recipes::SuggestFacade.new(Current.user, params)
+  end
+
   def show
     @facade = Api::Recipes::ShowFacade.new(Current.user, params)
   end

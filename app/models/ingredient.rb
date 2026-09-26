@@ -1,4 +1,6 @@
 class Ingredient < ApplicationRecord
+  include TrigramSearchable
+
   PACKAGING_FORMS = {
     fresh: 'Fresh',
     canned: 'Canned',

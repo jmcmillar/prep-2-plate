@@ -58,6 +58,25 @@ class ParseIngredientTest < ActiveSupport::TestCase
     assert_equal @units["cup"].id, ParseIngredient.new("2 cups flour").to_h[:measurement_unit_id]
   end
 
+  NAME_FRAGMENTS = {
+    "2 cups fl" => "fl",
+    "1 lb ground be" => "ground be",
+    "a pinch of sa" => "sa",
+    "1 (14.5 oz) can diced tom" => "diced tom",
+    "3 eg" => "eg",
+    "chicken br" => "chicken br",
+    "2 cups" => nil,
+    "2 cups flour, sifted" => nil,
+    "" => nil
+  }.freeze
+
+  def test_name_fragment_is_the_partial_name_after_quantity_and_unit
+    NAME_FRAGMENTS.each do |line, expected|
+      actual = ParseIngredient.new(line, unit_lookup: @lookup).name_fragment
+      expected.nil? ? assert_nil(actual, line) : assert_equal(expected, actual, line)
+    end
+  end
+
   def test_returns_blank_values_for_empty_input
     result = ParseIngredient.new("", unit_lookup: @lookup).to_h
 

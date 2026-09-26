@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_24_154227) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_26_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pg_trgm"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -123,6 +124,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_154227) do
     t.datetime "categorized_at"
     t.string "packaging_form"
     t.string "preparation_style"
+    t.index "lower((name)::text) gin_trgm_ops", name: "index_ingredients_on_lower_name_trgm", using: :gin
     t.index ["ingredient_category_id"], name: "index_ingredients_on_ingredient_category_id"
     t.index ["name", "packaging_form", "preparation_style"], name: "idx_ingredients_on_name_packaging_prep", unique: true
   end
@@ -321,6 +323,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_24_154227) do
     t.boolean "featured", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "lower((name)::text) gin_trgm_ops", name: "index_recipes_on_lower_name_trgm", using: :gin
     t.index ["created_at"], name: "index_recipes_on_created_at"
     t.index ["duration_minutes"], name: "index_recipes_on_duration_minutes"
     t.index ["featured"], name: "index_recipes_on_featured"

@@ -14,6 +14,46 @@ class Api::RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  def test_suggests_recipes_matching_the_query_prefix_matches_first
+    Recipe.create!(name: "Chicken Tacos")
+    Recipe.create!(name: "Easy Chicken Parmesan")
+
+    get suggest_api_recipes_url(format: :json), params: { q: "chi" }, headers: @headers
+
+    assert_response :success
+    suggestion = JSON.parse(response.body)["suggestions"].first
+    assert_equal "Chicken Tacos", suggestion["name"]
+    assert suggestion["imageUrl"].present?
+    assert_equal [ "Chicken Tacos", "Easy Chicken Parmesan" ],
+      JSON.parse(response.body)["suggestions"].map { |s| s["name"] }
+  end
+
+  def test_suggests_recipes_for_misspelled_queries
+    Recipe.create!(name: "Easy Chicken Parmesan")
+
+    get suggest_api_recipes_url(format: :json), params: { q: "chiken" }, headers: @headers
+
+    assert_equal [ "Easy Chicken Parmesan" ], JSON.parse(response.body)["suggestions"].map { |s| s["name"] }
+  end
+
+  def test_suggests_the_users_own_recipes_but_not_other_users_recipes
+    other_recipe = Recipe.create!(name: "Secret Family Recipe")
+    users(:two).user_recipes.create!(recipe: other_recipe)
+    own_recipe = Recipe.create!(name: "Secret Sauce")
+    @user.user_recipes.create!(recipe: own_recipe)
+
+    get suggest_api_recipes_url(format: :json), params: { q: "secret" }, headers: @headers
+
+    assert_equal [ "Secret Sauce" ], JSON.parse(response.body)["suggestions"].map { |s| s["name"] }
+  end
+
+  def test_returns_no_suggestions_for_queries_shorter_than_two_characters
+    get suggest_api_recipes_url(format: :json), params: { q: "r" }, headers: @headers
+
+    assert_response :success
+    assert_empty JSON.parse(response.body)["suggestions"]
+  end
+
   test "should show recipe" do
     get api_recipe_url(@recipe, format: :json), headers: @headers
     assert_response :success

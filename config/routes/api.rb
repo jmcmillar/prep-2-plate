@@ -6,7 +6,16 @@ namespace :api do
   resources :categories, only: %i[index], controller: "filters/categories"
   resources :meal_types, only: %i[index], controller: "filters/meal_types"
   resources :measurement_units, only: [ :index ]
-  resources :recipes, only: [ :index, :show, :create, :update ]
+  resources :recipes, only: [ :index, :show, :create, :update ] do
+    collection do
+      get :suggest
+    end
+  end
+  resources :ingredients, only: [] do
+    collection do
+      get :suggest
+    end
+  end
   resources :recipe_ingredients, only: [ :index ]
   resource :recipe_imports, only: [ :show, :create ]
   resources :current_shopping_lists, only: [ :create ]

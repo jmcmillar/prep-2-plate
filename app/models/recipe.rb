@@ -1,4 +1,6 @@
 class Recipe < ApplicationRecord
+  include TrigramSearchable
+
   # enum difficulty_level: {
   #   easy: "easy",
   #   medium: "medium",
