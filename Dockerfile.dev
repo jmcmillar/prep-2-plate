@@ -1,5 +1,5 @@
 # Development Dockerfile - optimized for fast rebuilds
-FROM ruby:3.2.3-bullseye
+FROM ruby:3.2.3-bookworm
 
 # Install dependencies
 RUN apt-get update -qq && \
