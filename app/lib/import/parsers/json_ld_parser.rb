@@ -26,25 +26,35 @@ class Import::Parsers::JsonLdParser < Import::Parsers::SchemaOrgRecipeParser
   private
 
   def parse_recipe_hash
-    nokogiri_doc.css(self.class.root_selector).each do |script|
-      cleaned = script.content.strip.chomp(';')
-      [Oj.load(cleaned)].flatten.each do |json|
-        next unless json.is_a?(Hash)
-        next unless json['@context'] =~ /schema\.org/
-
-        # b/c of www.thespruceeats.com in the specs
-        json = json['mainEntity'] if json.dig('mainEntity', '@type') == 'Recipe'
-
-        return json if is_a_recipe?(json)
-
-        if json['@graph'].is_a?(Array)
-          json['@graph'].each do |item|
-            return item if is_a_recipe?(item)
-          end
-        end
-      end
+    json_ld_documents.each do |json|
+      recipe = find_recipe_in(json)
+      return recipe if recipe
     end
     nil
+  end
+
+  def json_ld_documents
+    nokogiri_doc.css(self.class.root_selector).flat_map do |script|
+      [ load_json(script.content) ].flatten.select { |json| json.is_a?(Hash) && schema_org?(json) }
+    end
+  end
+
+  def load_json(content)
+    Oj.load(content.strip.chomp(';').gsub(/\A<!--|-->\z/, ""))
+  rescue Oj::ParseError, EncodingError
+    nil
+  end
+
+  # @context can be a string, a hash ({"@vocab": "https://schema.org/"}) or an array
+  def schema_org?(json)
+    json['@context'].to_s.match?(/schema\.org/)
+  end
+
+  def find_recipe_in(json)
+    return json if is_a_recipe?(json)
+
+    candidates = [ json['mainEntity'], json['mainEntityOfPage'], *Array(json['@graph']) ]
+    candidates.flatten.compact.find { |item| item.is_a?(Hash) && is_a_recipe?(item) }
   end
 
   def is_a_recipe?(json)
@@ -52,9 +62,7 @@ class Import::Parsers::JsonLdParser < Import::Parsers::SchemaOrgRecipeParser
   end
 
   def contains_required_keys?(json)
-    json.key?('name') &&
-    (json.key?('recipeIngredient') || json.key?('ingredients')) &&
-    json.key?('recipeInstructions')
+    json.key?('name') && (json.key?('recipeIngredient') || json.key?('ingredients'))
   end
 
   def nodes_with_itemprop(itemprop)
@@ -79,33 +87,27 @@ class Import::Parsers::JsonLdParser < Import::Parsers::SchemaOrgRecipeParser
 
   def parse_author
     author = node_with_itemprop(:author)
-    return unless author["@type"]
-
     case author
-    when Hash
-      type = [author.fetch("@type", "Unknown")].flat_map(&:downcase)
-      if type.member?("person") || type.member?("organization")
-        return author.fetch("name")
-      else
-        raise NotImplementedError, "Unexpected type for `author`: #{type.inspect}"
-      end
-    when String
-      author
-    else
-      raise NotImplementedError, "Unexpected node: #{author.inspect}"
+    when Hash then author["name"]
+    when String then author
     end
   end
 
   def parse_description
-    node_with_itemprop(:description)
+    clean(node_with_itemprop(:description))
   end
 
   def parse_ingredients
-    (nodes_with_itemprop('recipeIngredient') || nodes_with_itemprop('ingredients')).map(&:strip).reject(&:blank?)
+    ingredients = nodes_with_itemprop('recipeIngredient') || nodes_with_itemprop('ingredients')
+    Array(ingredients).flatten.grep(String).map { |ingredient| clean(ingredient) }.reject(&:blank?)
   end
 
   def parse_name
-    node_with_itemprop(:name)
+    clean(node_with_itemprop(:name))
+  end
+
+  def clean(text)
+    text.is_a?(String) ? RecipeUtils::CleanText.call(text) : text
   end
 
   def parse_published_date
@@ -137,37 +139,39 @@ class Import::Parsers::JsonLdParser < Import::Parsers::SchemaOrgRecipeParser
     # support different ways of presentation.
     # E.g. http://www.pillsbury.com/recipes/big-cheesy-pepperoni-pockets/a17766e6-30ce-4a0c-af08-72533bb9b449
     # has its steps doubled ("step by step" and "list" modes).
-    nodes = nodes_with_itemprop(:recipeInstructions)
-    nodes = [nodes].flatten
-    parse_list_to_text(*nodes).uniq
+    nodes = [ nodes_with_itemprop(:recipeInstructions) ].flatten
+    parse_list_to_text(*nodes).map { |step| clean(step) }.reject(&:blank?).uniq
   end
 
+  # Flattens strings, HowToStep, HowToSection, ItemList and ListItem nodes
+  # into plain step text. Section headings are not steps, so they are dropped.
   def parse_list_to_text(*nodes)
     nodes.flat_map do |node|
       case node
-      when String then [node]
+      when String then split_text_steps(node)
       when Hash then parse_to_list(node)
-      else fail NotImplementedError, "Unexpected node #{node.inspect}"
+      else []
       end
     end
   end
 
   def parse_to_list(node)
-    type = [node.fetch("@type")].flatten
-    if type.member?("ItemList")
-      node.fetch("itemListElement").flat_map(&method(:parse_to_list))
-    elsif type.member?("ListItem") || type.member?("HowToStep")
-      [node.fetch("text")]
-    elsif type.member?("HowToSection")
-      [node["name"], *parse_list_to_text(*node.fetch("itemListElement")), ""]
-    else
-      fail NotImplementedError, "Unexpected node @type #{type.inspect}"
-    end
+    children = node["itemListElement"] || node["steps"]
+    return parse_list_to_text(*Array(children)) if children.present?
+
+    step_text = node["text"] || node["name"] || node.dig("item", "text") || node.dig("item", "name")
+    step_text.is_a?(String) ? [ step_text ] : []
+  end
+
+  # A single string may hold every step separated by newlines or <li>/<p> tags.
+  def split_text_steps(text)
+    text.split(%r{\r?\n+|</?(?:li|p|br)\s*/?>}i).map(&:strip).reject(&:blank?)
   end
 
   def parse_image_url
-    url = node_with_itemprop(:image)
-    url = url["url"] if url.is_a?(Hash) && url["@type"] == "ImageObject"
-    url
+    image = nodes_with_itemprop(:image)
+    image = image.first if image.is_a?(Array)
+    image = image["url"] || image["contentUrl"] || image["@id"] if image.is_a?(Hash)
+    image.is_a?(String) && image.start_with?("http") ? image : nil
   end
 end

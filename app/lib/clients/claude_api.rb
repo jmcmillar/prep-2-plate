@@ -14,9 +14,15 @@ class Clients::ClaudeApi < Clients::BaseClient
     READ_TIMEOUT = 60
     CLIENT_NAME = "Claude API"
 
-    def initialize(prompt, api_key: ENV.fetch("ANTHROPIC_API_KEY"))
+    # @param model [String] Model ID; defaults to MODEL
+    # @param output_schema [Hash, nil] JSON schema to constrain the response
+    #   (structured outputs); the returned text is then guaranteed-valid JSON
+    def initialize(prompt, api_key: ENV.fetch("ANTHROPIC_API_KEY"), model: MODEL, max_tokens: MAX_TOKENS, output_schema: nil)
       @prompt = prompt
       @api_key = api_key
+      @model = model
+      @max_tokens = max_tokens
+      @output_schema = output_schema
     end
 
     def call
@@ -50,17 +56,26 @@ class Clients::ClaudeApi < Clients::BaseClient
       request["x-api-key"] = @api_key
       request["anthropic-version"] = API_VERSION
 
-      request.body = JSON.generate({
-        model: MODEL,
-        max_tokens: MAX_TOKENS,
-        messages: [{ role: "user", content: @prompt }]
-      })
+      request.body = JSON.generate(request_body)
 
       request
     end
 
+    def request_body
+      body = {
+        model: @model,
+        max_tokens: @max_tokens,
+        messages: [ { role: "user", content: @prompt } ]
+      }
+      body[:output_config] = { format: { type: "json_schema", schema: @output_schema } } if @output_schema
+      body
+    end
+
     def extract_content(response)
-      content = response.dig("content", 0, "text")
+      stop_reason = response["stop_reason"]
+      raise "Claude API stopped early: #{stop_reason}" if %w[refusal max_tokens].include?(stop_reason)
+
+      content = response["content"]&.find { |block| block["type"] == "text" }&.dig("text")
       raise "No content in Claude API response" if content.blank?
 
       content

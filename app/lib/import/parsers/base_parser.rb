@@ -92,10 +92,11 @@ class Import::Parsers::BaseParser
 
   def parse_duration(iso8601_string)
     return nil unless iso8601_string.present?
-    duration = ISO8601::Duration.new(iso8601_string)
-    duration.hours.to_i * 60 + duration.minutes.to_i
-  rescue ISO8601::Errors::UnknownPattern
-    # Try to just convert to an integer.. Assuming minutes?
-    iso8601_string.to_i
+    return iso8601_string.to_i if iso8601_string.is_a?(Numeric)
+
+    (ISO8601::Duration.new(iso8601_string.to_s.strip).to_seconds / 60).round
+  rescue StandardError
+    # Not ISO 8601 ("45 minutes"); assume the leading number is minutes.
+    iso8601_string.to_s[/\d+/]&.to_i
   end
 end

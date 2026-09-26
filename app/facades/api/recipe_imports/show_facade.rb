@@ -7,4 +7,8 @@ class Api::RecipeImports::ShowFacade
   def recipe
     @parsed_recipe ||= ParseRecipe.new(@params[:url]).to_h
   end
+
+  def duration
+    RecipeUtils::TotalMinutes.call(recipe)
+  end
 end

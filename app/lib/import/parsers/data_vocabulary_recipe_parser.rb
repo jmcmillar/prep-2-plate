@@ -22,7 +22,7 @@ class Import::Parsers::DataVocabularyRecipeParser < Import::Parsers::SchemaOrgRe
   end
 
   def parse_instructions
-    node_with_itemprop(:instructions).content
+    nodes_with_itemprop(:instructions).map { |node| node.content.strip }.reject(&:blank?)
   end
 
   def parse_published_date

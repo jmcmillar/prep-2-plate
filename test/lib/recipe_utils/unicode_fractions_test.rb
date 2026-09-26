@@ -78,8 +78,11 @@ class RecipeUtils::UnicodeFractionsTest < ActiveSupport::TestCase
   end
 
   def test_handles_mixed_numbers_with_unicode_fractions
-    # Note: This would be "2½" which should convert to "2 1/2" ideally
-    # But for now we just convert the fraction part
-    assert_equal "21/2 cups", RecipeUtils::UnicodeFractions.convert("2½ cups")
+    assert_equal "2 1/2 cups", RecipeUtils::UnicodeFractions.convert("2½ cups")
+    assert_equal "2 1/2 cups", RecipeUtils::UnicodeFractions.convert("2 ½ cups")
+  end
+
+  def test_converts_fraction_slash_to_ascii_slash
+    assert_equal "1 1/2 teaspoons", RecipeUtils::UnicodeFractions.convert("1 1⁄2 teaspoons")
   end
 end

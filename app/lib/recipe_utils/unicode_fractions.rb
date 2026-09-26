@@ -24,12 +24,16 @@ class RecipeUtils::UnicodeFractions
   # Regex pattern that matches any Unicode fraction character
   UNICODE_FRACTION_PATTERN = /[#{UNICODE_FRACTION_MAP.keys.join}]/
 
+  FRACTION_SLASH = "\u2044"
+
+  # Converts unicode fractions to ASCII. A fraction glued to a whole number
+  # gets a separating space so "1½" becomes "1 1/2" (not "11/2").
   def self.convert(text)
     return text if text.blank?
 
-    result = text.dup
+    result = text.tr(FRACTION_SLASH, "/")
     UNICODE_FRACTION_MAP.each do |unicode_char, ascii_fraction|
-      result.gsub!(unicode_char, ascii_fraction)
+      result = result.gsub(/(\d)?#{unicode_char}/) { "#{Regexp.last_match(1)&.concat(' ')}#{ascii_fraction}" }
     end
     result
   end

@@ -46,4 +46,14 @@ class Admin::RecipeImports::Recipes::NewFacadeTest < ActiveSupport::TestCase
     
     assert_kind_of ActiveRecord::Relation, meal_types
   end
+  def test_recipe_uses_parsed_details_without_ingredients
+    page = Struct.new(:body, :headers).new(file_fixture("recipe_pages/wprm_graph.html").read, {})
+    Import::SafeFetch.stub(:get, page) do
+      assert_equal "Grandma's Lemon Bars", @facade.recipe.name
+      assert_equal 16, @facade.serving_size
+      assert_equal 55, @facade.duration
+      assert_equal 3, @facade.recipe.recipe_instructions.size
+      assert_empty @facade.recipe.recipe_ingredients
+    end
+  end
 end

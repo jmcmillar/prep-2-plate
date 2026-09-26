@@ -1,5 +1,5 @@
 json.name @facade.recipe[:name]
-json.duration @facade.recipe[:total_time]
+json.duration @facade.duration
 json.servings "Unknown"
 json.difficultyLevel "Unknown"
 json.favorite false

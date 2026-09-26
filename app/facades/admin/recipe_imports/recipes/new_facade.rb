@@ -34,25 +34,20 @@ class Admin::RecipeImports::Recipes::NewFacade < Base::Admin::NewFacade
     @meal_types ||= MealType.all.order(:name)
   end
 
+  # Ingredients are reviewed in the next admin step, so only the recipe
+  # details and instructions are built here.
   def recipe
-    @recipe ||= import_record.recipes.new(
-      name: parsed_recipe[:name],
-    ).tap do |recipe|
-      parsed_recipe[:instructions]&.each&.with_index do |ingredient, index|
-        recipe.recipe_instructions.build(
-          step_number: index + 1,
-          instruction: ingredient
-        )
-      end
-    end
+    @recipe ||= RecipeImports::BuildRecipe.call(
+      parsed_recipe, recipe_import: import_record, attach_image: false, with_ingredients: false
+    )
   end
 
   def duration
-    parsed_recipe[:total_time]
+    recipe.duration_minutes
   end
 
   def serving_size
-    parsed_recipe[:yield]&.to_i
+    recipe.serving_size
   end
 
   def parsed_recipe

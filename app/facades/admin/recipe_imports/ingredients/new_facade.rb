@@ -32,9 +32,7 @@ class Admin::RecipeImports::Ingredients::NewFacade < Base::Admin::IndexFacade
   end
 
   def ingredients
-    @ingredients ||= parsed_recipe[:ingredients].map do |ingredient|
-      ParseIngredient.new(ingredient).to_h
-    end
+    @ingredients ||= RecipeImports::ParseIngredientLines.call(parsed_recipe[:ingredients])
   end
 
   def parsed_recipe

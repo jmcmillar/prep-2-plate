@@ -1,6 +1,13 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require "minitest/mock"
+
+# Rails 8 loads routes lazily; Devise builds its mappings from routes, so load
+# them up front for unit tests that create confirmable users.
+Rails.application.reload_routes_unless_loaded
+
+Dir[File.expand_path("support/**/*.rb", __dir__)].each { |file| require file }
 
 module ActiveSupport
   class TestCase
