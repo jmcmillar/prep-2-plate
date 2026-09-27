@@ -4,10 +4,12 @@ class Admin::RecipeImports::Ingredients::NewFacade < Base::Admin::IndexFacade
   end
 
   def build_ingredient_list
-    BuildRecipeIngredients.call(
+    built = BuildRecipeIngredients.call(
       recipe.id,
       @params[:recipe][:recipe_ingredients_attributes]
     )
+    RecipeImports::ScheduleIngredientCategorization.call if built
+    built
   end
 
   def import_url

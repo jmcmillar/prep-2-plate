@@ -38,6 +38,30 @@ class UserRecipeImports::NewFacadeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_save_persists_recipe_and_schedules_categorization
+    scheduled = 0
+
+    with_page(file_fixture("recipe_pages/wprm_graph.html").read) do
+      RecipeImports::ScheduleIngredientCategorization.stub(:call, -> { scheduled += 1 }) do
+        assert_difference([ "Recipe.count", "RecipeImport.count" ], 1) { assert @facade.save }
+      end
+    end
+
+    assert_equal 1, scheduled
+  end
+
+  def test_failed_save_does_not_schedule_categorization
+    scheduled = 0
+
+    with_page("<html></html>") do
+      RecipeImports::ScheduleIngredientCategorization.stub(:call, -> { scheduled += 1 }) do
+        assert_no_difference("Recipe.count") { assert_not @facade.save }
+      end
+    end
+
+    assert_equal 0, scheduled
+  end
+
   private
 
   def with_page(body, &block)

@@ -28,6 +28,20 @@ class Admin::RecipeImports::Ingredients::NewFacadeTest < ActiveSupport::TestCase
     assert_equal "Import Ingredients", trail[3].text
   end
 
+  def test_build_ingredient_list_schedules_categorization
+    params = {
+      recipe_id: @recipe.id,
+      recipe: { recipe_ingredients_attributes: [ { quantity: "1", ingredient_name: "schedule test onion" } ] }
+    }
+    facade = Admin::RecipeImports::Ingredients::NewFacade.new(@admin, params)
+    scheduled = 0
+
+    RecipeImports::ScheduleIngredientCategorization.stub(:call, -> { scheduled += 1 }) { facade.build_ingredient_list }
+
+    assert_equal 1, scheduled
+    assert Ingredient.exists?(name: "schedule test onion")
+  end
+
   def test_form_url
     expected = {
       controller: "admin/recipe_imports/ingredients",

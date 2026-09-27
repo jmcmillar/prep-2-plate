@@ -4,6 +4,11 @@
 # is never paid for twice. Any line that fails validation is simply left out,
 # so callers keep their rule-based result for it.
 #
+# Lines come from scraped pages, so a line can carry instructions aimed at the
+# model. Every returned name must be made of words from its own source line,
+# which stops one line from steering another line's result into the shared
+# cache.
+#
 # Returns a Hash of { raw_line => ParseIngredient-style hash }.
 class RecipeImports::AiParseIngredients
   include Service
@@ -39,7 +44,7 @@ class RecipeImports::AiParseIngredients
   def cached_results
     @lines.each_with_object({}) do |line, results|
       stored = @cache.read(cache_key(line))
-      parsed = stored && to_parsed_hash(stored)
+      parsed = stored && to_parsed_hash(stored, line)
       results[line] = parsed if parsed
     end
   end
@@ -50,7 +55,7 @@ class RecipeImports::AiParseIngredients
     items = request_items(lines)
     items.each_with_object({}) do |item, results|
       line = lines[item["line_index"].to_i]
-      parsed = line && to_parsed_hash(item)
+      parsed = line && to_parsed_hash(item, line)
       next unless parsed
 
       @cache.write(cache_key(line), item, expires_in: CACHE_TTL)
@@ -73,10 +78,10 @@ class RecipeImports::AiParseIngredients
   end
 
   # Returns nil when the item fails validation.
-  def to_parsed_hash(item)
+  def to_parsed_hash(item, line)
     name = RecipeUtils::CanonicalName.call(item["name"])
     unit = @unit_lookup.find(item["unit"].to_s)
-    return nil unless valid_item?(item, name, unit)
+    return nil unless valid_item?(item, name, unit) && grounded?(name, line)
 
     {
       quantity: item["quantity"].to_s,
@@ -94,6 +99,12 @@ class RecipeImports::AiParseIngredients
       (item["unit"].blank? || unit) &&
       allowed?(item["packaging_form"], Ingredient::PACKAGING_FORMS) &&
       allowed?(item["preparation_style"], Ingredient::PREPARATION_STYLES)
+  end
+
+  def grounded?(name, line)
+    line_words = RecipeUtils::CanonicalName.call(line).split
+    known = line_words.to_set | line_words.map { |word| RecipeUtils::CanonicalName.call(word) }
+    name.split.all? { |word| known.include?(word) }
   end
 
   def allowed?(value, enum)

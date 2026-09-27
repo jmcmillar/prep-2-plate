@@ -19,6 +19,18 @@ class UserRecipeImports::NewFacade < BaseFacade
     @recipe ||= valid? ? built_recipe : invalid_recipe
   end
 
+  # Saves the import record and recipe together, then queues categorization
+  # for any ingredients the import created.
+  def save
+    return false unless recipe.errors.empty?
+
+    saved = ActiveRecord::Base.transaction do
+      recipe_import.save && recipe.save || raise(ActiveRecord::Rollback)
+    end
+    RecipeImports::ScheduleIngredientCategorization.call if saved
+    saved.present?
+  end
+
   private
 
   def built_recipe

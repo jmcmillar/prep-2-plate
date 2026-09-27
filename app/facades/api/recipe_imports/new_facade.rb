@@ -12,11 +12,13 @@ class Api::RecipeImports::NewFacade
     end
   end
 
-  # Saves the recipe, its import record and the user's ownership in one transaction.
+  # Saves the recipe, its import record and the user's ownership in one
+  # transaction, then queues categorization for any new ingredients.
   def save
-    return false unless recipe_found?
+    return false unless recipe_found? && recipe.save
 
-    recipe.save
+    RecipeImports::ScheduleIngredientCategorization.call
+    true
   end
 
   def errors

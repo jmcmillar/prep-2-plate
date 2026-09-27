@@ -22,6 +22,16 @@ class Api::RecipeImports::NewFacadeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_save_schedules_categorization
+    scheduled = 0
+
+    with_page("hash_context_after_bad_json.html") do
+      RecipeImports::ScheduleIngredientCategorization.stub(:call, -> { scheduled += 1 }) { @facade.save }
+    end
+
+    assert_equal 1, scheduled
+  end
+
   def test_save_fails_without_recipe
     Import::SafeFetch.stub(:get, PageResponse.new("<html></html>", {})) do
       assert_not @facade.save
