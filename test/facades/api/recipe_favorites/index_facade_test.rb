@@ -32,4 +32,17 @@ class Api::RecipeFavorites::IndexFacadeTest < ActiveSupport::TestCase
     
     assert_includes @facade.user_recipes, user_created_recipe
   end
+
+  def test_search_filters_every_section_by_name
+    imported = Recipe.create!(name: "Imported Tacos", recipe_import: RecipeImport.create!(url: "https://example.com/tacos"))
+    created = Recipe.create!(name: "Fish Tacos")
+    other = Recipe.create!(name: "Pancakes")
+    [ imported, created, other ].each { |recipe| @user.user_recipes.create!(recipe: recipe) }
+
+    facade = Api::RecipeFavorites::IndexFacade.new(@user, { q: { name_cont: "taco" } })
+
+    assert_empty facade.favorite_recipes
+    assert_equal [ imported ], facade.imported_recipes.to_a
+    assert_equal [ created ], facade.user_recipes.to_a
+  end
 end
