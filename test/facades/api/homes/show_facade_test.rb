@@ -35,4 +35,20 @@ class Api::Homes::ShowFacadeTest < ActiveSupport::TestCase
     assert_includes owner_ids, recipe_categories(:one).id
     assert_not_includes other_ids, recipe_categories(:one).id
   end
+
+  def test_today_recipes_come_from_the_planner_for_the_given_day
+    @user.planned_meals.create!(date: Date.new(2026, 10, 5), recipe: recipes(:two))
+    @user.planned_meals.create!(date: Date.new(2026, 10, 5), kind: "eat_out")
+    @user.planned_meals.create!(date: Date.new(2026, 10, 6), recipe: recipes(:one))
+
+    facade = Api::Homes::ShowFacade.new(@user, { today: "2026-10-05" })
+
+    assert_equal [ recipes(:two) ], facade.today_recipes
+  end
+
+  def test_today_defaults_to_the_server_date
+    @user.planned_meals.create!(date: Date.current, recipe: recipes(:two))
+
+    assert_equal [ recipes(:two) ], Api::Homes::ShowFacade.new(@user, { today: "garbage" }).today_recipes
+  end
 end

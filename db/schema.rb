@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_26_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_03_120100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -234,6 +234,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_26_120000) do
     t.index ["featured"], name: "index_offerings_on_featured"
     t.index ["vendor_id", "created_at"], name: "index_offerings_on_vendor_id_and_created_at"
     t.index ["vendor_id"], name: "index_offerings_on_vendor_id"
+  end
+
+  create_table "planned_meals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "recipe_id"
+    t.date "date", null: false
+    t.string "kind", default: "recipe", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipe_id"], name: "index_planned_meals_on_recipe_id"
+    t.index ["user_id", "date"], name: "index_planned_meals_on_user_id_and_date"
+    t.index ["user_id"], name: "index_planned_meals_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -503,6 +516,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_26_120000) do
   add_foreign_key "offering_meal_types", "offerings"
   add_foreign_key "offering_price_points", "offerings"
   add_foreign_key "offerings", "vendors"
+  add_foreign_key "planned_meals", "recipes"
+  add_foreign_key "planned_meals", "users"
   add_foreign_key "recipe_category_assignments", "recipe_categories"
   add_foreign_key "recipe_category_assignments", "recipes"
   add_foreign_key "recipe_favorites", "recipes"

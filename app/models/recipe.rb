@@ -19,6 +19,7 @@ class Recipe < ApplicationRecord
   has_many :recipe_category_assignments, dependent: :destroy
   has_many :recipe_categories, through: :recipe_category_assignments
   has_many :recipe_favorites, dependent: :destroy
+  has_many :planned_meals, dependent: :destroy
   has_one :user_recipe, dependent: :destroy
 
   validates_presence_of :name

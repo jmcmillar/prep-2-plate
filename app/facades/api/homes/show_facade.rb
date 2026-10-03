@@ -42,21 +42,30 @@ class Api::Homes::ShowFacade
       .limit(4)
   end
 
+  # Saved meal plan covering today; only app builds from before the planner
+  # calendar use this
   def current_meal_plan_id
-    today_meal_plan_recipes.first&.meal_plan_id
+    MealPlanRecipe
+      .joins(meal_plan: :user_meal_plans)
+      .where(user_meal_plans: { user_id: @user.id })
+      .where(date: today)
+      .pick(:meal_plan_id)
   end
 
   def today_recipes
-    today_meal_plan_recipes.map(&:recipe).compact.uniq
+    @user.planned_meals
+      .where(date: today, kind: "recipe")
+      .includes(recipe: { image_attachment: :blob })
+      .ordered
+      .map(&:recipe).compact.uniq
   end
 
   private
 
-  def today_meal_plan_recipes
-    @today_meal_plan_recipes ||= MealPlanRecipe
-      .joins(meal_plan: :user_meal_plans)
-      .where(user_meal_plans: { user_id: @user.id })
-      .where(date: Date.current)
-      .includes(:recipe)
+  # The app sends the user's local date; the server's may already be tomorrow
+  def today
+    @today ||= Date.iso8601(@params[:today].to_s)
+  rescue Date::Error
+    @today = Date.current
   end
 end

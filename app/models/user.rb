@@ -22,6 +22,7 @@ class User < ApplicationRecord
   has_many :recipe_favorites, dependent: :destroy
   has_many :recipes, through: :recipe_favorites
   has_many :user_meal_plans, dependent: :destroy
+  has_many :planned_meals, dependent: :destroy
   has_many :meal_plans, through: :user_meal_plans
   has_many :shopping_lists, dependent: :destroy
   has_many :shopping_list_items, through: :shopping_lists

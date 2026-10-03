@@ -33,6 +33,11 @@ namespace :api do
   resource :user_password, only: %i[update]
   resources :meal_plans, only: [ :index, :show, :create, :update, :destroy ]
   resources :user_meal_plans, only: [ :index, :create ]
+  resources :planned_meals, only: [ :index ] do
+    collection do
+      put :replace
+    end
+  end
   resources :user_ingredient_preferences, only: [ :index, :show, :create, :update, :destroy ] do
     collection do
       get :suggest
