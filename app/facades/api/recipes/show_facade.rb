@@ -37,6 +37,10 @@ class Api::Recipes::ShowFacade
     recipe.user_recipe.user_id == @user.id
   end
 
+  def category_ids
+    recipe.recipe_category_ids
+  end
+
   # The page an imported recipe came from, for attribution
   def source_url
     recipe.recipe_import&.url

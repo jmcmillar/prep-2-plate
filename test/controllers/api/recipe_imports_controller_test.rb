@@ -60,6 +60,17 @@ class Api::RecipeImportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 55, response.parsed_body["duration"]
   end
 
+  def test_create_assigns_chosen_categories
+    with_page("wprm_graph.html") do
+      post api_recipe_imports_url(format: :json),
+        params: { recipe_import: { url: "https://example.com/lemon-bars", recipe_category_ids: [ recipe_categories(:two).id ] } },
+        headers: @headers
+    end
+
+    assert_response :created
+    assert_equal [ recipe_categories(:two) ], Recipe.order(:created_at).last.recipe_categories.to_a
+  end
+
   private
 
   def post_import(url)

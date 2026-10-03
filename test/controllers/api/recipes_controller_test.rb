@@ -127,4 +127,42 @@ class Api::RecipesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal recipe_imports(:one).url, JSON.parse(response.body)["sourceUrl"]
   end
+
+  test "create assigns the chosen categories and ignores unknown ids" do
+    post api_recipes_url(format: :json), params: {
+      recipe: { title: "Categorized", ingredients: [ "1 cup flour" ], recipe_category_ids: [ recipe_categories(:two).id, 0 ] }
+    }, headers: @headers
+
+    assert_response :created
+    assert_equal [ recipe_categories(:two) ], Recipe.find_by!(name: "Categorized").recipe_categories.to_a
+  end
+
+  test "update replaces categories" do
+    patch api_recipe_url(@recipe, format: :json), params: {
+      recipe: { recipe_category_ids: [ recipe_categories(:two).id ] }
+    }, headers: @headers
+
+    assert_response :success
+    assert_equal [ recipe_categories(:two) ], @recipe.reload.recipe_categories.to_a
+  end
+
+  test "update without category ids keeps existing categories" do
+    patch api_recipe_url(@recipe, format: :json), params: { recipe: { title: "Renamed" } }, headers: @headers
+
+    assert_response :success
+    assert_equal [ recipe_categories(:one) ], @recipe.reload.recipe_categories.to_a
+  end
+
+  test "update with a blank category id clears categories" do
+    patch api_recipe_url(@recipe, format: :json), params: { recipe: { recipe_category_ids: [ "" ] } }, headers: @headers
+
+    assert_response :success
+    assert_empty @recipe.reload.recipe_categories
+  end
+
+  test "show includes category ids" do
+    get api_recipe_url(@recipe, format: :json), headers: @headers
+
+    assert_equal [ recipe_categories(:one).id ], JSON.parse(response.body)["categoryIds"]
+  end
 end

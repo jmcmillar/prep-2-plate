@@ -33,7 +33,7 @@ class Api::RecipesController < Api::BaseController
 
   def recipe_params
     params.require(:recipe).permit(
-      :title, :image, ingredients: [], steps: []
+      :title, :image, ingredients: [], steps: [], recipe_category_ids: []
     )
   end
 end

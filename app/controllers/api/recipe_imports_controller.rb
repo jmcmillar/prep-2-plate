@@ -15,7 +15,7 @@ class Api::RecipeImportsController < Api::BaseController
   private
 
   def import_params
-    params.require(:recipe_import).permit(:url)
+    params.require(:recipe_import).permit(:url, recipe_category_ids: [])
   end
 
   def import_failed(exception)

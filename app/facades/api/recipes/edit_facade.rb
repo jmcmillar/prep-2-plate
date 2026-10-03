@@ -11,10 +11,19 @@ class Api::Recipes::EditFacade
       recipe.image.attach(@strong_params[:image]) if @strong_params[:image].present?
       update_instructions(recipe)
       update_ingredients(recipe)
+      update_categories(recipe)
     end
   end
 
   private
+
+  # Multipart forms can't send an empty array, so clients send [""] to clear
+  # all categories; leaving the key out keeps the current ones.
+  def update_categories(recipe)
+    return unless @strong_params.key?(:recipe_category_ids)
+
+    recipe.recipe_categories = RecipeCategory.where(id: Array(@strong_params[:recipe_category_ids]).compact_blank)
+  end
 
   def update_instructions(recipe)
     return if @strong_params[:steps].blank?
