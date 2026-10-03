@@ -37,8 +37,14 @@ class Api::Recipes::ShowFacade
     recipe.user_recipe.user_id == @user.id
   end
 
+  # The page an imported recipe came from, for attribution
+  def source_url
+    recipe.recipe_import&.url
+  end
+
   def recipe
     @recipe ||= Recipe.visible_to(@user).includes(
+      :recipe_import,
       :recipe_instructions,
       recipe_ingredients: [:measurement_unit, { ingredient: :ingredient_category }]
     ).find(@params[:id])

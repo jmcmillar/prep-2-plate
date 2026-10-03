@@ -47,4 +47,14 @@ class Api::Recipes::ShowFacadeTest < ActiveSupport::TestCase
     
     assert_not @facade.favorite?
   end
+
+  def test_source_url_for_imported_recipe
+    assert_equal recipe_imports(:one).url, @facade.source_url
+  end
+
+  def test_source_url_for_recipe_without_import
+    facade = Api::Recipes::ShowFacade.new(@user, { id: recipes(:two).id })
+
+    assert_nil facade.source_url
+  end
 end

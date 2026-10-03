@@ -120,4 +120,11 @@ class Api::RecipesControllerTest < ActionDispatch::IntegrationTest
     @recipe.reload
     assert_equal original_name, @recipe.name
   end
+
+  test "show includes the source url of an imported recipe" do
+    get api_recipe_url(@recipe, format: :json), headers: @headers
+
+    assert_response :success
+    assert_equal recipe_imports(:one).url, JSON.parse(response.body)["sourceUrl"]
+  end
 end

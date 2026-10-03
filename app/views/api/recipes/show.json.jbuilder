@@ -6,6 +6,7 @@ json.difficultyLevel @facade.difficulty_level
 json.favorite @facade.favorite?
 json.allowFavorite @facade.allow_favorite?
 json.allowEdit @facade.allow_edit?
+json.sourceUrl @facade.source_url
 json.ingredientsByCategory do
   json.array! @facade.grouped_ingredients do |category, ingredients|
     json.categoryId category.id
