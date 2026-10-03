@@ -34,7 +34,8 @@ class UserRecipeImports::NewFacade < BaseFacade
   private
 
   def built_recipe
-    RecipeImports::BuildRecipe.call(parsed_recipe, recipe_import: recipe_import).tap do |recipe|
+    # Links the source image rather than storing a copy; only the importer sees it
+    RecipeImports::BuildRecipe.call(parsed_recipe, recipe_import: recipe_import, attach_image: false).tap do |recipe|
       recipe.build_user_recipe(user: @user)
     end
   end

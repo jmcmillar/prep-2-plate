@@ -32,6 +32,6 @@ class Admin::Recipes::ShowFacade < Base::Admin::ShowFacade
   end
 
   def recipe_image
-    safe_attachment(recipe.image, 'no-recipe-image.png').url
+    safe_attachment(recipe.image, recipe.linked_image_url || 'no-recipe-image.png').url
   end
 end

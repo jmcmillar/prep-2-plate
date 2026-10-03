@@ -6,6 +6,8 @@
 class RecipeImports::BuildRecipe
   include Service
 
+  # The source image is always linked on the import; attach_image also copies
+  # it into storage.
   # with_ingredients: false suits flows that review ingredients in a later step.
   def initialize(parsed_recipe, recipe_import:, attach_image: true, with_ingredients: true,
                  ingredient_parser: RecipeImports::ParseIngredientLines)
@@ -20,11 +22,18 @@ class RecipeImports::BuildRecipe
     Recipe.new(recipe_attributes).tap do |recipe|
       build_instructions(recipe)
       build_ingredients(recipe) if @with_ingredients
+      link_image
       RecipeImports::AttachImage.call(recipe, @parsed[:image_url]) if @attach_image
     end
   end
 
   private
+
+  # Saved with the recipe (Recipe autosaves its import), so recipes without
+  # an uploaded copy can show the source page's image
+  def link_image
+    @recipe_import.image_url = @parsed[:image_url] if @parsed[:image_url].present?
+  end
 
   def recipe_attributes
     {

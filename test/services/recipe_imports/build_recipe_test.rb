@@ -59,6 +59,21 @@ class RecipeImports::BuildRecipeTest < ActiveSupport::TestCase
     assert_empty build(PARSED, with_ingredients: false).recipe_ingredients
   end
 
+  def test_links_the_source_image_on_the_import
+    recipe = build(PARSED.merge(image_url: "https://example.com/soup.jpg"))
+
+    assert_equal "https://example.com/soup.jpg", recipe.linked_image_url
+    assert_not recipe.image.attached?
+  end
+
+  def test_saving_the_recipe_saves_the_link_on_an_existing_import
+    @recipe_import.save!
+
+    build(PARSED.merge(image_url: "https://example.com/new.jpg"), with_ingredients: false).save!
+
+    assert_equal "https://example.com/new.jpg", @recipe_import.reload.image_url
+  end
+
   private
 
   def build(parsed = PARSED, **options)

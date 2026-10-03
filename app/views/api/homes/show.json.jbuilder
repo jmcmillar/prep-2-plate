@@ -6,7 +6,7 @@ json.favorites do
   json.array! @facade.recipes do |recipe|
     json.id recipe.id
     json.name recipe.name
-    json.imageUrl recipe.image.attached? ? rails_blob_url(recipe.image, host: request.host_with_port) : image_url("no-recipe-image.png")
+    json.imageUrl recipe_image_url(recipe)
   end
 end
 json.recommendations do
@@ -27,7 +27,7 @@ json.todayRecipes do
   json.array! @facade.today_recipes do |recipe|
     json.id recipe.id
     json.name recipe.name
-    json.imageUrl recipe.image.attached? ? rails_blob_url(recipe.image, host: request.host_with_port) : image_url("no-recipe-image.png")
+    json.imageUrl recipe_image_url(recipe)
     json.durationMinutes recipe.duration_minutes
     json.difficultyLevel recipe.difficulty_level
   end

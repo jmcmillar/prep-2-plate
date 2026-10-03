@@ -32,6 +32,11 @@ class Recipe < ApplicationRecord
 
   scope :imported, -> { where.not(recipe_import_id: nil) }
 
+  # The import's linked image, for recipes without an uploaded one
+  def linked_image_url
+    recipe_import&.image_url
+  end
+
   # Catalog recipes plus the user's own; other users' recipes stay private.
   # A subquery rather than a join so it composes with includes(:user_recipe).
   scope :visible_to, ->(user) {

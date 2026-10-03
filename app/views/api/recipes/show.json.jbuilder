@@ -32,4 +32,4 @@ json.instructions do
     json.instruction instruction.instruction
   end
 end
-json.imageUrl @facade.recipe.image.attached? ?  rails_blob_url(@facade.recipe.image, host: request.host_with_port) : image_url("no-recipe-image.png", host: request.host_with_port)
+json.imageUrl recipe_image_url(@facade.recipe)

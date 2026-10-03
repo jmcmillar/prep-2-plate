@@ -1,5 +1,7 @@
 class Api::BaseController < ActionController::API
   include Api::TokenAuthentication
+  # API controllers don't load app/helpers on their own; jbuilder views need this one
+  helper RecipeImagesHelper
   before_action :set_default_format
   
   rescue_from ActionController::ParameterMissing, with: :parameter_missing

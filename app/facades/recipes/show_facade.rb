@@ -112,6 +112,6 @@ class Recipes::ShowFacade < BaseFacade
   end
 
   def recipe_image
-    safe_attachment(resource.image, 'no-recipe-landscape-image.png').url
+    safe_attachment(resource.image, resource.linked_image_url || 'no-recipe-landscape-image.png').url
   end
 end

@@ -19,7 +19,7 @@ class Api::RecipeFavorites::IndexFacade
   private
 
   def base_user_recipes
-    @user_recipes ||= Recipe.joins(:user_recipe).where(user_recipes: { user: @user }).order(created_at: :desc).with_attached_image
+    @user_recipes ||= Recipe.joins(:user_recipe).where(user_recipes: { user: @user }).order(created_at: :desc).with_attached_image.includes(:recipe_import)
   end
 
   # Applies the same q[name_cont] search to every section

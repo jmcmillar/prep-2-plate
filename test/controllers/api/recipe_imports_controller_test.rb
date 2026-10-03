@@ -71,6 +71,16 @@ class Api::RecipeImportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ recipe_categories(:two) ], Recipe.order(:created_at).last.recipe_categories.to_a
   end
 
+  def test_create_links_the_image_instead_of_storing_it
+    with_page("wprm_graph.html") { post_import("https://example.com/lemon-bars") }
+
+    recipe = Recipe.order(:created_at).last
+    assert_not recipe.image.attached?
+
+    get api_recipe_url(recipe, format: :json), headers: @headers
+    assert_equal "https://example.com/lemon-bars.jpg", response.parsed_body["imageUrl"]
+  end
+
   private
 
   def post_import(url)

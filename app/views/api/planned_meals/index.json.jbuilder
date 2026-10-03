@@ -8,7 +8,7 @@ json.plannedMeals do
       json.recipe do
         json.id planned_meal.recipe.id
         json.name planned_meal.recipe.name
-        json.imageUrl planned_meal.recipe.image.attached? ? rails_blob_url(planned_meal.recipe.image, host: request.host_with_port) : nil
+        json.imageUrl recipe_image_url(planned_meal.recipe, placeholder: nil)
       end
     else
       json.recipe nil

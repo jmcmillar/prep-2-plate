@@ -3,6 +3,6 @@ json.recipes do
     json.id recipe.id
     json.name recipe.name
     json.instructions recipe.recipe_instructions.order(:step_number).pluck(:instruction)
-    json.imageUrl recipe.image.attached? ? rails_blob_url(recipe.image, host: request.host_with_port) : image_url("no-recipe-image.png")
+    json.imageUrl recipe_image_url(recipe)
   end
 end

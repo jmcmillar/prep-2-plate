@@ -6,8 +6,9 @@ class Api::RecipeImports::NewFacade
     @params = params
   end
 
+  # Links the source image rather than storing a copy; only the importer sees it
   def recipe
-    @recipe ||= RecipeImports::BuildRecipe.call(parsed_recipe, recipe_import: recipe_import).tap do |recipe|
+    @recipe ||= RecipeImports::BuildRecipe.call(parsed_recipe, recipe_import: recipe_import, attach_image: false).tap do |recipe|
       recipe.build_user_recipe(user: @user)
       recipe.recipe_categories = RecipeCategory.where(id: Array(@params[:recipe_category_ids]).compact_blank)
     end

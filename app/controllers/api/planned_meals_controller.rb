@@ -4,7 +4,7 @@ class Api::PlannedMealsController < Api::BaseController
   def index
     @planned_meals = Current.user.planned_meals
       .where(date: date_range)
-      .includes(recipe: { image_attachment: :blob })
+      .includes(recipe: [ :recipe_import, { image_attachment: :blob } ])
       .ordered
   end
 

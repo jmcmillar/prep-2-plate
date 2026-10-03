@@ -5,7 +5,7 @@ class Recipes::ResourceFacade
   end
 
   def image
-    SafeAttachment.new(@resource.image, 'no-recipe-image.png').url
+    SafeAttachment.new(@resource.image, @resource.linked_image_url || 'no-recipe-image.png').url
   end
 
   def description
