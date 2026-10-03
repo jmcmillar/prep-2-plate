@@ -1,6 +1,6 @@
 class Api::RecipesController < Api::BaseController
   def index
-    @recipes = Recipe.includes(:recipe_instructions).with_attached_image
+    @recipes = Recipe.visible_to(Current.user).includes(:recipe_instructions).with_attached_image
   end
 
   def suggest

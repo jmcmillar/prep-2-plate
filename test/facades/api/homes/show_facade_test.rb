@@ -27,4 +27,12 @@ class Api::Homes::ShowFacadeTest < ActiveSupport::TestCase
     
     assert_kind_of Array, recommendations
   end
+
+  def test_recommendations_exclude_categories_with_only_other_users_recipes
+    owner_ids = Api::Homes::ShowFacade.new(users(:one), {}).recommendations.map { |r| r[:id] }
+    other_ids = Api::Homes::ShowFacade.new(users(:two), {}).recommendations.map { |r| r[:id] }
+
+    assert_includes owner_ids, recipe_categories(:one).id
+    assert_not_includes other_ids, recipe_categories(:one).id
+  end
 end

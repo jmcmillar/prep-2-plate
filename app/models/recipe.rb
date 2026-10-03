@@ -31,6 +31,12 @@ class Recipe < ApplicationRecord
 
   scope :imported, -> { where.not(recipe_import_id: nil) }
 
+  # Catalog recipes plus the user's own; other users' recipes stay private.
+  # A subquery rather than a join so it composes with includes(:user_recipe).
+  scope :visible_to, ->(user) {
+    where.not(id: UserRecipe.where.not(user_id: user&.id).select(:recipe_id))
+  }
+
   scope :filtered_by_recipe_categories, -> (category_ids) {
     return all if category_ids.blank?
     includes(:recipe_categories).where(recipe_categories: { id: category_ids })

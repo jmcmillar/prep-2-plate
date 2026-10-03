@@ -16,6 +16,6 @@ class Api::RecipeCategories::ShowFacade
   def base_recipes
     return Recipe.includes(:user_recipe).where(user_recipe: { user_id: @user.id }) unless recipe_category
 
-    recipe_category.recipes
+    recipe_category.recipes.visible_to(@user)
   end
 end

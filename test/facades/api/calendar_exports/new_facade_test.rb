@@ -34,4 +34,10 @@ class Api::CalendarExports::NewFacadeTest < ActiveSupport::TestCase
     assert_equal 'text/calendar', options[:type]
     assert_includes options[:filename], ".ics"
   end
+
+  def test_recipes_excludes_other_users_recipes
+    facade = Api::CalendarExports::NewFacade.new(users(:two), @params)
+
+    assert_empty facade.recipes
+  end
 end

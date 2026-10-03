@@ -10,6 +10,7 @@ module UserMealPlans
 
     def call
       return { success: false, error: "No meal plan data provided" } if @meal_plans_params.blank?
+      return { success: false, error: "Recipe not found" } unless recipes_visible?
 
       errors = []
       user_meal_plan = nil
@@ -55,6 +56,14 @@ module UserMealPlans
     end
 
     private
+
+    def recipes_visible?
+      recipe_ids = @meal_plans_params.values
+        .flat_map { |data| data["recipeIds"] || data[:recipeIds] || [] }
+        .map(&:to_i).uniq
+
+      Recipe.visible_to(@user).where(id: recipe_ids).count == recipe_ids.size
+    end
 
     def meal_plan_name
       return @name if @name.present?

@@ -5,7 +5,7 @@ class Api::RecipeFavorites::IndexFacade
   end
 
   def favorite_recipes
-    @user.recipes.with_attached_image
+    @user.recipes.visible_to(@user).with_attached_image
   end
 
   def imported_recipes

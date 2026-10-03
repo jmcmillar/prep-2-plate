@@ -8,7 +8,8 @@ class Api::RecipeFavorites::CreateFacade
     if favorite
       favorite.destroy
     else
-      @user.recipe_favorites.create(recipe_id: recipe_id)
+      # Raises RecordNotFound (404) for recipes the user can't see
+      @user.recipe_favorites.create(recipe: Recipe.visible_to(@user).find(recipe_id))
     end
   end
 

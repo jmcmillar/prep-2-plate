@@ -38,12 +38,13 @@ class Api::RecipeCategories::IndexFacade
   end
 
   def categories
-    @categories ||= RecipeCategory.joins(:recipes).filtered_by_ids(@params.dig(:filter, :category_ids))
+    @categories ||= RecipeCategory.joins(:recipes).merge(Recipe.visible_to(@user))
+      .filtered_by_ids(@params.dig(:filter, :category_ids))
       .distinct
   end
 
   def category_recipes(category)
-    category.recipes
+    category.recipes.visible_to(@user)
       .filtered_by_duration((@params.dig(:filter, :duration) || nil))
       .ransack(@params[:q]).result.limit(10)
   end

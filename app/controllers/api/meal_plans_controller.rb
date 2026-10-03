@@ -1,4 +1,6 @@
 class Api::MealPlansController < Api::BaseController
+  before_action :ensure_recipes_visible, only: %i[create update]
+
   def index
     @meal_plans = Current.user.meal_plans.includes(:meal_plan_recipes)
   end
@@ -36,5 +38,15 @@ class Api::MealPlansController < Api::BaseController
 
   def meal_plan_params
     params.permit(:name, :description, meal_plan_recipes_attributes: [ :recipe_id, :day_sequence, :date ])
+  end
+
+  private
+
+  def ensure_recipes_visible
+    attributes = meal_plan_params[:meal_plan_recipes_attributes] || []
+    attributes = attributes.values if attributes.respond_to?(:values)
+    recipe_ids = attributes.filter_map { |attrs| attrs[:recipe_id]&.to_i }.uniq
+
+    raise ActiveRecord::RecordNotFound if Recipe.visible_to(Current.user).where(id: recipe_ids).count < recipe_ids.size
   end
 end

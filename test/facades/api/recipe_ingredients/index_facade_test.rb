@@ -30,4 +30,10 @@ class Api::RecipeIngredients::IndexFacadeTest < ActiveSupport::TestCase
     
     assert_kind_of Array, ingredients
   end
+
+  def test_recipe_ingredients_excludes_other_users_recipes
+    facade = Api::RecipeIngredients::IndexFacade.new(users(:two), { recipe_ids: [ @recipe.id ] })
+
+    assert_empty facade.recipe_ingredients
+  end
 end

@@ -13,7 +13,7 @@ class Api::Homes::ShowFacade
   end
 
   def recipes
-    @user.recipes
+    @user.recipes.visible_to(@user)
       .filtered_by_duration(@params.dig(:filter, :duration))
       .order(created_at: :desc)
       .ransack(@params[:q]).result
@@ -21,12 +21,14 @@ class Api::Homes::ShowFacade
   end
 
   def recommendations
-    RecipeCategory.includes(:recipes).order(created_at: :desc).where.not(recipes: { id: nil }).limit(4).map do |category|
+    with_visible_recipes = RecipeCategory.joins(:recipes).merge(Recipe.visible_to(@user)).select(:id)
+
+    RecipeCategory.where(id: with_visible_recipes).order(created_at: :desc).limit(4).map do |category|
       {
         id: category.id,
         name: category.name,
         image_url: category.image,
-        recipe_count: category.recipes.count
+        recipe_count: category.recipes.visible_to(@user).count
       }
     end
   end

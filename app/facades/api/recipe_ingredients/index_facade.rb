@@ -12,7 +12,7 @@ class Api::RecipeIngredients::IndexFacade
     @recipe_ingredients ||= IngredientFullNameDecorator.decorate_collection(
       RecipeIngredient
         .includes(:recipe, ingredient: :ingredient_category)
-        .where(recipe: { id: @params[:recipe_ids] })
+        .where(recipe_id: Recipe.visible_to(@user).where(id: @params[:recipe_ids]).select(:id))
         .order("ingredients.name")
     )
   end

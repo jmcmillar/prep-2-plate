@@ -20,7 +20,7 @@ class Api::CalendarExports::NewFacade
     @params.each.flat_map do |(recipe_date, day_data)|
       recipe_ids = day_data["recipeIds"] || day_data[:recipeIds] || []
 
-      Recipe.where(id: recipe_ids).map do |recipe|
+      Recipe.visible_to(@user).where(id: recipe_ids).map do |recipe|
         RecipeCalendarData.new(recipe.id, recipe.name, recipe_date.to_date)
       end
     end

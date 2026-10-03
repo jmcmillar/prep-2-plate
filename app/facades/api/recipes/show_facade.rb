@@ -38,10 +38,10 @@ class Api::Recipes::ShowFacade
   end
 
   def recipe
-    @recipe ||= Recipe.includes(
+    @recipe ||= Recipe.visible_to(@user).includes(
       :recipe_instructions,
       recipe_ingredients: [:measurement_unit, { ingredient: :ingredient_category }]
-    ).find_by(id: @params[:id])
+    ).find(@params[:id])
   end
 
   def instructions

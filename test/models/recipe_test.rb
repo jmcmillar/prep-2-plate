@@ -29,4 +29,23 @@ class RecipeTest < ActiveSupport::TestCase
     assert_includes Recipe.featured, recipes(:one)
     assert_not_includes Recipe.featured, recipes(:two)
   end
+
+  def test_visible_to_includes_catalog_and_own_recipes
+    visible = Recipe.visible_to(users(:one))
+
+    assert_includes visible, recipes(:one)
+    assert_includes visible, recipes(:two)
+  end
+
+  def test_visible_to_excludes_other_users_recipes
+    visible = Recipe.visible_to(users(:two))
+
+    assert_not_includes visible, recipes(:one)
+    assert_includes visible, recipes(:two)
+  end
+
+  def test_visible_to_without_user_excludes_all_user_recipes
+    assert_not_includes Recipe.visible_to(nil), recipes(:one)
+    assert_includes Recipe.visible_to(nil), recipes(:two)
+  end
 end
