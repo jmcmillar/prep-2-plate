@@ -10,8 +10,9 @@ class Api::ShoppingListItemsController < Api::BaseController
     end
 
     @shopping_list_items = @shopping_list_items
-      .includes(:ingredient)  # Prevent N+1 queries
+      .includes(ingredient: :ingredient_category)  # Prevent N+1 queries
       .order(created_at: :desc)
+    @brand_memory = ShoppingListItems::BrandMemory.new(Current.user)
   end
 
   def create
@@ -34,6 +35,7 @@ class Api::ShoppingListItemsController < Api::BaseController
       UserIngredientPreferences::Learn.call(@shopping_list_item)
       UserShoppingItemPreferences::Learn.call(@shopping_list_item)
 
+      @brand_memory = ShoppingListItems::BrandMemory.new(Current.user)
       render :show, status: :created
     else
       render json: @shopping_list_item.errors, status: :unprocessable_entity
@@ -44,9 +46,15 @@ class Api::ShoppingListItemsController < Api::BaseController
     @shopping_list_item = Current.user.shopping_list_items.find(params[:id])
 
     if @shopping_list_item.update(shopping_list_item_params)
-      # Learn from brand after successful update
-      UserIngredientPreferences::Learn.call(@shopping_list_item)
-      UserShoppingItemPreferences::Learn.call(@shopping_list_item)
+      @brand_memory = ShoppingListItems::BrandMemory.new(Current.user)
+
+      # Save the brand as the user's preference unless they opted out for this item
+      if remember_brand?
+        UserIngredientPreferences::Learn.call(@shopping_list_item)
+        UserShoppingItemPreferences::Learn.call(@shopping_list_item)
+      else
+        @brand_memory.forget(@shopping_list_item)
+      end
 
       render :show
     else
@@ -54,11 +62,17 @@ class Api::ShoppingListItemsController < Api::BaseController
     end
   end
 
+  # Brings back a checked-off (archived) item, for undo
+  def restore
+    @shopping_list_item = users_items_including_archived.find(params[:id])
+    @shopping_list_item.restore!
+    @brand_memory = ShoppingListItems::BrandMemory.new(Current.user)
+
+    render :show
+  end
+
   def destroy
-    shopping_list_item = ShoppingListItem.unscoped
-      .joins(:shopping_list)
-      .where(shopping_lists: { user_id: Current.user.id })
-      .find(params[:id])
+    shopping_list_item = users_items_including_archived.find(params[:id])
 
     if ShoppingListItems::Archive.call(shopping_list_item)
       render json: {
@@ -73,6 +87,16 @@ class Api::ShoppingListItemsController < Api::BaseController
   end
 
   private
+
+  def users_items_including_archived
+    ShoppingListItem.unscoped
+      .joins(:shopping_list)
+      .where(shopping_lists: { user_id: Current.user.id })
+  end
+
+  def remember_brand?
+    ActiveModel::Type::Boolean.new.cast(params.fetch(:remember_brand, true))
+  end
 
   def shopping_list_item_params
     params.require(:shopping_list_item).permit(:name, :ingredient_id, :packaging_form, :preparation_style, :brand)

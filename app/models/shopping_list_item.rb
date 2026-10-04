@@ -31,6 +31,16 @@ class ShoppingListItem < ApplicationRecord
     end
   end
 
+  # Undoes archive!
+  def restore!
+    return false unless archived?
+
+    transaction do
+      update!(archived_at: nil)
+      shopping_list.class.increment_counter(:shopping_list_items_count, shopping_list.id)
+    end
+  end
+
   def archived?
     archived_at.present?
   end

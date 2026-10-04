@@ -23,7 +23,9 @@ namespace :api do
   resource :user_notifications, only: [ :update, :show ]
   resources :recipe_favorites, only: [ :index, :create ]
   resources :shopping_lists, only: [ :index, :create, :update, :destroy ] do
-    resources :shopping_list_items, only: [ :index, :create, :update, :destroy ], shallow: true
+    resources :shopping_list_items, only: [ :index, :create, :update, :destroy ], shallow: true do
+      post :restore, on: :member
+    end
 
     # Barcode lookup endpoint - RESTful show action
     resources :products, only: [:show], controller: "shopping_lists/products"

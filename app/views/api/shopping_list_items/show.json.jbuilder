@@ -6,6 +6,8 @@ json.ingredientId @shopping_list_item.ingredient_id
 json.packagingForm @shopping_list_item.packaging_form
 json.preparationStyle @shopping_list_item.preparation_style
 json.brand @shopping_list_item.brand
+json.brandRemembered @brand_memory.remembered?(@shopping_list_item)
+json.aisle @shopping_list_item.ingredient&.ingredient_category_name
 json.displayName decorated.display_name
 json.displayNameWithBrand decorated.display_name_with_brand
 json.archivedAt @shopping_list_item.archived_at

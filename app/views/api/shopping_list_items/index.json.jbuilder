@@ -7,6 +7,8 @@ json.shopping_list_items do
     json.packagingForm item.packaging_form
     json.preparationStyle item.preparation_style
     json.brand item.brand
+    json.brandRemembered @brand_memory.remembered?(item)
+    json.aisle item.ingredient&.ingredient_category_name
     json.displayName decorated.display_name
     json.displayNameWithBrand decorated.display_name_with_brand
     json.archivedAt item.archived_at

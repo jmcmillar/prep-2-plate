@@ -209,6 +209,84 @@ class Api::ShoppingListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_includes names, "Archived"
   end
 
+
+  def test_index_includes_aisle_and_whether_the_brand_is_remembered
+    tomatoes = shopping_list_items(:canned_tomatoes)
+    tomatoes.update!(brand: "Muir Glen")
+    UserIngredientPreference.find_or_initialize_by(user: @user, ingredient: tomatoes.ingredient, packaging_form: "canned",
+                                                   preparation_style: "diced").update!(preferred_brand: "Muir Glen")
+    shopping_list_items(:custom_item).update!(brand: "Bounty")
+
+    get api_shopping_list_shopping_list_items_url(@shopping_list), headers: auth_headers(@session.token), as: :json
+
+    assert_response :success
+    items = JSON.parse(response.body)["shopping_list_items"].index_by { |item| item["id"] }
+    assert_equal "Canned & Jarred", items[tomatoes.id]["aisle"]
+    assert items[tomatoes.id]["brandRemembered"]
+    assert_nil items[shopping_list_items(:custom_item).id]["aisle"]
+    assert_not items[shopping_list_items(:custom_item).id]["brandRemembered"]
+  end
+
+  def test_update_remembers_the_brand_by_default
+    item = shopping_list_items(:custom_item)
+
+    patch api_shopping_list_item_url(item), params: { shopping_list_item: { brand: "Bounty" } },
+          headers: auth_headers(@session.token), as: :json
+
+    assert_response :success
+    assert JSON.parse(response.body)["brandRemembered"]
+    assert_equal "Bounty", UserShoppingItemPreference.find_for_item(@user.id, item.name).preferred_brand
+  end
+
+  def test_update_without_remembering_keeps_the_brand_but_forgets_the_preference
+    item = shopping_list_items(:custom_item)
+    patch api_shopping_list_item_url(item), params: { shopping_list_item: { brand: "Bounty" } },
+          headers: auth_headers(@session.token), as: :json
+
+    patch api_shopping_list_item_url(item), params: { shopping_list_item: { brand: "Bounty" }, remember_brand: false },
+          headers: auth_headers(@session.token), as: :json
+
+    assert_response :success
+    assert_not JSON.parse(response.body)["brandRemembered"]
+    assert_equal "Bounty", item.reload.brand
+    assert_nil UserShoppingItemPreference.find_for_item(@user.id, item.name)
+  end
+
+  def test_update_without_remembering_a_different_brand_keeps_the_saved_one
+    item = shopping_list_items(:custom_item)
+    patch api_shopping_list_item_url(item), params: { shopping_list_item: { brand: "Bounty" } },
+          headers: auth_headers(@session.token), as: :json
+
+    patch api_shopping_list_item_url(item), params: { shopping_list_item: { brand: "Viva" }, remember_brand: false },
+          headers: auth_headers(@session.token), as: :json
+
+    assert_equal "Bounty", UserShoppingItemPreference.find_for_item(@user.id, item.name).preferred_brand
+  end
+
+  def test_restore_brings_back_a_checked_off_item
+    item = shopping_list_items(:canned_tomatoes)
+    delete api_shopping_list_item_url(item), headers: auth_headers(@session.token), as: :json
+    assert_not ShoppingListItem.exists?(item.id)
+
+    assert_difference -> { @shopping_list.reload.shopping_list_items_count }, 1 do
+      post restore_api_shopping_list_item_url(item), headers: auth_headers(@session.token), as: :json
+    end
+
+    assert_response :success
+    assert_equal item.id, JSON.parse(response.body)["id"]
+    assert ShoppingListItem.exists?(item.id)
+  end
+
+  def test_restore_only_reaches_the_users_own_items
+    other = shopping_list_items(:two) # on user two's list
+    other.archive!
+
+    post restore_api_shopping_list_item_url(other), headers: auth_headers(@session.token), as: :json
+
+    assert_response :not_found
+    assert other.reload.archived?
+  end
+
   private
 
   def auth_headers(token)
