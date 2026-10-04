@@ -6,8 +6,16 @@ class Api::AuthController < Api::BaseController
 
     # Authenticate using Devise's valid_password? method
     user = nil unless user&.valid_password?(params[:user][:password])
-    
-    if user
+
+    # Same account checks as the website: confirmed email, not locked or deactivated
+    if user && !user.active_for_authentication?
+      reason = user.inactive_message
+      render json: {
+        status: 403,
+        reason: reason,
+        message: I18n.t("devise.failure.#{reason}")
+      }, status: :forbidden
+    elsif user
       session = user.sessions.create!(
         user_agent: request.user_agent,
         ip_address: request.remote_ip

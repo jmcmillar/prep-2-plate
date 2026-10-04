@@ -5,19 +5,18 @@ class Api::AuthRegistrationController < Api::BaseController
     user = User.new(registration_params)
 
     if user.save
-      session = user.sessions.create!(
-        user_agent: request.user_agent,
-        ip_address: request.remote_ip
-      )
+      # Start new accounts with a list so recipes can be added right away
+      user.shopping_lists.create!(name: "My List", current: true)
 
+      # No session until the email is confirmed; Devise sends the confirmation email
       render json: {
         status: {
-          code: 200,
-          message: "Signed up successfully."
+          code: 201,
+          message: I18n.t("devise.registrations.signed_up_but_unconfirmed")
         },
         data: {
           user: UserSerializer.new(user).serializable_hash[:data][:attributes],
-          token: session.token
+          confirmationRequired: true
         }
       }, status: :created
     else

@@ -1,6 +1,7 @@
 namespace :api do
   post "auth/sign_in", to: "auth#create"
   post "auth/sign_up", to: "auth_registration#create"
+  post "auth/confirmation", to: "auth_confirmations#create"
   delete "auth/sign_out", to: "auth#destroy"
   resource :home, only: [ :show ]
   resources :categories, only: %i[index], controller: "filters/categories"
