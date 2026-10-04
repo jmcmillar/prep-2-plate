@@ -17,6 +17,7 @@ class Api::UserDetailsController < Api::BaseController
   end
 
   def user_detail_params
-    params.require(:user).permit(:first_name, :last_name, :email, :image)
+    # Email changes aren't supported from the app
+    params.require(:user).permit(:first_name, :last_name, :image, :household_size)
   end
 end

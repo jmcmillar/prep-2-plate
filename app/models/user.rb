@@ -13,6 +13,8 @@ class User < ApplicationRecord
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
+  # How many people the user cooks for; recipes open scaled to it
+  validates :household_size, numericality: { only_integer: true, in: 1..20 }, allow_nil: true
 
   # Normalizations - updated to use :email instead of :email_address
   normalizes :email, with: ->(e) { e.strip.downcase }
