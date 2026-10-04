@@ -27,7 +27,6 @@ namespace :api do
     # Barcode lookup endpoint - RESTful show action
     resources :products, only: [:show], controller: "shopping_lists/products"
   end
-  resource :export_meal_plans, only: [:create]
   resources :recipe_categories, only: [ :index, :show ]
   resource :user_details, only: %i[show update]
   resource :user_password, only: %i[update]
