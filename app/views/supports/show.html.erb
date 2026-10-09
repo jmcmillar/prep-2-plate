@@ -1,0 +1,26 @@
+<%= render ContainerComponent.new(class: "max-w-3xl py-12") do %>
+  <%= tag.h1 "Support", class: "text-3xl font-bold mb-4 text-[#8CB369]" %>
+  <%= tag.p "Need help with Prep2Plate? Find answers to common questions below, or get in touch and we'll get back to you as soon as we can.", class: "mb-8 text-[#4a4a4a]" %>
+
+  <%= render SectionCardComponent.new(title: "Contact Us", class: "bg-white mb-8") do %>
+    <%= tag.p do %>
+      Email us at
+      <%= mail_to @facade.support_email, class: "text-[#8CB369] font-semibold hover:underline" %>.
+      Include the email address on your account and, if something isn't working, what device you're using and the steps that led to the problem.
+    <% end %>
+  <% end %>
+
+  <%= tag.h2 "Frequently Asked Questions", class: "text-xl font-bold mb-4 text-[#2E2E2E]" %>
+  <%= tag.div class: "space-y-4" do %>
+    <% @facade.faqs.each do |faq| %>
+      <%= tag.div class: "bg-white rounded-xl shadow-sm p-6 border border-[#EDEADE]" do %>
+        <%= tag.h3 faq.question, class: "font-semibold mb-2" %>
+        <%= tag.p faq.answer, class: "text-sm text-[#2E2E2E]" %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= tag.p class: "mt-8 text-sm text-[#4a4a4a]" do %>
+    See also our <%= link_to "Terms of Service", terms_of_service_path, class: "text-[#8CB369] hover:underline" %>.
+  <% end %>
+<% end %>

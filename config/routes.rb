@@ -58,6 +58,7 @@ Rails.application.routes.draw do
   resources :table_actions, only: :index
   resource :terms_of_service, only: :show
   resource :about, only: :show
+  resource :support, only: :show
   draw "admin"
   draw "api"
 end
